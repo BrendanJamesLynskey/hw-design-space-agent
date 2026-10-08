@@ -1,0 +1,45 @@
+One high-level spec goes in: a function, its constraints and what to optimise. The agent's job is to take that spec down a ladder of ever more faithful, ever more expensive models of the hardware, keeping only the candidates worth the next level's cost, and checking each level against the golden model before trusting it.
+
+## The ladder
+
+Each level offers its own power, performance and area trade-offs, and each costs more per design than the one above it. Exploring cheaply at the top is what makes it affordable to be thorough at the bottom.
+
+<LadderTable column="ppa" />
+
+At the vendored commit, milestone 1 is done: L0 and L1 are live and every result on this site comes from them. Everything below L1 is planned, and nothing on this site animates a planned level as if it had run.
+
+## The design principle: the LLM never produces a number
+
+The LLM chooses which architecture families to explore, over which parameter ranges, and what to do after each round. Code computes every figure. That rule is in the system prompt every recorded call was sent:
+
+<DivisionOfLabour />
+
+It is also in the types. Each LLM call names a Pydantic schema (`ExplorationPlan`, `AnalysisDecision`), and those schemas have no field for a LUT count, an Fmax or an error figure: the model can name families, ranges, a budget split, a decision and its reasons, and nothing else. Every number is labelled with where it came from:
+
+<ProvenanceKey />
+
+## The graph, replayed
+
+The agent is a LangGraph `StateGraph`. `intake` turns the spec into a validated `Spec`; `confirm_spec` stops for a human with `interrupt()`; `propose` asks the LLM for a plan; `explore_family` runs once per family, fanned out in parallel with `Send`, each branch an Optuna NSGA-II study inside the box the LLM chose; `analyse` merges the results, computes the Pareto front and its hypervolume, shows the LLM a compact summary and asks what next. Code then applies hard rules the LLM cannot override: the round cap, the budget, a stop when the hypervolume gains less than 1% in a round, and no "infeasible" verdict while feasible designs exist.
+
+The replay below walks one recorded run through that graph. Pick any of the <V of="runs" fmt="int" /> scored runs. The quoted decisions are the LLM's own words from the trace, and the counters add up the usage OpenRouter reported for each call <Prov kind="measured" />. Failed calls are shown too: they return no valid answer and report no cost, which is why the provider-reported total undercounts the key's real usage.
+
+<HowTrace />
+
+Two things to look for. On the infeasible spec, the LLM itself returns `infeasible` and names throughput as the binding constraint; code only checks that no feasible design exists before accepting it. And on many runs the last word is code's, not the LLM's: the LLM asks to `refine`, the hypervolume gained less than 1% that round, and the hard rule stops the run. That rule is why the agents stop early and map less of the front than NSGA-II, as the [results](/results) show.
+
+## Verification at every level
+
+A level is only useful if its numbers can be trusted, so every level is checked against the one golden model before the agent relies on it.
+
+<LadderTable column="check" />
+
+In M1 that means two checks: the bit-accurate golden model produces exactly the reference RTL's output codes on all 65,536 input angles (Icarus Verilog, in the repository's CI), and every eval run is graded against the exhaustive ground truth of all <V of="designs" fmt="int" /> designs. This site adds a third: its TypeScript ports of the golden model and the cost model match the Python exactly, in its own CI.
+
+## Many agents at once
+
+There are two kinds of parallelism. Inside a run, `Send` fans `explore_family` out across the families the LLM chose, so the studies run side by side and a reducer merges their evaluations. Across runs, every run is an independent graph with its own SQLite checkpoint, so runs can be queued and run side by side, and a run interrupted for human input, or killed, resumes from its last completed step. That is what makes a fleet of agents running 24/7 possible, each evaluating a real design decision. The eval was a small fleet:
+
+<FleetTimeline />
+
+That timeline is measured, not a projection: <V of="runs" fmt="int" /> runs, <V of="calls.total" fmt="int" /> LLM calls, up to <V of="fleet.max" fmt="int" /> runs at once. What a larger fleet would cost is on the [results](/results#calculator) page, worked out from these measured runs.

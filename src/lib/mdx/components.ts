@@ -8,11 +8,25 @@ import type { MDXRemoteProps } from "next-mdx-remote/rsc";
 import { Prov } from "@/components/dse/Badges";
 import { KnuthQuote } from "@/components/dse/Knuth";
 import {
+  DivisionOfLabour,
+  LadderTable,
+  ProvenanceKey,
+} from "@/components/dse/HowSections";
+import {
+  FleetTimeline,
+  SpecResultsTable,
+} from "@/components/dse/ResultsTables";
+import {
   CaseCordic,
   CaseDatapath,
   CasePareto,
+  HowTrace,
+  ResultsCalculator,
+  ResultsRace,
+  ResultsReplay,
   WhyClimb,
 } from "@/components/dse/Sections";
+import { CostTable } from "@/components/dse/Tables";
 import { Eq } from "@/components/mdx/Eq";
 import { V } from "@/components/mdx/V";
 import { Callout } from "@/components/ui/Callout";
@@ -30,4 +44,14 @@ export const mdxComponents: NonNullable<MDXRemoteProps["components"]> = {
   CaseCordic,
   CaseDatapath,
   CasePareto,
+  HowTrace,
+  LadderTable,
+  ProvenanceKey,
+  DivisionOfLabour,
+  FleetTimeline,
+  ResultsReplay,
+  ResultsRace,
+  ResultsCalculator,
+  SpecResultsTable,
+  CostTable,
 };

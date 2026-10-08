@@ -8,7 +8,10 @@ import { AGENT_REPO } from "@/lib/site";
 
 const NAV = [
   { href: "/why", label: "Why" },
+  { href: "/how-it-works", label: "How it works" },
   { href: "/case-study", label: "Case study" },
+  { href: "/results", label: "Results" },
+  { href: "/roadmap", label: "Roadmap" },
   { href: "/about", label: "About" },
 ] as const;
 

@@ -1,0 +1,53 @@
+Milestone 1 asks one question: on the same budget of evaluations, does an LLM steering the exploration do better than plain optimisers with no LLM? The CORDIC design space is small enough (<V of="designs" fmt="int" /> designs) to score every design, so every run is graded against the exact answer. Each method ran three seeds on each of four specs, 400 evaluations per run at most. The agents used four real models through OpenRouter: <V of="runs" fmt="int" /> recorded runs, <V of="calls.total" fmt="int" /> LLM calls, <V of="total_usd" fmt="usd" /> of provider-reported usage.
+
+## Where the agent lost
+
+Plainly, first. **NSGA-II maps the trade-off curve better than any agent on two of the three feasible specs.** On `dds_250msps` it covers <V of="dds_250msps.nsga2_hv" fmt="f3" /> of the true front's hypervolume, against <V of="dds_250msps.min_agent_hv" fmt="f3" />–<V of="dds_250msps.best_agent_hv" fmt="f3" /> for the agents; on `low_area_control`, <V of="low_area_control.nsga2_hv" fmt="f3" /> against <V of="low_area_control.min_agent_hv" fmt="f3" />–<V of="low_area_control.best_agent_hv" fmt="f3" />. The agents dive at the corner of the space the spec cares about, the front stops growing there, and the 1% hypervolume-gain rule ends the run with budget unspent. Random search beats every agent on hypervolume on those two specs as well.
+
+And on selection, one model-and-spec pair lost too: Qwen3.8-27B with reasoning off, on `low_area_control`, picked designs <V of="low_area_control.qwen_off_regret" fmt="spct" /> worse than the optimum on average, against NSGA-II's <V of="low_area_control.nsga2_regret" fmt="spct" />. The other <V of="regret.agent_beats_nsga2" fmt="int" /> of the <V of="regret.agent_rows" fmt="int" /> pairs beat NSGA-II's mean regret.
+
+## Where it won
+
+**The agent is the better selector.** On every feasible spec, the best agent picked a design closer to the true optimum than either baseline: <V of="dds_250msps.best_agent_regret" fmt="spct" /> against NSGA-II's <V of="dds_250msps.nsga2_regret" fmt="spct" /> on `dds_250msps`, <V of="high_precision.best_agent_regret" fmt="spct" /> against <V of="high_precision.nsga2_regret" fmt="spct" /> on `high_precision`, <V of="low_area_control.best_agent_regret" fmt="spct" /> against <V of="low_area_control.nsga2_regret" fmt="spct" /> on `low_area_control`. On `high_precision`, whose true front is a single point, the agents also win on hypervolume (Sonnet 5.5 covers <V of="high_precision.sonnet_hv" fmt="f3" />; evaluations to 95%: <V of="high_precision.sonnet_e95" fmt="str" />, against NSGA-II's <V of="high_precision.nsga2_e95" fmt="str" />). **And on the infeasible spec, every model on every seed declared it infeasible itself** (<V of="infeasible.llm_declared" fmt="int" /> of <V of="infeasible.llm_runs" fmt="int" /> runs), naming throughput as the binding constraint, usually after 100–200 evaluations rather than the whole budget. The baselines can only report that they found nothing.
+
+That split is the division of labour the design intends. The agent finds the critical 3% cheaply: the right design for this spec, or the proof that none exists. Mapping the whole front exhaustively stays the job of a classic optimiser, which the agent drives.
+
+## Pareto replay
+
+Pick a run and watch it explore, round by round: what the LLM asked for, what code found, the front so far against the true front, and the LLM's verdict on each round in its own words.
+
+<ResultsReplay />
+
+## The hypervolume race
+
+How quickly each method covers the true front, evaluation by evaluation. Watch the agents' lines go flat when their runs stop, while NSGA-II keeps climbing on `dds_250msps` and `low_area_control`.
+
+<ResultsRace />
+
+## Every spec, every method
+
+The selected design of every seed, its regret, the front coverage, and what the LLM cost on that spec: tokens, dollars per run and dollars per evaluated design. The baselines use no LLM.
+
+<SpecResultsTable spec="dds_250msps" />
+
+<SpecResultsTable spec="low_area_control" />
+
+<SpecResultsTable spec="high_precision" />
+
+<SpecResultsTable spec="infeasible_dds_400msps" />
+
+## What the LLM cost, by model
+
+<CostTable />
+
+Model choice matters more than the totals suggest. Qwen3.8-27B with its default reasoning failed <V of="calls.qwen_failed" fmt="int" /> of its <V of="calls.qwen" fmt="int" /> calls, <V of="calls.qwen_length" fmt="int" /> of them by reaching the output-token limit, mostly spent on reasoning; with reasoning off it was about <V of="cost.qwen.cheaper" fmt="x" /> cheaper per run and needed <V of="cost.qwen.speedup" fmt="x" /> less wall-clock, and it still beat NSGA-II's selection regret on two of the three feasible specs.
+
+<div id="calculator" />
+
+## Cost and labour
+
+The architecture lets several agents run round the clock, each evaluating a real design decision. What that costs is a projection, and the calculator builds it only from the measured runs above. The engineer-time side is yours to fill in: there are no salary assumptions here.
+
+<ResultsCalculator />
+
+The repository's own tables are in [eval/results.md](https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent/blob/0082ccd9a04d3da99285df65aec7db1e94c1bd1f/eval/results.md); every row this page shows is checked against it when the site's data is built.

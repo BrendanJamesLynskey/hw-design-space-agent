@@ -196,9 +196,12 @@ export default function HomePage(): JSX.Element {
         <a href={AGENT_REPO} className={BTN}>
           The repository
         </a>
-        <a href={agentFile("eval/results.md", commit)} className={BTN}>
+        <Link href="/results" className={BTN}>
           Full results
-        </a>
+        </Link>
+        <Link href="/how-it-works" className={BTN}>
+          How it works
+        </Link>
         <Link href="/case-study" className={BTN}>
           The CORDIC case study
         </Link>

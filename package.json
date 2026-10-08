@@ -28,7 +28,8 @@
     "smoke": "tsx scripts/smoke-check.ts",
     "export": "python3 scripts/export_dse.py",
     "export:check": "python3 scripts/export_dse.py --check",
-    "vendor:dse": "tsx scripts/vendor-dse.ts"
+    "vendor:dse": "tsx scripts/vendor-dse.ts",
+    "animations": "tsx scripts/capture-animations.ts"
   },
   "dependencies": {
     "katex": "^0.16.47",

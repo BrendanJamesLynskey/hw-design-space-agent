@@ -130,3 +130,25 @@ test("the Pareto chart reads out any point on the front", async ({ page }) => {
   await chart.locator("[data-point='100']").hover();
   await expect(chart.getByText("design 101/")).toBeVisible();
 });
+
+test("about: personal projects only, no interview repos, the education list", async ({
+  page,
+}) => {
+  await page.goto("/about");
+  await expect(page.getByTestId("personal-note")).toContainText(
+    "Links go to my personal projects on GitHub",
+  );
+  const html = await page.content();
+  expect(html).not.toContain("Interview_");
+  expect(html).not.toContain("Embedded systems and Linux");
+  // every row of evidence links is labelled as personal projects
+  for (const row of await page.locator("[data-personal-projects]").all())
+    await expect(row).toContainText("Personal projects:");
+  const edu = page.locator("section[aria-labelledby='education'] li");
+  await expect(edu).toHaveText([
+    "BEng Electronic Engineering",
+    "MSc Music Technology (DSP)",
+    "MSc Low Power Systems Integration",
+    "Diploma in Mathematics",
+  ]);
+});

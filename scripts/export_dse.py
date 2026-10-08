@@ -43,11 +43,11 @@ from typing import Any
 import numpy as np
 
 from hw_dse import accuracy_table
-from hw_dse.evaluate import evaluate, objective_vector
+from hw_dse.evaluate import evaluate, objective_vector, reference_point
 from hw_dse.families import COMMON_PARAMS, REGISTRY, ArchConfig
 from hw_dse.models import cordic_bitexact as cb
 from hw_dse.models.cost_fpga import FpgaCostModel, load_calibration
-from hw_dse.pareto import pareto_mask
+from hw_dse.pareto import hv_progress, pareto_mask
 from hw_dse.spec import Spec, load_spec
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -480,6 +480,321 @@ def hero_run(specs: dict[str, Spec], trace_records: list[dict[str, Any]]) -> dic
 
 
 # ---------------------------------------------------------------------------
+# Every recorded agent run, for the replays (How it works, Results)
+# ---------------------------------------------------------------------------
+
+FAMILIES = ("iterative", "unrolled_k", "pipelined", "pipelined_m")
+RUN_DIR = DATA / "runs"
+
+
+def run_id(run: str) -> str:
+    """'high_precision/20261008-130043-d1d3' -> 'high_precision__20261008-130043-d1d3' (a file name)."""
+    return run.replace("/", "__")
+
+
+def summaries() -> dict[str, dict[str, Any]]:
+    """The 48 scored agent runs, by trace directory ('<spec>/<stamp>')."""
+    out = {}
+    for p in sorted((V / "eval/data/agent").glob("*/*.json")):
+        row = json.loads(p.read_text())
+        out[row["run_dir"].split("runs/eval/", 1)[1]] = row
+    return out
+
+
+RESULT_RE = re.compile(
+    r"^\*\*Result \(code\):\*\* (\d+) evaluations this round, (\d+) total; (\d+) feasible; hypervolume (\S+) \((.*?)\)\.$")
+
+
+def parse_report(text: str) -> tuple[str, list[dict[str, Any]]]:
+    """The run report's verdict and its rounds: what the LLM planned (and why), what code
+    measured, what the LLM decided, and which hard rules code applied on top."""
+    verdict = re.search(r"^\*\*Verdict:\*\* (.*?)\s*$", text, re.M).group(1)  # type: ignore[union-attr]
+    body = text.split("## Rounds: what the architect proposed, saw and decided", 1)[1]
+    rounds = []
+    for chunk in re.split(r"^### Round ", body, flags=re.M)[1:]:
+        k = int(chunk.split("\n", 1)[0])
+        chunk = re.sub(r"<details>.*?</details>", "", chunk, flags=re.S)
+        m = re.search(r"^\*\*Plan explored\*\* \(LLM rationale: \*(.*?)\*\)\s*$", chunk, re.M)
+        jobs = [{"family": j.group(1), "evals": int(j.group(2)), "ranges": j.group(3), "why": j.group(4).strip()}
+                for j in re.finditer(r"^- `(\w+)` \((\d+) evals\): (.*?)\. \*Why:\* (.*)$", chunk, re.M)]
+        res = next(RESULT_RE.match(line) for line in chunk.splitlines() if RESULT_RE.match(line))
+        dec = re.search(r"^\*\*LLM decision:\*\* `(\w+)`", chunk, re.M)
+        eff = re.search(r"^- effective decision: `(\w+)`", chunk, re.M)
+        rounds.append({
+            "round": k,
+            "plan_rationale": m.group(1) if m else "",
+            "jobs": jobs,
+            "evals": int(res.group(1)),
+            "total": int(res.group(2)),
+            "feasible": int(res.group(3)),
+            "hv_text": res.group(4),
+            "hv_gain_text": res.group(5),
+            "llm_decision": dec.group(1) if dec else None,
+            "rules": re.findall(r"^- \*\*rule applied by code:\*\* (.*)$", chunk, re.M),
+            "decision": eff.group(1) if eff else (dec.group(1) if dec else None),
+        })
+    return verdict, rounds
+
+
+def error_type(err: Any) -> str:
+    """'LengthFinishReasonError: Could not parse ...' -> 'LengthFinishReasonError'."""
+    m = re.match(r"^(\w+(?:Error|Exception))\b", str(err))
+    return m.group(1) if m else "invalid structured output"
+
+
+def call_record(c: dict[str, Any]) -> dict[str, Any]:
+    """One LLM call as the replay shows it. A failed call carries no usage (none was reported)."""
+    parsed = c.get("parsed") if isinstance(c.get("parsed"), dict) else {}
+    ok = "error" not in c and c.get("parse_error") in (None, "None")
+    usage = c.get("usage") if isinstance(c.get("usage"), dict) else {}
+    err = c.get("error") or (c.get("parse_error") if c.get("parse_error") not in (None, "None") else None)
+    return {
+        "node": c["node"],
+        "attempt": int(c["attempt"]),
+        "ok": ok,
+        "decision": parsed.get("decision", "plan" if c["node"] == "propose" and ok else None),
+        "rationale": " ".join(str(parsed.get("rationale", "")).split()),
+        "families": [f.get("family") for f in parsed.get("families", [])] if c["node"] == "propose" else None,
+        "input_tokens": int(usage.get("input_tokens", 0)),
+        "output_tokens": int(usage.get("output_tokens", 0)),
+        "reasoning_tokens": int(c.get("reasoning_tokens") or 0) if ok else 0,
+        "cost_usd": float(c.get("cost_usd") or 0.0),
+        "latency_s": float(c["latency_s"]),
+        "error": error_type(err) if err else None,
+    }
+
+
+def agent_run(run: str, row: dict[str, Any], spec: Spec, gt: dict[str, Any],
+              trace_records: list[dict[str, Any]]) -> dict[str, Any]:
+    rows = read_evals(run)
+    assert [int(r["eval_index"]) for r in rows] == list(range(len(rows)))
+    report_md = (V / "eval/data/traces" / run / "report.md").read_text()
+    verdict, rounds = parse_report(report_md)
+    intake = re.search(r"^\*\*Spec intake:\*\* (.*?)\s*$", report_md, re.M).group(1)  # type: ignore[union-attr]
+    # the report, the evaluations and the summary agree
+    assert len(rows) == row["n_evals"] == (rounds[-1]["total"] if rounds else 0), run
+    pts = np.array([objective_vector({o.metric: float(r[o.metric]) for o in spec.objectives}, spec) for r in rows])
+    feas = np.array([r["feasible"] == "True" for r in rows])
+    prog = hv_progress(pts, feas, reference_point(spec))
+    assert math.isclose(float(prog[-1]), float(row["hv_final"]), rel_tol=1e-12, abs_tol=1e-9), run
+    seen = 0
+    for rd in rounds:
+        mine = [r for r in rows if int(r["round"]) == rd["round"]]
+        assert len(mine) == rd["evals"] == sum(j["evals"] for j in rd["jobs"]), (run, rd["round"])
+        for j in rd["jobs"]:
+            assert sum(r["family"] == j["family"] for r in mine) == j["evals"], (run, rd["round"], j["family"])
+        assert sum(r["feasible"] == "True" for r in mine) <= rd["feasible"]
+        seen += len(mine)
+        assert seen == rd["total"]
+        idx = [i for i in range(seen) if feas[i]]
+        rd["front"] = [idx[i] for i in np.flatnonzero(pareto_mask(pts[idx]))] if idx else []
+        rd["hv"] = float(prog[seen - 1])
+        rd["hv_frac"] = rnd(float(prog[seen - 1]) / gt["hv_true"]) if gt["hv_true"] else None
+        assert rd["hv_text"] == f"{prog[seen - 1]:.4g}", (run, rd["round"], rd["hv_text"])
+        rd["feasible_cum"] = int(feas[:seen].sum())
+        assert rd["feasible_cum"] == rd["feasible"], (run, rd["round"])
+        del rd["hv_text"]
+    calls = [call_record(c) for c in trace_records if c["_run"] == run]
+    assert math.isclose(math.fsum(c["cost_usd"] for c in calls), row["cost_usd"], abs_tol=1e-9), run
+    assert sum(c["input_tokens"] for c in calls) == row["input_tokens"], run
+    assert sum(c["output_tokens"] for c in calls) == row["output_tokens"], run
+    assert len(calls) == row["llm_calls"] and sum(not c["ok"] for c in calls) == row["llm_failures"], run
+    # which round each call belongs to: propose is round 0; each first-attempt analyse call
+    # opens the next round's decision
+    k = 0
+    for c in calls:
+        if c["node"] == "analyse" and c["attempt"] == 1:
+            k += 1
+        c["round"] = k if c["node"] == "analyse" else 0
+    assert k == len(rounds), (run, k, len(rounds))
+    sel = next((r for r in rows if r["key"] == row["selected_key"]), None)
+    return {
+        "id": run_id(run),
+        "run": run,
+        "spec": spec.name,
+        "model": row["model_requested"] + ("" if row["reasoning"] == "provider default" else f", reasoning {row['reasoning']}"),
+        "model_id": row["model_requested"],
+        "label": MODEL_LABELS[row["model_requested"] + ("" if row["reasoning"] == "provider default" else f", reasoning {row['reasoning']}")],
+        "reasoning": row["reasoning"],
+        "seed": int(row["seed"]),
+        "status": row["status"],
+        "verdict": verdict,
+        "intake": intake,
+        "n_evals": int(row["n_evals"]),
+        "budget": spec.budget.total_evals,
+        "hv_frac": rnd(row["hv_frac"]),
+        "evals_to_95": row["evals_to_95"],
+        "select_regret": rnd(row["select_regret"]),
+        "selected": design(sel) if sel else None,
+        "selected_meets_spec": bool(row["selected_meets_spec"]),
+        "llm_declared_infeasible": row["status"] == "infeasible",
+        "llm_calls": int(row["llm_calls"]),
+        "llm_failures": int(row["llm_failures"]),
+        "input_tokens": int(row["input_tokens"]),
+        "output_tokens": int(row["output_tokens"]),
+        "cost_usd": row["cost_usd"],
+        "wall_s": row["wall_s"],
+        "axes": [o.metric for o in spec.objectives],
+        "calls": calls,
+        "rounds": rounds,
+        "points": {
+            "round": [int(r["round"]) for r in rows],
+            "family": [FAMILIES.index(r["family"]) for r in rows],
+            "x": [rnd(float(r[spec.objectives[0].metric])) for r in rows],
+            "y": [rnd(float(r[spec.objectives[1].metric])) for r in rows],
+            "feasible": "".join("1" if f else "0" for f in feas),
+        },
+    }
+
+
+def division_of_labour(trace_records: list[dict[str, Any]]) -> str:
+    """The system prompt's "Division of labour" paragraph, as every recorded call sent it."""
+    parts = {r["system"].split("Division of labour (strict):\n", 1)[1].split("\n\n", 1)[0] for r in trace_records}
+    assert len(parts) == 1, "the runs did not all send the same division of labour"
+    return parts.pop()
+
+
+def failures(runs: list[dict[str, Any]]) -> dict[str, dict[str, int]]:
+    """Failed LLM calls per model, by error type (from the traces)."""
+    out: dict[str, dict[str, int]] = {}
+    for r in runs:
+        for c in r["calls"]:
+            if not c["ok"]:
+                d = out.setdefault(r["model"], {})
+                d[c["error"]] = d.get(c["error"], 0) + 1
+    return out
+
+
+def runs_index(runs: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """The runs' picker and the fleet timeline: when each run started (its directory's UTC
+    timestamp) and how long it took (timed by the eval harness)."""
+    def t(stamp: str) -> int:
+        hh, mm, ss = int(stamp[9:11]), int(stamp[11:13]), int(stamp[13:15])
+        return hh * 3600 + mm * 60 + ss
+    t0 = min(t(r["run"].split("/")[1]) for r in runs)
+    return [{
+        "id": r["id"], "spec": r["spec"], "model": r["model"], "label": r["label"], "seed": r["seed"],
+        "status": r["status"], "start_s": t(r["run"].split("/")[1]) - t0, "wall_s": r["wall_s"],
+        "start_utc": f"{r['run'].split('/')[1][9:11]}:{r['run'].split('/')[1][11:13]}:{r['run'].split('/')[1][13:15]}",
+        "cost_usd": r["cost_usd"], "n_evals": r["n_evals"],
+    } for r in sorted(runs, key=lambda r: (t(r["run"].split("/")[1]), r["id"]))]
+
+
+def all_runs(specs: dict[str, Spec], gts: dict[str, Any], trace_records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    out = [agent_run(run, row, specs[row["spec"]], gts[row["spec"]], trace_records) for run, row in summaries().items()]
+    assert len(out) == 48
+    return out
+
+
+# ---------------------------------------------------------------------------
+# The hypervolume race and the per-spec tables (Results)
+# ---------------------------------------------------------------------------
+
+RACE_STEP = 5
+
+
+def sample(prog: np.ndarray, hv_true: float) -> list[float]:
+    """HV fraction after every RACE_STEP evaluations (and after the last one)."""
+    n = len(prog)
+    at = list(range(RACE_STEP, n + 1, RACE_STEP))
+    if not at or at[-1] != n:
+        at.append(n)
+    return [round(float(prog[e - 1]) / hv_true, 5) for e in at]
+
+
+def race(specs: dict[str, Spec], gts: dict[str, Any], runs: list[dict[str, Any]]) -> dict[str, Any]:
+    """HV fraction against evaluations, every run of every method, per feasible spec.
+
+    The baselines are re-run here with the repository's own code at the vendored commit
+    (Optuna NSGA-II and random search, the same seeds); each re-run must reproduce the
+    recorded result in baselines.json exactly (final HV, evaluations to 95%, the selected
+    design) before its curve is used. The agents' curves come from their recorded
+    evaluations, in the order the runs made them."""
+    from hw_dse.benchmark import run_baseline, score_run
+
+    base = json.loads((V / "eval/data/baselines.json").read_text())
+    out: dict[str, Any] = {"step": RACE_STEP, "specs": {}}
+    for name in SPECS:
+        g = gts[name]
+        if not g["feasible"]:
+            continue
+        spec = specs[name]
+        methods = []
+        for method, label in (("nsga2", "NSGA-II"), ("random", "Random search")):
+            seeds = []
+            for seed in (0, 1, 2):
+                recs = run_baseline(spec, method, seed)
+                sc = score_run(recs, spec, g)
+                rec = base[f"{name}|{method}|{seed}"]
+                assert sc["hv_final"] == float(rec["hv_final"]), (name, method, seed)
+                assert sc["evals_to_95"] == rec["evals_to_95"] and sc["selected_key"] == rec["selected_key"]
+                pts = np.array([objective_vector(r, spec) for r in recs])
+                prog = hv_progress(pts, np.array([bool(r["feasible"]) for r in recs]), reference_point(spec))
+                seeds.append({"seed": seed, "n": len(recs), "evals_to_95": sc["evals_to_95"],
+                              "hv_frac": rnd(sc["hv_frac"]), "curve": sample(prog, g["hv_true"])})
+            methods.append({"method": method, "label": label, "agent": False, "seeds": seeds})
+        for model, mlabel in MODEL_LABELS.items():
+            seeds = []
+            for r in sorted((r for r in runs if r["spec"] == name and r["model"] == model), key=lambda r: r["seed"]):
+                rows = read_evals(r["run"])
+                pts = np.array([objective_vector({o.metric: float(x[o.metric]) for o in spec.objectives}, spec) for x in rows])
+                prog = hv_progress(pts, np.array([x["feasible"] == "True" for x in rows]), reference_point(spec))
+                hit = np.flatnonzero(prog >= 0.95 * g["hv_true"])
+                assert (int(hit[0]) + 1 if hit.size else None) == r["evals_to_95"], r["id"]
+                seeds.append({"seed": r["seed"], "n": len(rows), "evals_to_95": r["evals_to_95"],
+                              "hv_frac": r["hv_frac"], "curve": sample(prog, g["hv_true"]), "run": r["id"]})
+            assert len(seeds) == 3
+            methods.append({"method": model, "label": mlabel, "agent": True, "seeds": seeds})
+        out["specs"][name] = {"hv_true": rnd(g["hv_true"]), "budget": spec.budget.total_evals, "methods": methods}
+    return out
+
+
+def spec_tables(runs: list[dict[str, Any]]) -> dict[str, Any]:
+    """Per spec and method: the designs each seed selected, and for the agents the tokens,
+    dollars and wall-clock of that spec's runs (sums over the same summaries as the cost
+    table, which they must add up to)."""
+    base = json.loads((V / "eval/data/baselines.json").read_text())
+    out: dict[str, Any] = {}
+    for name in SPECS:
+        per: dict[str, Any] = {}
+        for method in ("nsga2", "random"):
+            per[method] = {"selected": []}
+            for seed in (0, 1, 2):
+                rec = base[f"{name}|{method}|{seed}"]
+                key = rec["selected_key"]
+                per[method]["selected"].append({"seed": seed, "key": key,
+                                                "family": key.split(":")[0] if key else None,
+                                                "params": params_from_key(key) if key else None,
+                                                "regret": rnd(float(rec["select_regret"])) if rec["select_regret"] not in (None, "None") else None})
+        for model in MODEL_LABELS:
+            rs = sorted((r for r in runs if r["spec"] == name and r["model"] == model), key=lambda r: r["seed"])
+            cost = math.fsum(r["cost_usd"] for r in rs)
+            evals = sum(r["n_evals"] for r in rs)
+            per[model] = {
+                "selected": [{"seed": r["seed"], "key": r["selected"]["key"] if r["selected"] else None,
+                              "family": r["selected"]["family"] if r["selected"] else None,
+                              "params": r["selected"]["params"] if r["selected"] else None,
+                              "regret": r["select_regret"]} for r in rs],
+                "input_tokens": sum(r["input_tokens"] for r in rs),
+                "output_tokens": sum(r["output_tokens"] for r in rs),
+                "cost_usd": round(cost, 6),
+                "cost_per_run": round(cost / len(rs), 6),
+                "evals": evals,
+                "cost_per_eval": cost / evals,
+                "wall_s_mean": round(statistics.mean(r["wall_s"] for r in rs), 2),
+                "llm_calls": sum(r["llm_calls"] for r in rs),
+                "failed_calls": sum(r["llm_failures"] for r in rs),
+            }
+        out[name] = per
+    for model in MODEL_LABELS:
+        tot = math.fsum(out[s][model]["cost_usd"] for s in SPECS)
+        allr = [r for r in runs if r["model"] == model]
+        assert math.isclose(tot, math.fsum(r["cost_usd"] for r in allr), abs_tol=4 * 5e-7)  # 4 specs, each rounded to 1e-6
+        assert sum(out[s][model]["input_tokens"] for s in SPECS) == sum(r["input_tokens"] for r in allr)
+    return out
+
+
+# ---------------------------------------------------------------------------
 # "Micro-optimise the default design": a hill-climb on the real grid (Why page)
 # ---------------------------------------------------------------------------
 
@@ -717,6 +1032,7 @@ def build() -> dict[Path, str]:
     gt, gts_raw = ground_truth(specs)
     trace_records = traces()
     ms = milestones()
+    runs = all_runs(specs, gts_raw, trace_records)
     site = {
         "vendored": {"repository": vend["repository"], "commit": vend["commit"], "committed": vend["committed"]},
         "milestones": ms,
@@ -728,6 +1044,10 @@ def build() -> dict[Path, str]:
         "hero": hero_run(specs, trace_records),
         "trace_calls": len(trace_records),
         "trace_runs": len({r["_run"] for r in trace_records}),
+        "runs": runs_index(runs),
+        "division_of_labour": division_of_labour(trace_records),
+        "failures": failures(runs),
+        "spec_tables": spec_tables(runs),
     }
     why = {"hill_climb": hill_climb(specs["dds_250msps"])}
     dump = lambda o: json.dumps(o, ensure_ascii=False, indent=1) + "\n"  # noqa: E731
@@ -736,6 +1056,8 @@ def build() -> dict[Path, str]:
         DATA / "site.json": dump(site),
         DATA / "why.json": dump(why),
         DATA / "calibration.json": dump(calibration()),
+        DATA / "race.json": compact(race(specs, gts_raw, runs)),
+        **{RUN_DIR / f"{r['id']}.json": compact(r) for r in runs},
         FIX / "cordic.json": compact(cordic_fixtures()),
         FIX / "cost.json": compact(cost_fixtures()),
     }
@@ -755,6 +1077,9 @@ def main() -> None:
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(text)
             print(f"wrote {path.relative_to(ROOT)} ({len(text):,} bytes)")
+    if a.check:
+        extra = sorted(set(RUN_DIR.glob("*.json")) - set(out))
+        stale += [str(p.relative_to(ROOT)) + " (not exported)" for p in extra]
     if stale:
         sys.exit("out of date (run python scripts/export_dse.py): " + ", ".join(stale))
     if a.check:

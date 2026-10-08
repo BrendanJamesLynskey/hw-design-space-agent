@@ -8,6 +8,7 @@ import { accuracy, REFERENCE } from "./cordic";
 import { estimate } from "./cost";
 import { site, why } from "./data";
 import { arch } from "./families";
+import { fleetSpan, maxConcurrent } from "./fleet";
 
 export type Fmt =
   | "num"
@@ -130,6 +131,28 @@ export const VALUES: Record<string, number | string> = {
   "hero.calls": hero.llm_calls,
   "hero.regret": hero.select_regret,
   "hero.evals": hero.rounds[hero.rounds.length - 1]!.cumulative_evals,
+  // the fleet and the calls (measured)
+  "fleet.max": maxConcurrent(site.runs),
+  "fleet.minutes": fleetSpan(site.runs) / 60,
+  "calls.total": costs.models.reduce((a, m) => a + m.llm_calls, 0),
+  "calls.failed": costs.models.reduce((a, m) => a + m.failed_calls, 0),
+  "calls.qwen_failed": qwen.failed_calls,
+  "calls.qwen": qwen.llm_calls,
+  "calls.qwen_length": site.failures[qwen.model]!.LengthFinishReasonError!,
+  // where an agent lost on selection
+  "low_area_control.qwen_off_regret": row(
+    "low_area_control",
+    "qwen/qwen3.8-27b, reasoning off",
+  ).regret_mean!,
+  "high_precision.sonnet_hv": row(
+    "high_precision",
+    "anthropic/claude-sonnet-5.5",
+  ).hv_frac_mean!,
+  "high_precision.sonnet_e95": row(
+    "high_precision",
+    "anthropic/claude-sonnet-5.5",
+  ).evals_to_95_text!,
+  "high_precision.nsga2_e95": row("high_precision", "nsga2").evals_to_95_text!,
   // the Why page's hill-climb
   "climb.steps": climb.path.length - 1,
   "climb.end_msps": gap.climbed.throughput_msps,
