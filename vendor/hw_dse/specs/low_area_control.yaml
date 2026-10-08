@@ -1,0 +1,14 @@
+# Slow control loop (e.g. a motor-control Park transform): tiny, accurate enough.
+name: low_area_control
+description: >
+  Field-oriented motor-control loop needing sin/cos of the rotor angle at
+  >= 1 MSPS with max error <= 2^-10. Area is everything: minimise LUTs + FFs.
+constraints:
+  - {metric: throughput_msps, op: ">=", value: 1}
+  - {metric: max_abs_err, op: "<=", value: "2^-10"}
+objectives:
+  - {metric: luts_plus_ffs, direction: min, ref: 1500}
+  - {metric: accuracy_bits, direction: max, ref: 10}
+select_by: luts_plus_ffs
+select_direction: min
+budget: {total_evals: 400, evals_per_round: 100, max_rounds: 4, hv_epsilon: 0.01}

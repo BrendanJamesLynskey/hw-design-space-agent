@@ -1,0 +1,59 @@
+{
+ "id": "artix7-xc7a35t-vivado2025.2-2anchor-v1",
+ "device": "xc7a35tcpg236-1",
+ "source_constants": {
+  "t_clk2q_ns": 0.467,
+  "t_clk_overhead_ns": 0.128,
+  "t_carry_first_ns": 0.616,
+  "t_carry_mid_ns": 0.117,
+  "t_carry_last_ns": 0.334,
+  "activity_factor": 0.125
+ },
+ "fitted": {
+  "c_arith": 1.053748,
+  "c_mux": 0.754118,
+  "c_ff": 1.008927,
+  "t_logic_ns": 0.884173,
+  "t_mux_ns": 1.131346
+ },
+ "anchors": [
+  {
+   "family": "iterative",
+   "params": {
+    "data_width": 16,
+    "n_iter": 14,
+    "angle_guard": 0,
+    "frac_guard": 0,
+    "rounding": "trunc"
+   },
+   "luts": 170,
+   "ffs": 95,
+   "fmax_mhz": 198.3
+  },
+  {
+   "family": "pipelined",
+   "params": {
+    "data_width": 16,
+    "n_iter": 14,
+    "angle_guard": 0,
+    "frac_guard": 0,
+    "rounding": "trunc"
+   },
+   "luts": 745,
+   "ffs": 784,
+   "fmax_mhz": 272.9
+  }
+ ],
+ "power_reference": {
+  "family": "iterative",
+  "params": {
+   "data_width": 16,
+   "n_iter": 14,
+   "angle_guard": 0,
+   "frac_guard": 0,
+   "rounding": "trunc"
+  },
+  "f_mhz": 100.0
+ },
+ "provenance": "estimate: cost_fpga (artix7-xc7a35t-vivado2025.2-2anchor-v1, 2 anchors)"
+}

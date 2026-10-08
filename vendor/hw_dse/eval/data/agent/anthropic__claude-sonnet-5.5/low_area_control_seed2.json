@@ -1,0 +1,33 @@
+{
+ "spec": "low_area_control",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "converged",
+ "rounds": 2,
+ "llm_calls": 3.0,
+ "llm_failures": 0.0,
+ "input_tokens": 12494.0,
+ "output_tokens": 2602.0,
+ "cost_usd": 0.051008,
+ "wall_s": 23.0,
+ "run_dir": "runs/eval/low_area_control/20261008-130417-8845",
+ "decisions": [
+  "refine",
+  "refine"
+ ],
+ "n_evals": 200,
+ "hv_final": 2761.6675314482436,
+ "hv_frac": 0.16571427524544394,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=15,angle_guard=1,frac_guard=1,rounding=trunc",
+ "select_regret": 0.052561276715541075,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

@@ -1,0 +1,33 @@
+{
+ "spec": "high_precision",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "converged",
+ "rounds": 2,
+ "llm_calls": 3.0,
+ "llm_failures": 0.0,
+ "input_tokens": 5283.0,
+ "output_tokens": 11806.0,
+ "cost_usd": 0.014145387,
+ "wall_s": 53.2,
+ "run_dir": "runs/eval/high_precision/20261008-130543-6398",
+ "decisions": [
+  "refine",
+  "refine"
+ ],
+ "n_evals": 200,
+ "hv_final": 87471.27974103998,
+ "hv_frac": 0.9674634582858281,
+ "evals_to_95": 30,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=25,n_iter=23,angle_guard=2,frac_guard=1,rounding=trunc,m=6",
+ "select_regret": 0.0494327742194749,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

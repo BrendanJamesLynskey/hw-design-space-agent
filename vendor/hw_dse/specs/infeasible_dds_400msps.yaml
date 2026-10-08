@@ -1,0 +1,17 @@
+# Deliberately infeasible under the M1 cost model: no single-lane CORDIC in
+# the registry clocks anywhere near 400 MHz on Artix-7 (the fastest, a
+# narrow fully pipelined design, is estimated below 300 MHz). The agent
+# must say so instead of "converging" on the least-bad design.
+name: infeasible_dds_400msps
+description: >
+  Wideband DDS needing >= 400 MSPS single-lane sin/cos with max error
+  <= 2^-12. Minimise LUTs.
+constraints:
+  - {metric: throughput_msps, op: ">=", value: 400}
+  - {metric: max_abs_err, op: "<=", value: "2^-12"}
+objectives:
+  - {metric: luts, direction: min, ref: 4000}
+  - {metric: accuracy_bits, direction: max, ref: 12}
+select_by: luts
+select_direction: min
+budget: {total_evals: 400, evals_per_round: 100, max_rounds: 4, hv_epsilon: 0.01}

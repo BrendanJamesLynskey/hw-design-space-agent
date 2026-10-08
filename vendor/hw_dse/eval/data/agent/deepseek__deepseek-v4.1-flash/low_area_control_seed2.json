@@ -1,0 +1,33 @@
+{
+ "spec": "low_area_control",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "converged",
+ "rounds": 2,
+ "llm_calls": 3.0,
+ "llm_failures": 0.0,
+ "input_tokens": 6679.0,
+ "output_tokens": 10006.0,
+ "cost_usd": 0.013634579999999999,
+ "wall_s": 51.6,
+ "run_dir": "runs/eval/low_area_control/20261008-131838-2512",
+ "decisions": [
+  "refine",
+  "refine"
+ ],
+ "n_evals": 200,
+ "hv_final": 3008.2033421187616,
+ "hv_frac": 0.1805076936139064,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=14,angle_guard=0,frac_guard=0,rounding=round",
+ "select_regret": 0.02486530858814836,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

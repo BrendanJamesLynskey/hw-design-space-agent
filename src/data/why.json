@@ -1,0 +1,146 @@
+{
+ "hill_climb": {
+  "spec": "dds_250msps",
+  "err_max": 0.0001220703125,
+  "accuracy_bits_min": 13.0,
+  "throughput_min": 250.0,
+  "path": [
+   {
+    "move": "start: the reference iterative CORDIC (W=16, N=14)",
+    "key": "iterative:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "iterative",
+    "params": {
+     "data_width": 16,
+     "n_iter": 14,
+     "angle_guard": 0,
+     "frac_guard": 0,
+     "rounding": "trunc"
+    },
+    "luts": 170.0,
+    "ffs": 95.8481,
+    "luts_plus_ffs": 265.848,
+    "fmax_mhz": 198.3,
+    "throughput_msps": 11.6647,
+    "latency_cycles": 17,
+    "power_index": 1.983,
+    "max_abs_err": 0.000643038,
+    "accuracy_bits": 10.6028,
+    "feasible": false,
+    "meets_accuracy": false
+   },
+   {
+    "move": "data_width 16 → 17",
+    "key": "iterative:data_width=17,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "iterative",
+    "params": {
+     "data_width": 17,
+     "n_iter": 14,
+     "angle_guard": 0,
+     "frac_guard": 0,
+     "rounding": "trunc"
+    },
+    "luts": 181.456,
+    "ffs": 100.893,
+    "luts_plus_ffs": 282.349,
+    "fmax_mhz": 198.3,
+    "throughput_msps": 11.6647,
+    "latency_cycles": 17,
+    "power_index": 2.10608,
+    "max_abs_err": 0.000337862,
+    "accuracy_bits": 11.5313,
+    "feasible": false,
+    "meets_accuracy": false
+   },
+   {
+    "move": "data_width 17 → 18",
+    "key": "iterative:data_width=18,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "iterative",
+    "params": {
+     "data_width": 18,
+     "n_iter": 14,
+     "angle_guard": 0,
+     "frac_guard": 0,
+     "rounding": "trunc"
+    },
+    "luts": 192.913,
+    "ffs": 105.937,
+    "luts_plus_ffs": 298.85,
+    "fmax_mhz": 198.3,
+    "throughput_msps": 11.6647,
+    "latency_cycles": 17,
+    "power_index": 2.22917,
+    "max_abs_err": 0.000250525,
+    "accuracy_bits": 11.9628,
+    "feasible": false,
+    "meets_accuracy": false
+   },
+   {
+    "move": "data_width 18 → 19",
+    "key": "iterative:data_width=19,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "iterative",
+    "params": {
+     "data_width": 19,
+     "n_iter": 14,
+     "angle_guard": 0,
+     "frac_guard": 0,
+     "rounding": "trunc"
+    },
+    "luts": 204.37,
+    "ffs": 110.982,
+    "luts_plus_ffs": 315.352,
+    "fmax_mhz": 193.804,
+    "throughput_msps": 11.4002,
+    "latency_cycles": 17,
+    "power_index": 2.29892,
+    "max_abs_err": 0.000172345,
+    "accuracy_bits": 12.5024,
+    "feasible": false,
+    "meets_accuracy": false
+   },
+   {
+    "move": "n_iter 14 → 15",
+    "key": "iterative:data_width=19,n_iter=15,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "iterative",
+    "params": {
+     "data_width": 19,
+     "n_iter": 15,
+     "angle_guard": 0,
+     "frac_guard": 0,
+     "rounding": "trunc"
+    },
+    "luts": 204.37,
+    "ffs": 110.982,
+    "luts_plus_ffs": 315.352,
+    "fmax_mhz": 193.804,
+    "throughput_msps": 10.7669,
+    "latency_cycles": 18,
+    "power_index": 2.29892,
+    "max_abs_err": 0.000118939,
+    "accuracy_bits": 13.0375,
+    "feasible": false,
+    "meets_accuracy": true
+   }
+  ],
+  "iterative_ceiling": {
+   "key": "iterative:data_width=24,n_iter=14,angle_guard=1,frac_guard=2,rounding=round",
+   "family": "iterative",
+   "params": {
+    "data_width": 24,
+    "n_iter": 14,
+    "angle_guard": 1,
+    "frac_guard": 2,
+    "rounding": "round"
+   },
+   "luts": 340.879,
+   "ffs": 141.25,
+   "luts_plus_ffs": 482.128,
+   "fmax_mhz": 189.506,
+   "throughput_msps": 11.1474,
+   "latency_cycles": 17,
+   "power_index": 3.43679,
+   "max_abs_err": 0.000121927,
+   "accuracy_bits": 13.0017
+  },
+  "iterative_designs": 39690
+ }
+}

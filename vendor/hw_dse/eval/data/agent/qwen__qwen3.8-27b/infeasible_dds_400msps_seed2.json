@@ -1,0 +1,32 @@
+{
+ "spec": "infeasible_dds_400msps",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "infeasible",
+ "rounds": 1,
+ "llm_calls": 3.0,
+ "llm_failures": 1.0,
+ "input_tokens": 3562.0,
+ "output_tokens": 18477.0,
+ "cost_usd": 0.0510667122,
+ "wall_s": 580.6,
+ "run_dir": "runs/eval/infeasible_dds_400msps/20261008-133218-32c5",
+ "decisions": [
+  "infeasible"
+ ],
+ "n_evals": 100,
+ "hv_final": 0.0,
+ "hv_frac": null,
+ "evals_to_95": null,
+ "selected_meets_spec": false,
+ "selected_key": null,
+ "select_regret": null,
+ "declared_infeasible": true,
+ "infeasibility_correct": true
+}
