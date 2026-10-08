@@ -632,8 +632,12 @@ def cordic_fixtures() -> dict[str, Any]:
             text = ";".join(f"{a},{b}" for a, b in zip(ac.tolist(), as_.tolist()))
             entry["exhaustive_sha256"] = hashlib.sha256(text.encode()).hexdigest()
             acc = cb._accuracy(cfg)
-            entry["accuracy"] = {"max_abs_lsb": acc.max_abs_lsb, "rms_lsb": acc.rms_lsb, "accuracy_bits": acc.accuracy_bits,
-                                 "n_angles": acc.n_angles}
+            # NumPy's cos/sin (and its pairwise mean) can differ in the last bit between CPUs
+            # (SIMD dispatch), so these floats are stored to 10 significant figures: the
+            # fixture is then the same on every machine, and the TS test's tolerance (1e-7
+            # absolute) is far below one output LSB anyway. The integer outputs stay exact.
+            entry["accuracy"] = {"max_abs_lsb": rnd(acc.max_abs_lsb, 10), "rms_lsb": rnd(acc.rms_lsb, 10),
+                                 "accuracy_bits": rnd(acc.accuracy_bits, 10), "n_angles": acc.n_angles}
         out["configs"].append(entry)
     out["gain"] = [{"n": n, "k": cb.cordic_gain(n)} for n in (1, 4, 14, 30)]
     return out

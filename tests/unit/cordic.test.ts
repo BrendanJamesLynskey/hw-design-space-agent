@@ -4,7 +4,7 @@
  * gain constant, the outputs on a strided sweep plus the edge codes, every register of three
  * full rotations per configuration, and, for every W <= 16, a SHA-256 over all 2^W outputs.
  * Integers must match exactly; the accuracy metrics (which take cos and sin of the angles)
- * to a tolerance far below one output LSB.
+ * to 1e-7 (the fixture stores them to 10 significant figures, since NumPy's cos and sin can differ in the last bit between CPUs), far below one output LSB.
  */
 import { createHash } from "node:crypto";
 
@@ -94,10 +94,10 @@ describe("bit-exact CORDIC: TS port = Python reference", () => {
         const a = accuracy(c);
         const want = entry.accuracy!;
         expect(a.nAngles).toBe(want.n_angles);
-        expect(Math.abs(a.maxAbsLsb - want.max_abs_lsb)).toBeLessThan(1e-9);
-        expect(Math.abs(a.rmsLsb - want.rms_lsb)).toBeLessThan(1e-9);
+        expect(Math.abs(a.maxAbsLsb - want.max_abs_lsb)).toBeLessThan(1e-7);
+        expect(Math.abs(a.rmsLsb - want.rms_lsb)).toBeLessThan(1e-7);
         expect(Math.abs(a.accuracyBits - want.accuracy_bits)).toBeLessThan(
-          1e-9,
+          1e-7,
         );
       });
     }
