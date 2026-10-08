@@ -101,7 +101,6 @@ const HARDWARE: Item[] = [
         label: "Cache_Controller_MESI",
       },
       { href: ownerRepo("VHDL_example_code"), label: "VHDL_example_code" },
-      { href: ownerRepo("Interview_FPGA"), label: "Interview_FPGA" },
     ],
   },
   {
@@ -111,54 +110,28 @@ const HARDWARE: Item[] = [
   },
   {
     title: "Power: multiphase DC-DC and PDN",
-    body: "DC-DC converter control (PWM, PFM, hysteretic and constant on-time, with load-transient comparisons) and power-delivery-network design.",
+    body: "Multiphase DC-DC conversion and power-delivery-network design. Public example: DC-DC converter control (PWM, PFM, hysteretic and constant on-time, with load-transient comparisons).",
     links: [
       {
         href: ownerRepo("DCDC_Control_Techniques"),
         label: "DCDC_Control_Techniques",
       },
-      { href: ownerRepo("Interview_SI_PI"), label: "Interview_SI_PI" },
     ],
   },
   {
     title: "Signal and power integrity, thermal",
-    body: "Seventeen interactive decks on signal integrity and high-speed digital design in which every number is computed by a model and checked against published work; SI/PI notes from transmission lines to PDN design.",
-    links: [
-      { href: ownerRepo("Signal_Integrity"), label: "Signal_Integrity" },
-      { href: ownerRepo("Interview_SI_PI"), label: "Interview_SI_PI" },
-    ],
+    body: "Seventeen interactive decks on signal integrity and high-speed digital design in which every number is computed by a model and checked against published work.",
+    links: [{ href: ownerRepo("Signal_Integrity"), label: "Signal_Integrity" }],
   },
   {
     title: "PCB: HDI, DDR, PCIe and MIPI",
-    body: "Schematic and layout practice, design for manufacture and board bring-up; LPDDRx PHY layout and routing.",
-    links: [
-      {
-        href: ownerRepo("Interview_PCB_Electronics"),
-        label: "Interview_PCB_Electronics",
-      },
-      {
-        href: ownerRepo("Interview_LPDDRx_Layout"),
-        label: "Interview_LPDDRx_Layout",
-      },
-    ],
+    body: "High-density boards with DDR, PCIe and MIPI interfaces: schematic and layout practice, design for manufacture and board bring-up.",
+    links: [],
   },
   {
     title: "DSP (MSc)",
-    body: "Signal processing from theory to implementation, and a collection of browser-based DSP, synthesis and analysis projects.",
-    links: [
-      { href: ownerRepo("DSP_and_Music"), label: "DSP_and_Music" },
-      { href: ownerRepo("Interview_DSP"), label: "Interview_DSP" },
-    ],
-  },
-  {
-    title: "Embedded systems and Linux",
-    body: "Bare-metal C, RTOS, communication protocols and debugging; embedded Linux.",
-    links: [
-      {
-        href: ownerRepo("Interview_Embedded_Systems"),
-        label: "Interview_Embedded_Systems",
-      },
-    ],
+    body: "Signal processing, the subject of an MSc. Public example: a collection of browser-based DSP, synthesis and analysis projects.",
+    links: [{ href: ownerRepo("DSP_and_Music"), label: "DSP_and_Music" }],
   },
 ];
 
@@ -183,13 +156,21 @@ function Column({
             <p className="mt-1 text-sm text-neutral-700 dark:text-neutral-300">
               {it.body}
             </p>
-            <p className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-sm">
-              {it.links.map((l) => (
-                <a key={l.href + l.label} href={l.href} className={A}>
-                  {l.label}
-                </a>
-              ))}
-            </p>
+            {it.links.length > 0 && (
+              <p
+                className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-sm"
+                data-personal-projects
+              >
+                <span className="text-xs font-medium uppercase tracking-wide text-neutral-600 dark:text-neutral-400">
+                  Personal projects:
+                </span>
+                {it.links.map((l) => (
+                  <a key={l.href + l.label} href={l.href} className={A}>
+                    {l.label}
+                  </a>
+                ))}
+              </p>
+            )}
           </li>
         ))}
       </ul>
@@ -214,7 +195,14 @@ export default function AboutPage(): JSX.Element {
         calibration stops being trustworthy is hardware.
       </p>
 
-      <div className="mt-10 grid gap-10 md:grid-cols-2">
+      <p
+        className="mt-6 max-w-3xl text-sm text-neutral-600 dark:text-neutral-400"
+        data-testid="personal-note"
+      >
+        Links go to my personal projects on GitHub (and the sites built from
+        them).
+      </p>
+      <div className="mt-6 grid gap-10 md:grid-cols-2">
         <Column heading="Software" items={SOFTWARE} id="software" />
         <Column heading="Hardware (25+ years)" items={HARDWARE} id="hardware" />
       </div>
@@ -227,6 +215,7 @@ export default function AboutPage(): JSX.Element {
           <li>BEng Electronic Engineering</li>
           <li>MSc Music Technology (DSP)</li>
           <li>MSc Low Power Systems Integration</li>
+          <li>Diploma in Mathematics</li>
         </ul>
       </section>
 

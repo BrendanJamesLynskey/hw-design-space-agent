@@ -136,6 +136,43 @@ export type GroundTruth = {
   front: Design[];
 };
 
+/** One run in the picker and on the fleet timeline (measured start and wall-clock). */
+export type RunIndex = {
+  id: string;
+  spec: string;
+  model: string;
+  label: string;
+  seed: number;
+  status: string;
+  /** Seconds after the first run started (from the run directories' UTC timestamps). */
+  start_s: number;
+  wall_s: number;
+  start_utc: string;
+  cost_usd: number;
+  n_evals: number;
+};
+
+export type Selection = {
+  seed: number;
+  key: string | null;
+  family: string | null;
+  params: Record<string, number | string> | null;
+  regret: number | null;
+};
+
+export type SpecTableRow = {
+  selected: Selection[];
+  input_tokens?: number;
+  output_tokens?: number;
+  cost_usd?: number;
+  cost_per_run?: number;
+  evals?: number;
+  cost_per_eval?: number;
+  wall_s_mean?: number;
+  llm_calls?: number;
+  failed_calls?: number;
+};
+
 export type Site = {
   vendored: { repository: string; commit: string; committed: string };
   milestones: { id: string; levels: string; status: string }[];
@@ -155,6 +192,12 @@ export type Site = {
   hero: Hero;
   trace_calls: number;
   trace_runs: number;
+  runs: RunIndex[];
+  division_of_labour: string;
+  /** Failed LLM calls per model, by error type. */
+  failures: Record<string, Record<string, number>>;
+  /** spec -> method (nsga2, random, or the agent's model) -> its row. */
+  spec_tables: Record<string, Record<string, SpecTableRow>>;
 };
 
 export type ClimbStep = Design & {

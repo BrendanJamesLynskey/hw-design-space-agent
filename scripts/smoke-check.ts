@@ -33,7 +33,13 @@ const PAGES: [string, string[]][] = [
     ],
   ],
   ["/why", [commit, "doi.org/10.1145/356635.356640", "critical 3%"]],
+  ["/how-it-works", [commit, "Division of labour", "data-pending-widget"]],
   ["/case-study", [commit, "bit-exact", "data-pending-widget"]],
+  [
+    "/results",
+    [commit, "Where the agent lost", "data-pending-widget", "eval/results.md"],
+  ],
+  ["/roadmap", [commit, "M4", "pull/1"]],
   [
     "/about",
     [commit, "linkedin.com/in/brendan-lynskey-a891705", "BrendanJamesLynskey"],

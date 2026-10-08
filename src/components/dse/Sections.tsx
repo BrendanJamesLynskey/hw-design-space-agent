@@ -7,10 +7,14 @@ import type { ReactNode } from "react";
 import { site, why } from "@/lib/dse/data";
 
 import {
+  Calculator,
   CordicWidget,
   DatapathWidget,
   HillClimbWidget,
+  HvRace,
   ParetoChart,
+  ParetoReplay,
+  TraceReplay,
 } from "./lazy";
 
 export function WhyClimb({ children }: { children?: ReactNode }): JSX.Element {
@@ -49,4 +53,20 @@ export function CasePareto(): JSX.Element {
       names={FRONT_SPECS}
     />
   );
+}
+
+export function HowTrace(): JSX.Element {
+  return <TraceReplay />;
+}
+
+export function ResultsReplay(): JSX.Element {
+  return <ParetoReplay />;
+}
+
+export function ResultsRace(): JSX.Element {
+  return <HvRace />;
+}
+
+export function ResultsCalculator(): JSX.Element {
+  return <Calculator models={site.costs.models} />;
 }

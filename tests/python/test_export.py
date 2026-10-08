@@ -78,3 +78,24 @@ def test_nsga2_wins_hypervolume_where_the_brief_says():
         rows = SITE["results"][spec]
         ns = next(r for r in rows if r["method"] == "nsga2")
         assert all(r["hv_frac_mean"] < ns["hv_frac_mean"] for r in rows if r["agent"]), spec
+
+
+def test_every_scored_run_is_exported_for_the_replays():
+    """48 run files (one per scored run), each agreeing with its summary row."""
+    runs = sorted((ROOT / "src/data/runs").glob("*.json"))
+    assert len(runs) == 48 == len(SITE["runs"])
+    for p in runs:
+        r = json.loads(p.read_text())
+        assert len(r["calls"]) == r["llm_calls"]
+        assert sum(not c["ok"] for c in r["calls"]) == r["llm_failures"]
+        assert len(r["points"]["x"]) == r["n_evals"] == (r["rounds"][-1]["total"] if r["rounds"] else 0)
+        # failed calls report no cost: the provider-reported total undercounts
+        assert all(c["cost_usd"] == 0 for c in r["calls"] if not c["ok"])
+
+
+def test_race_ends_on_the_recorded_hv_fractions():
+    race = json.loads((ROOT / "src/data/race.json").read_text())
+    for name, spec in race["specs"].items():
+        for m in spec["methods"]:
+            for s in m["seeds"]:
+                assert math.isclose(s["curve"][-1], s["hv_frac"], abs_tol=1e-5), (name, m["method"], s["seed"])

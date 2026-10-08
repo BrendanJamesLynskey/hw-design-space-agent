@@ -43,3 +43,19 @@ export const ParetoChart = dynamic(() => import("./ParetoChart"), {
   ssr: false,
   loading: loading("chart"),
 });
+export const TraceReplay = dynamic(() => import("./TraceReplay"), {
+  ssr: false,
+  loading: loading("animation"),
+});
+export const ParetoReplay = dynamic(() => import("./ParetoReplay"), {
+  ssr: false,
+  loading: loading("animation"),
+});
+export const HvRace = dynamic(() => import("./HvRace"), {
+  ssr: false,
+  loading: loading("animation"),
+});
+export const Calculator = dynamic(() => import("./Calculator"), {
+  ssr: false,
+  loading: loading("calculator"),
+});

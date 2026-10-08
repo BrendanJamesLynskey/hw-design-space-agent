@@ -6,7 +6,10 @@
       "url": [
         "http://localhost:3000/",
         "http://localhost:3000/why",
+        "http://localhost:3000/how-it-works",
         "http://localhost:3000/case-study",
+        "http://localhost:3000/results",
+        "http://localhost:3000/roadmap",
         "http://localhost:3000/about"
       ],
       "numberOfRuns": 3
