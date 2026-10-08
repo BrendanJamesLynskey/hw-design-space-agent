@@ -1,0 +1,15 @@
+# Direct digital synthesis (DDS/NCO) phase-to-amplitude converter.
+# Needs a new sin/cos pair every clock at a high sample rate, moderate accuracy.
+name: dds_250msps
+description: >
+  NCO / DDS sin-cos generator for a digital up-converter. One sample per
+  clock at >= 250 MSPS, max error <= 2^-13. Minimise LUTs.
+constraints:
+  - {metric: throughput_msps, op: ">=", value: 250}
+  - {metric: max_abs_err, op: "<=", value: "2^-13"}
+objectives:
+  - {metric: luts, direction: min, ref: 4000}
+  - {metric: accuracy_bits, direction: max, ref: 13}
+select_by: luts
+select_direction: min
+budget: {total_evals: 400, evals_per_round: 100, max_rounds: 4, hv_epsilon: 0.01}

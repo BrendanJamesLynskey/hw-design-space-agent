@@ -1,0 +1,40 @@
+<KnuthQuote />
+
+Knuth's point was never "don't optimise". It was "don't optimise _yet_": find the critical 3% first, then spend the effort there. Hardware has the same trap, with a higher price. The premature optimisation in a hardware project is choosing the architecture first, because it is the familiar one or the one in the reference design, and then spending weeks polishing its bit widths, its timing and its area. The polish is real work, and it can still be work on the wrong design.
+
+**Avoid premature optimisation: exploration finds the critical 3% worth optimising.**
+
+## Micro-optimise the default design, or explore first
+
+The animation runs both strategies on the real M1 data, for the `dds_250msps` spec: a direct digital synthesiser that needs a new sin/cos pair at 250 million samples a second or more, with a maximum error of 2^-13. Every point is a design scored by the repository's own models.
+
+<WhyClimb>
+  <Eq
+    label="Throughput T is Fmax times results per cycle r; r is one over N plus 3 for the iterative family and 1 for the pipelined families"
+    tex="T = F_{\max} \cdot r, \qquad r = \begin{cases} \htmlClass{hl-iter}{1/(\htmlClass{hl-n}{N} + 3)} & \text{iterative} \\ \htmlClass{hl-pipe}{1} & \text{pipelined} \end{cases}"
+  />
+</WhyClimb>
+
+**Micro-optimise the default.** Start from the reference design, the iterative CORDIC with a 16-bit datapath and 14 micro-rotations (the one in the reference RTL). It misses the accuracy target, so improve it the way a careful engineer would, one knob at a time: widen the datapath, add an iteration, add guard bits, change the rounding, keeping every change that helps. After <V of="climb.steps" fmt="int" /> steps it meets the accuracy target, at <V of="climb.end_luts" fmt="int" /> LUTs and <V of="climb.end_msps" /> MSPS. No single move improves it further.
+
+Then look at the whole family. The best any of the <V of="climb.iterative_designs" fmt="int" /> iterative designs can do at this accuracy is <V of="climb.ceiling_msps" /> MSPS. The spec needs about <V of="climb.shortfall" fmt="x" /> that. The equation says why: an iterative CORDIC delivers one result every $N+3$ cycles, and at this accuracy $N$ cannot shrink. No amount of polishing gets past that ceiling.
+
+**Explore first.** Across all four families the true Pareto front for this spec has <V of="dds_250msps.front" fmt="int" /> designs, and every one is a fully pipelined CORDIC above 250 MSPS. The spec's own choice uses <V of="climb.explored_luts" fmt="int" /> LUTs at <V of="climb.explored_msps" /> MSPS: <V of="climb.ratio" fmt="x" /> the throughput of the best iterative design, at equal accuracy. The critical 3% here was one decision, the architecture family, and only exploration finds it.
+
+<Callout kind="illustrative">
+
+LUTs, Fmax and throughput are <Prov kind="estimate" /> values from the repository's analytical cost model, calibrated to two Vivado synthesis results (the reference iterative and pipelined designs at W=16, N=14). Accuracy is <Prov kind="exact" />: the bit-accurate golden model, swept over every input angle up to 16 bits. The ranking between families should be more trustworthy than any absolute number; milestone 2 replaces the estimates with synthesis.
+
+</Callout>
+
+## An AI agent is the perfect environment for trade-off exploration
+
+Exploring is the part engineers skip, because it is tedious and it looks like no progress. It is exactly the part an agent is good at:
+
+- **It is cheap.** A complete exploration of one spec cost <V of="cost.min_per_run" fmt="usd" /> to <V of="cost.max_per_run" fmt="usd" /> in LLM usage, depending on the model <Prov kind="measured" />.
+- **It is tireless.** Each run is a checkpointed LangGraph thread that can pause for a human and resume, so several agents can run around the clock, each on a real design decision.
+- **It explains itself.** Every decision comes with the model's reasoning, recorded in the run's trace: why it ruled a family out, why it narrowed a range, why it stopped.
+- **A human still picks the point.** The agent proposes; the graph pauses (`interrupt()`) to confirm the spec and to choose a design off the front.
+- **It never invents a number.** The model chooses families, ranges and next steps. The golden model, the cost model and the optimiser produce every figure, so the numbers are as good as the models, and no better.
+
+The agent does not replace the optimiser. In milestone 1 it was the better _selector_, finding a design closer to the true optimum than NSGA-II or random search on every feasible spec, and the worse _front-mapper_: on two of the three specs plain NSGA-II covered far more of the trade-off curve. That is the right split. The agent finds the critical 3% for this spec, or proves there is none; mapping the whole front stays the job of a classic optimiser, which the agent drives.

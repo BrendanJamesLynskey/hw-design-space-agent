@@ -1,0 +1,48 @@
+Milestone 1 explores one function, a **CORDIC sin/cos unit on an Artix-7 FPGA**, starting from the owner's [CORDIC repository](https://github.com/BrendanJamesLynskey/CORDIC): synthesisable SystemVerilog, with an iterative and a pipelined sin/cos module, 16-bit data and 14 iterations. The agent may choose from four architecture families and five numeric knobs (data width 8–28 bits, 4–30 iterations, the angle-path width, 0–4 guard bits, truncation or rounding), plus the unrolling factor $k$ or the register spacing $m$. That is <V of="designs" fmt="int" /> designs, few enough that the repository scores every one of them to get the exact answer every run is graded against.
+
+## The algorithm, bit for bit
+
+CORDIC computes sin and cos with nothing but shifts and adds. It starts with the vector $(K, 0)$ and rotates it towards the input angle by a fixed sequence of ever-smaller angles, $\pm\arctan 2^{-i}$, choosing the sign each time from the residual angle $z$. The rotations stretch the vector by a known factor, so the start value $K$ pre-compensates for it, and after $N$ iterations $x \approx \cos\theta$ and $y \approx \sin\theta$.
+
+<CaseCordic>
+  <Eq
+    label="Each iteration: x minus sigma times y shifted right by i; y plus sigma times x shifted right by i; z minus sigma times arctan of 2 to the minus i; sigma is the sign of z; the start value K is the product of 1 over root of 1 plus 2 to the minus 2i"
+    tex="\begin{gathered} \htmlClass{hl-rot}{x_{i+1} = x_i - \sigma_i\, 2^{-i} y_i, \quad y_{i+1} = y_i + \sigma_i\, 2^{-i} x_i} \\ \htmlClass{hl-z}{z_{i+1} = z_i - \sigma_i \arctan 2^{-i}}, \quad \sigma_i = \operatorname{sign} z_i \\ \htmlClass{hl-k}{x_0 = K = \textstyle\prod_{i<N} (1 + 2^{-2i})^{-1/2}} \end{gathered}"
+  />
+</CaseCordic>
+
+The animation runs a TypeScript port of the repository's golden model. That model is **bit-exact against the reference RTL**: for every one of the 65,536 input angles of the 16-bit design it produces the same output codes as an Icarus Verilog simulation of both reference modules, a check that runs in the repository's CI. This site's port reproduces the Python model exactly, register by register, on every configuration its tests cover, and all 2^W outputs for every W up to 16 (the site's CI checks a SHA-256 of them).
+
+Every accuracy number on this site is <Prov kind="exact" />: the error against the true sin and cos, taken over every input angle. The reference design's worst-case error is <V of="ref.max_lsb" /> LSB (<V of="ref.bits" /> accurate bits), and its RMS error is <V of="ref.rms_lsb" /> LSB. In the reference design that error is dominated by truncation in the x and y shifts; guard bits fix that, and a wider angle path then fixes the atan-LUT quantisation that takes over (the repository's own analysis). Those are knobs the agent can turn. Drag the iterations down and the rotation stops short: the residual angle $z$ is left over and the error grows.
+
+## The families as datapaths
+
+All four families compute exactly the same integer arithmetic, so they share one accuracy number per configuration. What differs is how the $N$ micro-rotations map onto clock cycles, and that is where the area, speed and latency trade-offs come from.
+
+<CaseDatapath>
+  <Eq
+    label="Throughput is Fmax times results per cycle; latency is ceiling of N over k plus 3 cycles for the FSM families, and ceiling of N over m plus 2 cycles for the pipelined families, with one result per cycle"
+    tex="\begin{gathered} T = F_{\max} \cdot r \\ \htmlClass{hl-fsm}{L = \lceil N/k \rceil + 3,\ r = 1/L} \ \ \text{(iterative, unrolled\_k)} \\ \htmlClass{hl-pipe}{L = \lceil N/m \rceil + 2,\ r = 1} \ \ \text{(pipelined, pipelined\_m)} \end{gathered}"
+  />
+</CaseDatapath>
+
+- **iterative**: one micro-rotation per cycle on a single shared datapath, with barrel shifters (the shift changes every cycle) and a small state machine. Smallest, slowest: one result every $N+3$ cycles. This is the reference RTL's `cordic_rotation_iterative`.
+- **unrolled_k**: $k$ micro-rotations chained in each cycle. Fewer cycles per result, but a longer critical path and more logic.
+- **pipelined**: one registered stage per micro-rotation; the shifts are constants, so they are just wiring. A new angle every cycle. This is the reference RTL's `cordic_rotation_pipelined`.
+- **pipelined_m**: a register only every $m$ stages. Still one result per cycle, with fewer flip-flops and a slower clock.
+
+The counters come from a TypeScript port of the repository's analytical cost model, again identical to the Python on every field the tests compare. It counts the structure each family needs (adder bits, barrel-shifter multiplexers, ROM bits, registers, logic levels and carry chains on the critical path) and converts it to Artix-7 LUTs, flip-flops and Fmax with five constants solved from two real synthesis results. It reproduces both anchors: the iterative design at <V of="ref.iter.luts" fmt="int" /> LUTs and <V of="ref.iter.fmax" /> MHz, the pipelined design at <V of="ref.pipe.luts" fmt="int" /> LUTs and <V of="ref.pipe.fmax" /> MHz.
+
+<Callout kind="illustrative">
+
+Every LUT, flip-flop, Fmax and throughput figure here is an <Prov kind="estimate" />. Two anchor points is a weak calibration: it pins the model at the reference designs and makes it plausible elsewhere, but everything away from W=16, N=14, and both families with no anchor at all (`unrolled_k`, `pipelined_m`), is an extrapolation. **No `unrolled_k` design is on any spec's true front**: chaining $k$ stages lengthens the critical path roughly $k$-fold while the three overhead cycles remain. The repository flags that this may be an artefact of the cost model, to be tested against synthesis in milestone 2.
+
+</Callout>
+
+## The Pareto front
+
+For each feasible spec, the exhaustive ground truth gives the true Pareto front: the designs that no other design beats on every objective at once. This is the curve the agent and the baselines are trying to find, and the yardstick for the hypervolume scores on the home page.
+
+<CasePareto />
+
+The three specs have very different fronts. `dds_250msps` asks for at least 250 MSPS, so only fully pipelined designs make it, trading LUTs for accuracy. `low_area_control` needs just 1 MSPS, so the small iterative designs win. `high_precision` is the odd one: its front collapses to a single point (two designs with identical objectives), which is why one near-optimal design already scores more than 95% of the true hypervolume there.

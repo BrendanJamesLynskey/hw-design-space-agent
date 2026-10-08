@@ -1,0 +1,33 @@
+{
+ "spec": "dds_250msps",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "converged",
+ "rounds": 2,
+ "llm_calls": 3.0,
+ "llm_failures": 0.0,
+ "input_tokens": 12804.0,
+ "output_tokens": 3040.0,
+ "cost_usd": 0.056008,
+ "wall_s": 30.5,
+ "run_dir": "runs/eval/dds_250msps/20261008-125908-d3e9",
+ "decisions": [
+  "refine",
+  "refine"
+ ],
+ "n_evals": 200,
+ "hv_final": 3676.042182532806,
+ "hv_frac": 0.18618545381283783,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=18,n_iter=16,angle_guard=0,frac_guard=0,rounding=round",
+ "select_regret": 0.05355064027939462,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

@@ -1,0 +1,33 @@
+{
+ "spec": "high_precision",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "converged",
+ "rounds": 2,
+ "llm_calls": 3.0,
+ "llm_failures": 0.0,
+ "input_tokens": 11559.0,
+ "output_tokens": 4427.0,
+ "cost_usd": 0.067388,
+ "wall_s": 38.5,
+ "run_dir": "runs/eval/high_precision/20261008-130151-5bfe",
+ "decisions": [
+  "refine",
+  "refine"
+ ],
+ "n_evals": 200,
+ "hv_final": 88393.83852895499,
+ "hv_frac": 0.9776672865374626,
+ "evals_to_95": 4,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=26,n_iter=22,angle_guard=1,frac_guard=1,rounding=trunc,m=7",
+ "select_regret": 0.033844965734059526,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

@@ -1,0 +1,4 @@
+# The Python reference (HW_Design_Space_Agent's hw_dse package), at the commit the site vendors
+# (vendor/hw_dse/VENDORED.json). scripts/export_dse.py refuses to run against any other commit.
+hw-dse @ git+https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent@0082ccd9a04d3da99285df65aec7db1e94c1bd1f
+pytest>=8.0

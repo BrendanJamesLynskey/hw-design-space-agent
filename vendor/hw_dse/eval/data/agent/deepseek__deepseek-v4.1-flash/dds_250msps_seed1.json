@@ -1,0 +1,34 @@
+{
+ "spec": "dds_250msps",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "converged",
+ "rounds": 3,
+ "llm_calls": 5.0,
+ "llm_failures": 1.0,
+ "input_tokens": 9932.0,
+ "output_tokens": 12865.0,
+ "cost_usd": 0.01408734,
+ "wall_s": 102.6,
+ "run_dir": "runs/eval/dds_250msps/20261008-130259-32ac",
+ "decisions": [
+  "refine",
+  "refine",
+  "refine"
+ ],
+ "n_evals": 300,
+ "hv_final": 14336.645393512697,
+ "hv_frac": 0.7261273663910333,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=18,n_iter=15,angle_guard=3,frac_guard=0,rounding=round",
+ "select_regret": 0.03259604190919677,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

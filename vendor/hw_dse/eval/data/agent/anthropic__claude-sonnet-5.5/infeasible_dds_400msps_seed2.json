@@ -1,0 +1,32 @@
+{
+ "spec": "infeasible_dds_400msps",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "infeasible",
+ "rounds": 1,
+ "llm_calls": 2.0,
+ "llm_failures": 0.0,
+ "input_tokens": 7462.0,
+ "output_tokens": 1919.0,
+ "cost_usd": 0.034114,
+ "wall_s": 17.0,
+ "run_dir": "runs/eval/infeasible_dds_400msps/20261008-130306-ecb2",
+ "decisions": [
+  "infeasible"
+ ],
+ "n_evals": 100,
+ "hv_final": 0.0,
+ "hv_frac": null,
+ "evals_to_95": null,
+ "selected_meets_spec": false,
+ "selected_key": null,
+ "select_regret": null,
+ "declared_infeasible": true,
+ "infeasibility_correct": true
+}

@@ -1,0 +1,35 @@
+{
+ "spec": "dds_250msps",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "stopped",
+ "rounds": 4,
+ "llm_calls": 6.0,
+ "llm_failures": 1.0,
+ "input_tokens": 12366.0,
+ "output_tokens": 47818.0,
+ "cost_usd": 0.14085296320000001,
+ "wall_s": 922.5,
+ "run_dir": "runs/eval/dds_250msps/20261008-130854-a7dc",
+ "decisions": [
+  "refine",
+  "refine",
+  "refine",
+  "stop"
+ ],
+ "n_evals": 400,
+ "hv_final": 7287.7285560270175,
+ "hv_frac": 0.36911139238717333,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=19,n_iter=15,angle_guard=1,frac_guard=0,rounding=round",
+ "select_regret": 0.048894062863795155,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

@@ -1,0 +1,33 @@
+{
+ "spec": "high_precision",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "converged",
+ "rounds": 2,
+ "llm_calls": 3.0,
+ "llm_failures": 0.0,
+ "input_tokens": 5535.0,
+ "output_tokens": 35054.0,
+ "cost_usd": 0.07386547199999999,
+ "wall_s": 489.1,
+ "run_dir": "runs/eval/high_precision/20261008-132338-7351",
+ "decisions": [
+  "refine",
+  "refine"
+ ],
+ "n_evals": 200,
+ "hv_final": 86914.49507523907,
+ "hv_frac": 0.9613052218922256,
+ "evals_to_95": 45,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=24,n_iter=23,angle_guard=2,frac_guard=2,rounding=round,m=7",
+ "select_regret": 0.05887872869604388,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

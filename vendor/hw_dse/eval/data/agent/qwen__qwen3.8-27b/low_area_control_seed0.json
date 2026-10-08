@@ -1,0 +1,33 @@
+{
+ "spec": "low_area_control",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "stopped",
+ "rounds": 2,
+ "llm_calls": 4.0,
+ "llm_failures": 2.0,
+ "input_tokens": 4264.0,
+ "output_tokens": 23014.0,
+ "cost_usd": 0.078378147,
+ "wall_s": 1204.8,
+ "run_dir": "runs/eval/low_area_control/20261008-130854-a026",
+ "decisions": [
+  "refine",
+  "stop"
+ ],
+ "n_evals": 200,
+ "hv_final": 6660.55929248802,
+ "hv_frac": 0.3996678612885537,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=16,n_iter=16,angle_guard=-1,frac_guard=1,rounding=trunc",
+ "select_regret": 0.095917982844692,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

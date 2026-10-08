@@ -1,0 +1,14 @@
+# Instrumentation-grade sin/cos: very accurate, moderate rate.
+name: high_precision
+description: >
+  Coherent demodulator for a precision instrument: max error <= 2^-20 at
+  >= 50 MSPS. Minimise area (LUTs + FFs) and the relative power index.
+constraints:
+  - {metric: throughput_msps, op: ">=", value: 50}
+  - {metric: max_abs_err, op: "<=", value: "2^-20"}
+objectives:
+  - {metric: luts_plus_ffs, direction: min, ref: 8000}
+  - {metric: power_index, direction: min, ref: 20}
+select_by: luts_plus_ffs
+select_direction: min
+budget: {total_evals: 400, evals_per_round: 100, max_rounds: 4, hv_epsilon: 0.01}
