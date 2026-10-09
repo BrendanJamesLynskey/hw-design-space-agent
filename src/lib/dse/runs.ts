@@ -9,7 +9,13 @@
  * The files are loaded on demand (src/components/dse/loadRun.ts, one chunk per run), so a
  * page only carries the run shown.
  */
-import { site, type Design, type RunIndex } from "./data";
+import {
+  site,
+  type BackAnnotation,
+  type Design,
+  type MsKey,
+  type RunIndex,
+} from "./data";
 
 export const FAMILIES = [
   "iterative",
@@ -47,6 +53,10 @@ export type Job = {
 export type Round = {
   round: number;
   plan_rationale: string;
+  /** M2's front-mapping rounds: code planned the exploration (NSGA-II over the front families). */
+  plan_by_code: boolean;
+  /** Whether the LLM was asked after this round (not on code's final front-mapping round). */
+  llm_call: boolean;
   jobs: Job[];
   evals: number;
   total: number;
@@ -67,6 +77,7 @@ export type Round = {
 export type RunData = {
   id: string;
   run: string;
+  milestone: MsKey;
   spec: string;
   model: string;
   model_id: string;
@@ -90,6 +101,10 @@ export type RunData = {
   output_tokens: number;
   cost_usd: number;
   wall_s: number;
+  /** M2: front-mapping rounds (code's and the LLM's map_front). */
+  coverage_rounds: number;
+  /** M2: the run's own L5 node; null in M1. */
+  back_annotation: BackAnnotation | null;
   axes: [string, string];
   calls: Call[];
   rounds: Round[];
@@ -103,19 +118,51 @@ export type RunData = {
   };
 };
 
-/** The models, in the cost table's order, with their short labels. */
-export const MODELS = site.costs.models.map((m) => ({
-  model: m.model,
-  label: m.label,
-}));
+/** A milestone's models, in its cost table's order, with their short labels. */
+export function modelsOf(ms: MsKey): { model: string; label: string }[] {
+  return site.evals[ms].costs.models.map((m) => ({
+    model: m.model,
+    label: m.label,
+  }));
+}
 
-/** The run of a spec, model and seed. */
+/** The seeds a milestone ran (0..n-1). */
+export function seedsOf(ms: MsKey): number[] {
+  return Array.from({ length: site.evals[ms].seeds }, (_, i) => i);
+}
+
+/** The run of a milestone, spec, model and seed. */
 export function findRun(
+  ms: MsKey,
   spec: string,
   model: string,
   seed: number,
 ): RunIndex | undefined {
   return site.runs.find(
-    (r) => r.spec === spec && r.model === model && r.seed === seed,
+    (r) =>
+      r.milestone === ms &&
+      r.spec === spec &&
+      r.model === model &&
+      r.seed === seed,
   );
+}
+
+/** A run picked in the replays' controls. */
+export type RunPick = {
+  ms: MsKey;
+  spec: string;
+  model: string;
+  seed: number;
+};
+
+/** Move a pick to another milestone, keeping what that milestone also has. */
+export function switchMilestone(pick: RunPick, ms: MsKey): RunPick {
+  const models = modelsOf(ms).map((m) => m.model);
+  const seeds = seedsOf(ms);
+  return {
+    ms,
+    spec: pick.spec,
+    model: models.includes(pick.model) ? pick.model : models[0]!,
+    seed: seeds.includes(pick.seed) ? pick.seed : 0,
+  };
 }

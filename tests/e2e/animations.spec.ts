@@ -78,7 +78,9 @@ for (const scheme of ["light", "dark"] as const) {
             .click();
           expect(await step(fig)).toBe(0);
           // every parameter choice re-runs the animation from the start
-          for (const radio of await fig.getByRole("radio").all()) {
+          // (re-queried each time: a milestone switch changes the other choices)
+          for (let i = 0; i < (await fig.getByRole("radio").count()); i++) {
+            const radio = fig.getByRole("radio").nth(i);
             if ((await radio.getAttribute("aria-checked")) === "true") continue;
             const key = await fig.getAttribute("data-key");
             await radio.click();

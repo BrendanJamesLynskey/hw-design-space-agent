@@ -17,17 +17,29 @@ import {
   SpecResultsTable,
 } from "@/components/dse/ResultsTables";
 import {
+  GlanceTable,
+  RefitTable,
+  SpendTable,
+  VerificationTable,
+  VivadoTable,
+} from "@/components/dse/LadderTables";
+import {
   CaseCordic,
   CaseDatapath,
+  CaseHighPrecision,
   CasePareto,
+  CaseScatter,
+  HowDescent,
   HowTrace,
   ResultsCalculator,
   ResultsRace,
   ResultsReplay,
+  ResultsShift,
   WhyClimb,
 } from "@/components/dse/Sections";
-import { CostTable } from "@/components/dse/Tables";
+import { CostTable, HeadlineTable } from "@/components/dse/Tables";
 import { Eq } from "@/components/mdx/Eq";
+import { RepoFile } from "@/components/mdx/RepoFile";
 import { V } from "@/components/mdx/V";
 import { Callout } from "@/components/ui/Callout";
 import { MdxPre, MdxTable } from "@/components/ui/MdxTable";
@@ -38,6 +50,7 @@ export const mdxComponents: NonNullable<MDXRemoteProps["components"]> = {
   Callout,
   Eq,
   V,
+  RepoFile,
   Prov,
   KnuthQuote,
   WhyClimb,
@@ -54,4 +67,14 @@ export const mdxComponents: NonNullable<MDXRemoteProps["components"]> = {
   ResultsCalculator,
   SpecResultsTable,
   CostTable,
+  HeadlineTable,
+  HowDescent,
+  CaseScatter,
+  CaseHighPrecision,
+  ResultsShift,
+  VerificationTable,
+  VivadoTable,
+  RefitTable,
+  GlanceTable,
+  SpendTable,
 };

@@ -32,6 +32,10 @@ const NODE_INFO: Record<Node, { who: "code" | "LLM" | "human"; what: string }> =
       what: "code: front, HV, hard rules; LLM: next step (AnalysisDecision)",
     },
     select: { who: "human", what: "interrupt(), or the spec's rule" },
+    back_annotate: {
+      who: "code",
+      what: "L5 (M2 graph): estimate against measured, winner check",
+    },
     report: { who: "code", what: "report.md, evaluations.csv, trace" },
   };
 
@@ -42,6 +46,7 @@ const ORDER: Node[] = [
   "explore_family",
   "analyse",
   "select",
+  "back_annotate",
   "report",
 ];
 
@@ -54,10 +59,9 @@ const WHO_CLS = {
 
 export default function TraceReplay(): JSX.Element {
   const hero = site.hero;
-  const heroIndex = site.runs.find(
-    (r) => r.id === hero.run.replace("/", "__"),
-  )!;
+  const heroIndex = site.runs.find((r) => r.id === hero.id)!;
   const { run, controls } = useRun({
+    ms: heroIndex.milestone,
     spec: heroIndex.spec,
     model: heroIndex.model,
     seed: heroIndex.seed,
@@ -86,7 +90,7 @@ export default function TraceReplay(): JSX.Element {
       summary={
         <>
           {run
-            ? `${run.label} (${run.model_id}, reasoning: ${run.reasoning}) on ${run.spec}, seed ${run.seed}: ${run.calls.length} LLM calls from its llm_trace.jsonl.`
+            ? `${run.label} (${run.model_id}, reasoning: ${run.reasoning}) on ${run.spec}, ${run.milestone.toUpperCase()} seed ${run.seed}: ${run.calls.length} LLM calls from its llm_trace.jsonl.`
             : "Loading…"}{" "}
           Each LLM node is one recorded call; the counters add up its
           provider-reported usage.
@@ -143,8 +147,8 @@ export default function TraceReplay(): JSX.Element {
                   )}
                   {n === "analyse" && (
                     <span className="mt-0.5 block text-[0.7rem] text-neutral-600 dark:text-neutral-400">
-                      ↺ refine / widen / add_family: Send again · stop: select ·
-                      infeasible: report
+                      ↺ refine / widen / add_family / map_front (M2): Send again
+                      · stop: select · infeasible: report
                     </span>
                   )}
                 </li>
@@ -180,12 +184,20 @@ export default function TraceReplay(): JSX.Element {
                 No LLM call on this step: code (or a human) does it.
               </p>
             )}
-            {run && f && f.round > 0 && (
-              <p className="text-xs text-neutral-600 dark:text-neutral-400">
-                Round {f.round} plan, in the LLM&apos;s words: &ldquo;
-                {run.rounds[f.round - 1]!.plan_rationale}&rdquo;
-              </p>
-            )}
+            {run &&
+              f &&
+              f.round > 0 &&
+              (run.rounds[f.round - 1]!.plan_by_code ? (
+                <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                  Round {f.round} was planned by code, not the LLM: &ldquo;
+                  {run.rounds[f.round - 1]!.plan_rationale}&rdquo;
+                </p>
+              ) : (
+                <p className="text-xs text-neutral-600 dark:text-neutral-400">
+                  Round {f.round} plan, in the LLM&apos;s words: &ldquo;
+                  {run.rounds[f.round - 1]!.plan_rationale}&rdquo;
+                </p>
+              ))}
           </div>
         </div>
       }

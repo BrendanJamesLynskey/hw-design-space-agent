@@ -11,19 +11,26 @@ import { describe, expect, it } from "vitest";
 
 import { calculate, parseEntry } from "@/lib/dse/calc";
 import { raceCaption, replayCaption, traceCaption } from "@/lib/dse/captions";
-import { site } from "@/lib/dse/data";
+import { ev, runsOf, site, type MsKey } from "@/lib/dse/data";
 import { fleetSpan, maxConcurrent } from "@/lib/dse/fleet";
 import {
   leader,
   methodAt,
   race,
+  races,
   raceSteps,
   seedAt,
   stoppedBy,
 } from "@/lib/dse/race";
 import { extent, pointsOf, replayFrames, staircase } from "@/lib/dse/replay";
 import { loadRun } from "@/components/dse/loadRun";
-import { findRun, MODELS, type RunData } from "@/lib/dse/runs";
+import {
+  findRun,
+  modelsOf,
+  seedsOf,
+  switchMilestone,
+  type RunData,
+} from "@/lib/dse/runs";
 import { traceFrames, visited } from "@/lib/dse/trace";
 import { lookup } from "@/lib/dse/values";
 
@@ -35,15 +42,46 @@ const RUNS: RunData[] = readdirSync(DIR)
 const close = (a: number, b: number, eps = 1e-9) =>
   expect(Math.abs(a - b)).toBeLessThan(eps);
 
+const MS: MsKey[] = ["m1", "m2"];
+
 describe("the recorded runs", () => {
-  it("are all 48, one per spec, model and seed, in the index", () => {
-    expect(RUNS).toHaveLength(48);
-    expect(site.runs).toHaveLength(48);
+  it("are all 108 (48 in M1, 60 in M2), one per milestone, spec, model and seed", () => {
+    expect(RUNS).toHaveLength(108);
+    expect(site.runs).toHaveLength(108);
+    expect(runsOf("m1")).toHaveLength(48);
+    expect(runsOf("m2")).toHaveLength(60);
     for (const r of RUNS)
-      expect(findRun(r.spec, r.model, r.seed)!.id).toBe(r.id);
-    expect(MODELS.map((m) => m.label)).toEqual(
-      site.costs.models.map((m) => m.label),
+      expect(findRun(r.milestone, r.spec, r.model, r.seed)!.id).toBe(r.id);
+    for (const ms of MS)
+      expect(modelsOf(ms).map((m) => m.label)).toEqual(
+        ev(ms).costs.models.map((m) => m.label),
+      );
+    expect(seedsOf("m1")).toEqual([0, 1, 2]);
+    expect(seedsOf("m2")).toEqual([0, 1, 2, 3, 4]);
+  });
+
+  it("switching milestone keeps what the other milestone has", () => {
+    const a = switchMilestone(
+      {
+        ms: "m2",
+        spec: "high_precision",
+        model: "deepseek/deepseek-v4.1-flash",
+        seed: 4,
+      },
+      "m1",
     );
+    expect(a).toEqual({
+      ms: "m1",
+      spec: "high_precision",
+      model: "deepseek/deepseek-v4.1-flash",
+      seed: 0,
+    });
+    const b = switchMilestone(
+      { ms: "m1", spec: "dds_250msps", model: "qwen/qwen3.8-27b", seed: 2 },
+      "m2",
+    );
+    expect(b.model).toBe(modelsOf("m2")[0]!.model);
+    expect(b.seed).toBe(2);
   });
 
   it("load on demand", async () => {
@@ -53,16 +91,21 @@ describe("the recorded runs", () => {
   });
 
   it("add up to the cost table's totals per model (results.md)", () => {
-    for (const m of site.costs.models) {
-      const mine = RUNS.filter((r) => r.model === m.model);
-      close(
-        mine.reduce((a, r) => a + r.cost_usd, 0),
-        m.cost_usd,
-        1e-6,
-      );
-      expect(mine.reduce((a, r) => a + r.input_tokens, 0)).toBe(m.input_tokens);
-      expect(mine.reduce((a, r) => a + r.llm_calls, 0)).toBe(m.llm_calls);
-    }
+    for (const ms of MS)
+      for (const m of ev(ms).costs.models) {
+        const mine = RUNS.filter(
+          (r) => r.milestone === ms && r.model === m.model,
+        );
+        close(
+          mine.reduce((a, r) => a + r.cost_usd, 0),
+          m.cost_usd,
+          1e-6,
+        );
+        expect(mine.reduce((a, r) => a + r.input_tokens, 0)).toBe(
+          m.input_tokens,
+        );
+        expect(mine.reduce((a, r) => a + r.llm_calls, 0)).toBe(m.llm_calls);
+      }
   });
 });
 
@@ -84,9 +127,13 @@ describe("trace replay", () => {
       expect(fr.findIndex((f) => f.node === "propose")).toBeLessThan(
         fr.findIndex((f) => f.node === "explore_family"),
       );
-      // an infeasible verdict goes straight to report; anything else selects first
+      // an infeasible verdict goes straight to report; anything else selects first,
+      // and M2's graph then back-annotates
       expect(fr.some((f) => f.kind === "select")).toBe(
         r.status !== "infeasible",
+      );
+      expect(fr.some((f) => f.kind === "annotate")).toBe(
+        r.status !== "infeasible" && r.milestone === "m2",
       );
       // one explore frame per round, with its Send fan-out
       const ex = fr.filter((f) => f.kind === "explore");
@@ -114,17 +161,30 @@ describe("trace replay", () => {
     );
     expect(traceCaption(fr[1]!, r, spec)).toContain("interrupt()");
     const p = fr[2]!;
+    const c0 = r.calls[0]!;
     expect(traceCaption(p, r, spec)).toBe(
-      `propose (LLM, Sonnet 5.5): explore pipelined_m and pipelined. ${(
-        r.calls[0]!.input_tokens + r.calls[0]!.output_tokens
-      ).toLocaleString("en-GB")} tokens, $0.0194, 11.9 s.`,
+      `propose (LLM, Sonnet 5.5): explore ${c0.families!.join(" and ")}. ${(
+        c0.input_tokens + c0.output_tokens
+      ).toLocaleString(
+        "en-GB",
+      )} tokens, $${Number(c0.cost_usd.toPrecision(3))}, ${Number(c0.latency_s.toPrecision(3))} s.`,
     );
     expect(traceCaption(fr[3]!, r, spec)).toContain(
-      "Round 1, Send fan-out: pipelined_m 67, pipelined 33",
+      `Round 1, Send fan-out: ${r.rounds[0]!.jobs.map((j) => `${j.family} ${j.evals}`).join(", ")}`,
     );
-    expect(traceCaption(fr[fr.length - 2]!, r, spec)).toContain(
+    expect(traceCaption(fr[fr.length - 3]!, r, spec)).toContain(
       "select: the spec's rule (min luts_plus_ffs)",
     );
+    expect(traceCaption(fr[fr.length - 2]!, r, spec)).toContain(
+      "back_annotate (L5, code): the selected design was synthesised in L4. LUTs 159 → 216",
+    );
+    const code = fr.find(
+      (f) => f.kind === "explore" && !r.rounds[f.round - 1]!.llm_call,
+    )!;
+    expect(traceCaption(code, r, spec)).toContain(
+      "a front-mapping round planned by code",
+    );
+    expect(traceCaption(code, r, spec)).toContain("No LLM call follows");
     const v = visited(fr, 3);
     expect([...v]).toEqual([
       "intake",
@@ -132,6 +192,19 @@ describe("trace replay", () => {
       "propose",
       "explore_family",
     ]);
+  });
+
+  it("back-annotation with nothing measured says so", () => {
+    const r = RUNS.find(
+      (x) =>
+        x.milestone === "m2" &&
+        x.back_annotation &&
+        !x.back_annotation.compared,
+    )!;
+    const f = traceFrames(r).find((x) => x.kind === "annotate")!;
+    expect(traceCaption(f, r, site.specs[r.spec]!)).toContain(
+      "no measured data for the selected design",
+    );
   });
 
   it("shows failed calls and the hard rules code applied", () => {
@@ -216,8 +289,25 @@ describe("Pareto replay", () => {
     ).not.toContain("hypervolume");
   });
 
+  it("captions code's front-mapping rounds", () => {
+    const r = RUNS.find((x) => x.rounds.some((y) => !y.llm_call))!;
+    const k = r.rounds.findIndex((y) => !y.llm_call);
+    expect(
+      replayCaption(replayFrames(r)[k + 1]!, r, site.ground_truth[r.spec]!),
+    ).toContain("code's final front-mapping round");
+    const m = RUNS.find((x) =>
+      x.rounds.some((y) => y.plan_by_code && y.llm_call),
+    )!;
+    const j = m.rounds.findIndex((y) => y.plan_by_code && y.llm_call);
+    expect(
+      replayCaption(replayFrames(m)[j + 1]!, m, site.ground_truth[m.spec]!),
+    ).toContain("(front-mapping, planned by code)");
+  });
+
   it("captions a round the LLM failed to answer and one code overrode", () => {
-    const r = RUNS.find((x) => x.rounds.some((y) => y.llm_decision === null));
+    const r = RUNS.find((x) =>
+      x.rounds.some((y) => y.llm_call && y.llm_decision === null),
+    );
     const o = RUNS.find((x) =>
       x.rounds.some(
         (y) => y.llm_decision !== null && y.decision !== y.llm_decision,
@@ -228,7 +318,9 @@ describe("Pareto replay", () => {
       replayCaption(replayFrames(o)[k + 1]!, o, site.ground_truth[o.spec]!),
     ).toContain("code overrode it to");
     if (r) {
-      const j = r.rounds.findIndex((y) => y.llm_decision === null);
+      const j = r.rounds.findIndex(
+        (y) => y.llm_call && y.llm_decision === null,
+      );
       expect(
         replayCaption(replayFrames(r)[j + 1]!, r, site.ground_truth[r.spec]!),
       ).toContain("nothing (no valid answer)");
@@ -260,33 +352,38 @@ describe("Pareto replay", () => {
 });
 
 describe("hypervolume race", () => {
-  it("ends on results.md's mean HV fraction for every method and spec", () => {
-    for (const [name, spec] of Object.entries(race.specs)) {
-      for (const m of spec.methods) {
-        const row = site.results[name]!.find((r) => r.method === m.method)!;
-        expect(methodAt(m, spec.budget).toFixed(3)).toBe(
-          row.hv_frac_mean!.toFixed(3),
-        );
-        // each seed's final value is its recorded HV fraction
-        for (const s of m.seeds) close(seedAt(s, s.n), s.hv_frac!, 1e-5);
+  it("ends on results.md's mean HV fraction for every method, spec and milestone", () => {
+    for (const ms of MS)
+      for (const [name, spec] of Object.entries(races[ms].specs)) {
+        for (const m of spec.methods) {
+          expect(m.seeds).toHaveLength(races[ms].seeds);
+          const row = ev(ms).results[name]!.find((r) => r.method === m.method)!;
+          expect(methodAt(m, spec.budget).toFixed(3)).toBe(
+            row.hv_frac_mean!.toFixed(3),
+          );
+          // each seed's final value is its recorded HV fraction
+          for (const s of m.seeds) close(seedAt(s, s.n), s.hv_frac!, 1e-5);
+        }
       }
-    }
+    expect(race).toBe(races.m2);
   });
 
   it("evaluations to 95% match the recorded runs", () => {
-    for (const spec of Object.values(race.specs))
-      for (const m of spec.methods)
-        for (const s of m.seeds) {
-          if (s.evals_to_95 === null) expect(seedAt(s, s.n)).toBeLessThan(0.95);
-          else
-            expect(
-              seedAt(s, Math.ceil(s.evals_to_95 / 5) * 5),
-            ).toBeGreaterThanOrEqual(0.95);
-        }
+    for (const ms of MS)
+      for (const spec of Object.values(races[ms].specs))
+        for (const m of spec.methods)
+          for (const s of m.seeds) {
+            if (s.evals_to_95 === null)
+              expect(seedAt(s, s.n)).toBeLessThan(0.95);
+            else
+              expect(
+                seedAt(s, Math.ceil(s.evals_to_95 / 5) * 5),
+              ).toBeGreaterThanOrEqual(0.95);
+          }
   });
 
-  it("has key frames: nothing at 0, agents flat after they stop", () => {
-    const spec = race.specs.dds_250msps!;
+  it("M1 key frames: nothing at 0, agents flat after they stop, NSGA-II leads dds", () => {
+    const spec = races.m1.specs.dds_250msps!;
     expect(raceSteps(spec)).toHaveLength(41);
     for (const m of spec.methods) expect(methodAt(m, 0)).toBe(0);
     const ns = spec.methods.find((m) => m.method === "nsga2")!;
@@ -296,19 +393,29 @@ describe("hypervolume race", () => {
       expect(methodAt(m, stop)).toBe(methodAt(m, spec.budget));
     }
     expect(leader(spec, 400).method).toBe("nsga2");
-    expect(raceCaption(0, spec, "dds_250msps")).toContain(
-      "starts with nothing",
+    expect(raceCaption(0, spec, "dds_250msps", "M1")).toContain(
+      "M1, dds_250msps: every method starts with nothing",
     );
-    const c = raceCaption(400, spec, "dds_250msps");
+    const c = raceCaption(400, spec, "dds_250msps", "M1");
     expect(c).toContain("NSGA-II 0.800");
     expect(c).toContain("(stopped)");
     expect(c).toContain("Leading: NSGA-II.");
-    expect(leader(race.specs.high_precision!, 400).agent).toBe(true);
+    expect(leader(races.m1.specs.high_precision!, 400).agent).toBe(true);
+  });
+
+  it("M2 key frames: agents use the whole budget and lead at the end on every spec", () => {
+    for (const [name, spec] of Object.entries(races.m2.specs)) {
+      for (const m of spec.methods) expect(stoppedBy(m)).toBe(spec.budget);
+      expect(leader(spec, 400).agent, name).toBe(true);
+    }
+    expect(
+      raceCaption(400, races.m2.specs.dds_250msps!, "dds_250msps"),
+    ).not.toContain("(stopped)");
   });
 });
 
 describe("calculator", () => {
-  const models = site.costs.models;
+  const models = ev("m2").costs.models;
   const base = {
     specs: 10,
     runsPerSpec: 3,
@@ -354,28 +461,49 @@ describe("calculator", () => {
 });
 
 describe("fleet", () => {
-  it("measures the eval's concurrency", () => {
-    expect(maxConcurrent(site.runs)).toBe(6);
-    expect(fleetSpan(site.runs)).toBeGreaterThan(100 * 60);
-    expect(lookup("fleet.max")).toBe(6);
+  it("measures each eval's concurrency", () => {
+    expect(maxConcurrent(runsOf("m1"))).toBe(6);
+    expect(fleetSpan(runsOf("m1"))).toBeGreaterThan(100 * 60);
+    expect(lookup("m1.fleet.max")).toBe(6);
+    expect(lookup("m2.fleet.max")).toBe(maxConcurrent(runsOf("m2")));
+    expect(maxConcurrent(runsOf("m2"))).toBeGreaterThan(1);
   });
 });
 
 describe("quoted values on the results page", () => {
-  it("random search beats every agent on HV where NSGA-II does", () => {
+  it("M1: random search beat every agent on HV where NSGA-II did", () => {
     for (const s of ["dds_250msps", "low_area_control"]) {
-      const rows = site.results[s]!;
+      const rows = ev("m1").results[s]!;
       const rnd = rows.find((r) => r.method === "random")!.hv_frac_mean!;
       for (const r of rows.filter((x) => x.agent))
         expect(r.hv_frac_mean!).toBeLessThan(rnd);
     }
   });
 
-  it("names the one pair that lost to NSGA-II on regret", () => {
-    expect(lookup("regret.agent_beats_nsga2")).toBe(11);
-    expect(lookup("low_area_control.qwen_off_regret")).toBeGreaterThan(
-      lookup("low_area_control.nsga2_regret") as number,
+  it("M1: names the one pair that lost to NSGA-II on regret", () => {
+    expect(lookup("m1.regret.agent_beats_nsga2")).toBe(11);
+    expect(lookup("m1.low_area_control.qwen_off_regret")).toBeGreaterThan(
+      lookup("m1.low_area_control.nsga2_regret") as number,
     );
-    expect(lookup("calls.qwen_length")).toBe(17);
+    expect(lookup("m1.calls.qwen_length")).toBe(17);
+  });
+
+  it("M2: what got worse, as the repository states it", () => {
+    expect(lookup("glance.qwen_hp_worst_seed")).toBeCloseTo(0.71654, 5);
+    expect((lookup("glance.qwen_hp_median") as number).toFixed(3)).toBe(
+      "0.056",
+    );
+    expect(lookup("glance.mf_deepseek")).toBe(13);
+    expect(lookup("glance.mf_qwen")).toBe(7);
+    expect(lookup("glance.mf_sonnet")).toBe(4);
+    expect(lookup("glance.mf_runs")).toBe(15);
+    expect(
+      (lookup("glance.ds_dds_regret_m1") as number) <
+        (lookup("glance.ds_dds_regret_m2") as number),
+    ).toBe(true);
+    expect(
+      (lookup("glance.ds_low_regret_m1") as number) <
+        (lookup("glance.ds_low_regret_m2") as number),
+    ).toBe(true);
   });
 });

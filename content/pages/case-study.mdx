@@ -1,4 +1,4 @@
-Milestone 1 explores one function, a **CORDIC sin/cos unit on an Artix-7 FPGA**, starting from the owner's [CORDIC repository](https://github.com/BrendanJamesLynskey/CORDIC): synthesisable SystemVerilog, with an iterative and a pipelined sin/cos module, 16-bit data and 14 iterations. The agent may choose from four architecture families and five numeric knobs (data width 8–28 bits, 4–30 iterations, the angle-path width, 0–4 guard bits, truncation or rounding), plus the unrolling factor $k$ or the register spacing $m$. That is <V of="designs" fmt="int" /> designs, few enough that the repository scores every one of them to get the exact answer every run is graded against.
+The project explores one function so far, a **CORDIC sin/cos unit on an Artix-7 FPGA**, starting from the owner's [CORDIC repository](https://github.com/BrendanJamesLynskey/CORDIC): synthesisable SystemVerilog, with an iterative and a pipelined sin/cos module, 16-bit data and 14 iterations. The agent may choose from four architecture families and five numeric knobs (data width 8–28 bits, 4–30 iterations, the angle-path width, 0–4 guard bits, truncation or rounding), plus the unrolling factor $k$ or the register spacing $m$. That is <V of="designs" fmt="int" /> designs, few enough that the repository scores every one of them to get the exact answer every run is graded against.
 
 ## The algorithm, bit for bit
 
@@ -35,7 +35,7 @@ The counters come from a TypeScript port of the repository's analytical cost mod
 
 <Callout kind="illustrative">
 
-Every LUT, flip-flop, Fmax and throughput figure here is an <Prov kind="estimate" />. Two anchor points is a weak calibration: it pins the model at the reference designs and makes it plausible elsewhere, but everything away from W=16, N=14, and both families with no anchor at all (`unrolled_k`, `pipelined_m`), is an extrapolation. **No `unrolled_k` design is on any spec's true front**: chaining $k$ stages lengthens the critical path roughly $k$-fold while the three overhead cycles remain. The repository flags that this may be an artefact of the cost model, to be tested against synthesis in milestone 2.
+Every LUT, flip-flop, Fmax and throughput figure here is an <Prov kind="estimate" />. Two anchor points is a weak calibration: it pins the model at the reference designs and makes it plausible elsewhere, but everything away from W=16, N=14, and both families with no anchor at all (`unrolled_k`, `pipelined_m`), is an extrapolation. **No `unrolled_k` design is on any spec's true front**: chaining $k$ stages lengthens the critical path roughly $k$-fold while the three overhead cycles remain. Milestone 2 tested that against synthesis (below): Vivado confirms `unrolled_k` is never cheaper than `iterative` at equal accuracy, so it reaches no spec's front, but it also shows the model is structurally off on `unrolled_k` area for $k \ge 3$, and that $k=2$ does raise throughput in Vivado, which the models miss.
 
 </Callout>
 
@@ -46,3 +46,25 @@ For each feasible spec, the exhaustive ground truth gives the true Pareto front:
 <CasePareto />
 
 The three specs have very different fronts. `dds_250msps` asks for at least 250 MSPS, so only fully pipelined designs make it, trading LUTs for accuracy. `low_area_control` needs just 1 MSPS, so the small iterative designs win. `high_precision` is the odd one: its front collapses to a single point (two designs with identical objectives), which is why one near-optimal design already scores more than 95% of the true hypervolume there.
+
+<div id="estimates-against-measurements" />
+
+## Estimates against measurements
+
+Milestone 2 synthesised what the model only estimated: <V of="l4.points" fmt="int" /> points through Yosys and nextpnr-xilinx (open-source synthesis, placement and routing on the anchors' Artix-7 part), and <V of="vivado.designs" fmt="int" /> generated designs through Vivado 2025.2, each after synthesis and after routing. Then it refitted the cost model to those measurements, tool by tool, and asked whether any spec's winner would change. Watch the M1 model's estimates meet the measurements, then move to the refit's predictions:
+
+<CaseScatter />
+
+Three things stand out. The tools disagree with each other, so the refit keeps one correction factor per tool and metric rather than pretending they measure the same thing. Fmax is the hardest number: the open-source flow's routed timing is far below Vivado's synthesis estimate on the pipelined designs, and Vivado's own routed Fmax is <V of="vivado.route_drop_min" fmt="pct0" />–<V of="vivado.route_drop_max" fmt="pct0" /> below its post-synthesis figure on the short-path designs (`pipelined`, and `pipelined_m` with m=2). And on the Vivado points the refit does **not** predict unseen designs better than the untouched M1 model (leave-one-out <V of="l5.loo_vivado_luts" fmt="f1" />% LUT and <V of="l5.loo_vivado_fmax" fmt="f1" />% Fmax RMS, against M1's <V of="l5.m1_vivado_luts" fmt="f1" />% and <V of="l5.m1_vivado_fmax" fmt="f1" />%), so the default cost model stays M1's.
+
+<VivadoTable />
+
+<RefitTable />
+
+## The winner that measurement had to settle
+
+One decision in the eval sits closer to a constraint than any model's error: `high_precision`'s winner, `pipelined_m` with a register every 6 stages, against its slightly smaller neighbour with one every 8. Both models call m=8 too slow. Only Vivado can say by how much.
+
+<CaseHighPrecision />
+
+The verdict is honest about its margin. After routing, m=6 runs at <V of="hp.m6_route" fmt="f2" /> MSPS (<V of="hp.m6_route_margin" fmt="spct" />) and m=8 at <V of="hp.m8_route" fmt="f2" /> (<V of="hp.m8_route_margin" fmt="spct" />), so m=6 stays the winner. After synthesis alone, the view the anchors and the default model use, m=8 at <V of="hp.m8_synth" fmt="f2" /> MSPS misses by only <V of="hp.m8_synth_shortfall" fmt="pct2" />, well inside every model's error, and both designs were synthesised against a 10 ns clock rather than the 20 ns the spec needs. A different tool version or constraint could move that figure; the routed result is what settles it. The repository records a further refit (a timing factor per family class) as deferred rather than rejected, because it would flip the refit's winner to m=8 on exactly this point.

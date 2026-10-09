@@ -1,0 +1,42 @@
+{
+ "milestone": "m2",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null
+ },
+ "spec": "infeasible_dds_400msps",
+ "seed": 3,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "structured_method": "json_schema",
+ "status": "infeasible",
+ "rounds": 1,
+ "coverage_rounds": 0,
+ "llm_calls": 2.0,
+ "llm_failures": 0.0,
+ "input_tokens": 4377.0,
+ "output_tokens": 1091.0,
+ "cost_usd": 0.004516875,
+ "wall_s": 18.7,
+ "run_dir": "runs/eval_m2/infeasible_dds_400msps/20261009-075848-a08d",
+ "decisions": [
+  "infeasible"
+ ],
+ "overrides": [],
+ "n_evals": 100,
+ "hv_final": 0.0,
+ "hv_frac": null,
+ "evals_to_95": null,
+ "selected_meets_spec": false,
+ "selected_key": null,
+ "select_regret": null,
+ "declared_infeasible": true,
+ "infeasibility_correct": true
+}

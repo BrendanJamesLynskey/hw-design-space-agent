@@ -1,0 +1,34 @@
+{
+ "note": "OpenRouter GET /api/v1/key (free), read with the key from the environment; the key itself is never recorded.",
+ "before_m2": {
+  "ts": "2026-10-09T08:05",
+  "usage_usd": 2.512691545,
+  "limit_usd": 10,
+  "limit_remaining_usd": 7.487308455
+ },
+ "m2_spend_cap_usd": 5.0,
+ "models_checked": {
+  "qwen/qwen3.8-27b": {
+   "listed": true,
+   "tools": true,
+   "structured_outputs": true
+  },
+  "anthropic/claude-sonnet-5.5": {
+   "listed": true,
+   "tools": true,
+   "structured_outputs": true
+  },
+  "deepseek/deepseek-v4.1-flash": {
+   "listed": true,
+   "tools": true,
+   "structured_outputs": true
+  }
+ },
+ "after_m2": {
+  "ts": "2026-10-09T08:18",
+  "usage_usd": 4.170438218,
+  "limit_usd": 10,
+  "limit_remaining_usd": 5.829561782
+ },
+ "m2_spend_by_key_usd": 1.657747
+}

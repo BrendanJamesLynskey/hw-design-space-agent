@@ -1,0 +1,48 @@
+{
+ "milestone": "m2",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null
+ },
+ "spec": "low_area_control",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "stopped",
+ "rounds": 5,
+ "coverage_rounds": 3,
+ "llm_calls": 5.0,
+ "llm_failures": 0.0,
+ "input_tokens": 24933.0,
+ "output_tokens": 2803.0,
+ "cost_usd": 0.077896,
+ "wall_s": 28.7,
+ "run_dir": "runs/eval_m2/low_area_control/20261009-075630-8e33",
+ "decisions": [
+  "refine",
+  "map_front",
+  "map_front",
+  "stop"
+ ],
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 60 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ],
+ "n_evals": 400,
+ "hv_final": 14094.9269319723,
+ "hv_frac": 0.8457682087258346,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=12,angle_guard=1,frac_guard=0,rounding=round",
+ "select_regret": 0.0,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

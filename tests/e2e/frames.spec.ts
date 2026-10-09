@@ -5,27 +5,39 @@
  */
 import { expect, test, type Locator } from "@playwright/test";
 
-import dsRun from "../../src/data/runs/dds_250msps__20261008-125907-9473.json";
-import heroRun from "../../src/data/runs/high_precision__20261008-130043-d1d3.json";
-import infRun from "../../src/data/runs/infeasible_dds_400msps__20261008-130229-2502.json";
+import infM1 from "../../src/data/runs/infeasible_dds_400msps__20261008-130229-2502.json";
+import dsRun from "../../src/data/runs/m2__dds_250msps__20261009-074844-f588.json";
+import infRun from "../../src/data/runs/m2__infeasible_dds_400msps__20261009-075413-77ab.json";
+import heroRun from "../../src/data/runs/m2__low_area_control__20261009-075630-8e33.json";
 import cordicFx from "../fixtures/cordic.json";
 
 import {
   climbCaption,
   datapathCaption,
+  descentCaption,
   heroCaption,
+  hpCaption,
   raceCaption,
   replayCaption,
   rotationCaption,
+  scatterCaption,
+  shiftCaption,
   traceCaption,
 } from "@/lib/dse/captions";
 import { climbFrames } from "@/lib/dse/climb";
 import { rotate, type Numerics } from "@/lib/dse/cordic";
-import { site, why } from "@/lib/dse/data";
+import { ev, site, why } from "@/lib/dse/data";
 import { datapathFrame } from "@/lib/dse/datapath";
 import { arch } from "@/lib/dse/families";
 import { heroFrames } from "@/lib/dse/hero";
-import { race, raceSteps } from "@/lib/dse/race";
+import { ladder } from "@/lib/dse/ladder";
+import {
+  descentFrames,
+  hpFrames,
+  scatterFrames,
+  shiftFrames,
+} from "@/lib/dse/m2frames";
+import { races, raceSteps } from "@/lib/dse/race";
 import { replayFrames } from "@/lib/dse/replay";
 import type { RunData } from "@/lib/dse/runs";
 import { traceFrames } from "@/lib/dse/trace";
@@ -49,7 +61,11 @@ test("hero: captions from the recorded run", async ({ page }) => {
   const frames = heroFrames(site.hero, site.ladder);
   const spec = site.specs[site.hero.spec]!;
   for (const i of keySteps(frames.length))
-    await frame(fig, i, heroCaption(frames[i]!, site.hero, spec, site.ladder));
+    await frame(
+      fig,
+      i,
+      heroCaption(frames[i]!, site.hero, spec, site.ladder, ladder.worked),
+    );
 });
 
 test("why: captions from the exported hill-climb", async ({ page }) => {
@@ -127,15 +143,19 @@ test("trace replay: captions from the hero run's recorded trace", async ({
     await frame(fig, i, traceCaption(frames[i]!, run, spec));
 });
 
-test("Pareto replay: captions from the recorded rounds, and another run", async ({
+test("Pareto replay: captions from the recorded rounds, another run, and M1", async ({
   page,
 }) => {
   await page.goto("/results");
   const fig = page.getByTestId("replay-widget");
   await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
-  for (const data of [dsRun, infRun]) {
+  for (const data of [dsRun, infRun, infM1]) {
     const run = data as unknown as RunData;
-    if (run.spec !== "dds_250msps") {
+    if (run.milestone === "m1")
+      await fig
+        .getByRole("radio", { name: "M1 (3 seeds)", exact: true })
+        .click();
+    else if (run.spec !== "dds_250msps") {
       await fig.getByRole("radio", { name: run.spec, exact: true }).click();
       await fig.getByRole("radio", { name: run.label, exact: true }).click();
     }
@@ -147,21 +167,102 @@ test("Pareto replay: captions from the recorded rounds, and another run", async 
   }
 });
 
-test("hypervolume race: captions from the exported curves", async ({
+test("hypervolume race: captions from the exported curves, M2 and M1", async ({
   page,
 }) => {
   await page.goto("/results");
   const fig = page.getByTestId("race-widget");
   await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
-  for (const name of ["dds_250msps", "high_precision"]) {
-    const spec = race.specs[name]!;
-    if (name !== "dds_250msps") {
-      const key = (await fig.getAttribute("data-key")) ?? "";
+  for (const [ms, name] of [
+    ["m2", "dds_250msps"],
+    ["m2", "high_precision"],
+    ["m1", "high_precision"],
+  ] as const) {
+    const spec = races[ms].specs[name]!;
+    const key = (await fig.getAttribute("data-key")) ?? "";
+    if (ms === "m1") {
+      await fig
+        .getByRole("radio", { name: "M1 (3 seeds)", exact: true })
+        .click();
+      await expect(fig).not.toHaveAttribute("data-key", key);
+    } else if (name !== "dds_250msps") {
       await fig.getByRole("radio", { name, exact: true }).click();
       await expect(fig).not.toHaveAttribute("data-key", key);
     }
     const steps = raceSteps(spec);
     for (const i of keySteps(steps.length))
-      await frame(fig, i, raceCaption(steps[i]!, spec, name));
+      await frame(fig, i, raceCaption(steps[i]!, spec, name, ms.toUpperCase()));
+  }
+});
+
+test("one design down the ladder: captions from the worked example", async ({
+  page,
+}) => {
+  await page.goto("/how-it-works");
+  const fig = page.getByTestId("descent-widget");
+  await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
+  const w = ladder.worked;
+  const proofs = ladder.formal.rows.filter((r) => r.family === w.family);
+  const frames = descentFrames(w);
+  for (const i of keySteps(frames.length))
+    await frame(fig, i, descentCaption(frames[i]!, w, proofs));
+});
+
+test("measured against estimated: captions from the L5 report's points", async ({
+  page,
+}) => {
+  await page.goto("/case-study");
+  const fig = page.getByTestId("scatter-widget");
+  await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
+  const frames = scatterFrames();
+  const n = ladder.l5.vivado.n_fit_points;
+  for (const m of ["fmax", "luts"] as const) {
+    if (m === "luts") {
+      const key = (await fig.getAttribute("data-key")) ?? "";
+      await fig.getByRole("radio", { name: "LUTs", exact: true }).click();
+      await expect(fig).not.toHaveAttribute("data-key", key);
+    }
+    for (const i of keySteps(frames.length))
+      await frame(fig, i, scatterCaption(frames[i]!, ladder.scatter, n, m));
+  }
+});
+
+test("high_precision: captions from the Vivado measurements", async ({
+  page,
+}) => {
+  await page.goto("/case-study");
+  const fig = page.getByTestId("hp-widget");
+  await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
+  const frames = hpFrames();
+  for (const i of keySteps(frames.length))
+    await frame(fig, i, hpCaption(frames[i]!, ladder.high_precision));
+  await expect(
+    fig.locator('[data-view="post_route"] [data-m="8"]'),
+  ).toHaveAttribute("data-meets", "false");
+});
+
+test("M1 → M2: captions from results.md's glance tables", async ({ page }) => {
+  await page.goto("/results");
+  const fig = page.getByTestId("shift-widget");
+  await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
+  const specs = ["dds_250msps", "low_area_control", "high_precision"];
+  const frames = shiftFrames(specs);
+  const labels = Object.fromEntries(
+    ev("m2").costs.models.map((m) => [m.model, m.label]),
+  );
+  for (const metric of ["hv", "regret"] as const) {
+    if (metric === "regret") {
+      const key = (await fig.getAttribute("data-key")) ?? "";
+      await fig
+        .getByRole("radio", { name: "Selection regret", exact: true })
+        .click();
+      await expect(fig).not.toHaveAttribute("data-key", key);
+    }
+    for (const i of keySteps(frames.length))
+      await frame(
+        fig,
+        i,
+        shiftCaption(frames[i]!, site.glance, metric, labels),
+      );
   }
 });

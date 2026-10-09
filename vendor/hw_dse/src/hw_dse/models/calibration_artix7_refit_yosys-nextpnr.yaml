@@ -1,0 +1,89 @@
+# Refitted calibration 'yosys-nextpnr' written by hw_dse.synth.recalibrate -- NOT the default.
+# The default cost model still uses calibration_artix7.yaml. Load this one with
+#   FpgaCostModel('src/hw_dse/models/calibration_artix7_refit_yosys-nextpnr.yaml')
+id: artix7-xc7a35t-refit-yosys-nextpnr
+device: xc7a35tcpg236-1
+tool: 'Vivado 2025.2, synth_design only (post-synthesis, unplaced: timing uses Vivado''s net-delay estimates), 10.000
+  ns clock constraint on CLK. Fmax = 1000 / (10 - WNS).'
+anchors:
+- family: iterative
+  params:
+    data_width: 16
+    n_iter: 14
+    angle_guard: 0
+    frac_guard: 0
+    rounding: trunc
+  luts: 170
+  ffs: 95
+  fmax_mhz: 198.3
+  source: 'CORDIC repo README synthesis table (commit 5bd6bf5); synthesis_logs/utilization_cordic_rotation_iterative.rpt
+    (Slice LUTs 170, Slice Registers 95 = 86 FDRE + 9 FDSE); synthesis_logs/timing_cordic_rotation_iterative.rpt
+    (WNS 4.957 ns; path y_reg[15] -> x_reg[17], 8 levels: LUT6, LUT3, LUT6, 5x CARRY4).'
+- family: pipelined
+  params:
+    data_width: 16
+    n_iter: 14
+    angle_guard: 0
+    frac_guard: 0
+    rounding: trunc
+  luts: 745
+  ffs: 784
+  fmax_mhz: 272.9
+  source: 'CORDIC repo README synthesis table (commit 5bd6bf5); synthesis_logs/utilization_cordic_rotation_pipelined.rpt
+    (Slice LUTs 745, Slice Registers 784 FDRE, CARRY4 201); synthesis_logs/timing_cordic_rotation_pipelined.rpt
+    (WNS 6.336 ns; path x_pipe_reg[0][0] -> y_pipe_reg[1][16], 6 levels: LUT1, 4x CARRY4, LUT3).'
+source_constants:
+  t_clk2q_ns: 0.467
+  t_clk_overhead_ns: 0.128
+  t_carry_first_ns: 0.616
+  t_carry_mid_ns: 0.117
+  t_carry_last_ns: 0.334
+  activity_factor: 0.125
+fitted:
+  c_arith: 0.969319
+  c_mux: 0.848764
+  c_ff: 0.987354
+  t_logic_ns: 0.679659
+  t_mux_ns: 1.000175
+power_reference:
+  family: iterative
+  params:
+    data_width: 16
+    n_iter: 14
+    angle_guard: 0
+    frac_guard: 0
+    rounding: trunc
+  f_mhz: 100.0
+fitted_per_family:
+  iterative:
+    c_arith: 0.92771
+    c_ff: 1.027389
+    t_logic_ns: 0.965642
+  pipelined:
+    c_arith: 0.971359
+    c_ff: 0.952192
+    t_logic_ns: 0.667009
+  pipelined_m:
+    c_arith: 0.879646
+    c_ff: 0.948854
+    t_logic_ns: 0.883573
+tool_corrections:
+  vivado:
+    luts: 1.0
+    ffs: 1.0
+    path: 1.0
+  yosys+nextpnr-xilinx:
+    luts: 1.141343
+    ffs: 1.053437
+    path: 1.446407
+refit:
+  from_calibration: artix7-xc7a35t-vivado2025.2-2anchor-v1
+  n_points: 39
+  points_by_tool:
+    vivado: 2
+    yosys+nextpnr-xilinx: 37
+  sources:
+  - eval/data/l4_synthesis.csv
+  - eval/data/vivado_spotcheck.csv
+  method: 'hw_dse.synth.recalibrate: relative least squares, per-family constants where a family has >= 9 points,
+    one multiplicative correction per tool and metric (vivado = 1)'

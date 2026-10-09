@@ -1,15 +1,16 @@
 /**
- * /results: milestone 1's eval, honestly. Where the agent lost and where it won, the Pareto
- * replay of any recorded run, the hypervolume race, every spec's table with tokens and dollars,
- * the cost per model, and a cost and labour calculator driven by the measured runs. Server
- * Component; the prose is content/pages/results.mdx.
+ * /results: the eval, honestly, milestone 2 first. M1 → M2 against NSGA-II, where it got worse
+ * and where it held, the Pareto replay of any recorded run, the hypervolume race, every spec's
+ * table with tokens and dollars, the cost per model and three ways of counting it, a cost and
+ * labour calculator driven by the measured runs, and M1's results kept. Server Component; the
+ * prose is content/pages/results.mdx.
  */
+import { site } from "@/lib/dse/data";
 import { MdxPage } from "@/lib/mdx/render";
 
 export const metadata = {
   title: "Results",
-  description:
-    "Milestone 1's eval against NSGA-II and random search on the exhaustive ground truth: the agent is the better selector and NSGA-II the better front-mapper. Pareto replays, the hypervolume race, tokens and dollars per run, and a cost calculator.",
+  description: `The agent against NSGA-II and random search on the exhaustive ground truth, M1 to M2: the front-mapping gap closed (${site.glance.hv_ratio_m2[0]}–${site.glance.hv_ratio_m2[1]}× NSGA-II's hypervolume), the selection lead kept in ${site.glance.regret_beats_nsga2_m2} of ${site.glance.regret_cells} cells, and where it got worse. Pareto replays, the hypervolume race, tokens and dollars per run, and a cost calculator.`,
 };
 
 export default function ResultsPage(): JSX.Element {

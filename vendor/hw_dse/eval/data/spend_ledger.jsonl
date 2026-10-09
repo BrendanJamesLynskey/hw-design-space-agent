@@ -1,0 +1,111 @@
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "dds_250msps", "seed": 0, "cost_usd": 0.0108, "ts": "2026-10-08T13:01:00", "note": "pre-fix trial run, result discarded"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "dds_250msps", "seed": 0, "cost_usd": 0.056008, "ts": "2026-10-08T12:59:38"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "dds_250msps", "seed": 1, "cost_usd": 0.079626, "ts": "2026-10-08T13:00:10"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "dds_250msps", "seed": 2, "cost_usd": 0.079626, "ts": "2026-10-08T13:00:43"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "high_precision", "seed": 0, "cost_usd": 0.083598, "ts": "2026-10-08T13:01:22"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "high_precision", "seed": 1, "cost_usd": 0.05563800000000001, "ts": "2026-10-08T13:01:51"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "high_precision", "seed": 2, "cost_usd": 0.067388, "ts": "2026-10-08T13:02:29"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "infeasible_dds_400msps", "seed": 0, "cost_usd": 0.035812, "ts": "2026-10-08T13:02:47"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "dds_250msps", "seed": 0, "cost_usd": 0.0262014, "ts": "2026-10-08T13:02:59"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "infeasible_dds_400msps", "seed": 1, "cost_usd": 0.035351999999999995, "ts": "2026-10-08T13:03:06"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "infeasible_dds_400msps", "seed": 2, "cost_usd": 0.034114, "ts": "2026-10-08T13:03:22"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "low_area_control", "seed": 0, "cost_usd": 0.049257999999999996, "ts": "2026-10-08T13:03:43"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "low_area_control", "seed": 1, "cost_usd": 0.08659800000000001, "ts": "2026-10-08T13:04:17"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "low_area_control", "seed": 2, "cost_usd": 0.051008, "ts": "2026-10-08T13:04:40"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "dds_250msps", "seed": 1, "cost_usd": 0.01408734, "ts": "2026-10-08T13:04:42"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "dds_250msps", "seed": 2, "cost_usd": 0.00708518, "ts": "2026-10-08T13:05:43"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "high_precision", "seed": 0, "cost_usd": 0.014145387, "ts": "2026-10-08T13:06:36"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "high_precision", "seed": 1, "cost_usd": 0.025884086, "ts": "2026-10-08T13:08:45"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "high_precision", "seed": 2, "cost_usd": 0.010739022, "ts": "2026-10-08T13:09:26"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "infeasible_dds_400msps", "seed": 0, "cost_usd": 0.013068018, "ts": "2026-10-08T13:12:00"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "infeasible_dds_400msps", "seed": 1, "cost_usd": 0.012549972000000001, "ts": "2026-10-08T13:12:48"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "infeasible_dds_400msps", "seed": 2, "cost_usd": 0.004167896000000001, "ts": "2026-10-08T13:13:21"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 0, "cost_usd": 0.019605631, "ts": "2026-10-08T13:16:30"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 1, "cost_usd": 0.015055302, "ts": "2026-10-08T13:18:38"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 2, "cost_usd": 0.013634579999999999, "ts": "2026-10-08T13:19:30"}
+{"model": "qwen/qwen3.8-27b", "spec": "infeasible_dds_400msps", "seed": 0, "cost_usd": 0.07290173479999999, "ts": "2026-10-08T13:21:57"}
+{"model": "qwen/qwen3.8-27b", "spec": "high_precision", "seed": 0, "cost_usd": 0.0547353, "ts": "2026-10-08T13:23:38"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 0, "cost_usd": 0.14085296320000001, "ts": "2026-10-08T13:24:17"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 0, "cost_usd": 0.078378147, "ts": "2026-10-08T13:28:59"}
+{"model": "qwen/qwen3.8-27b", "spec": "high_precision", "seed": 1, "cost_usd": 0.07386547199999999, "ts": "2026-10-08T13:31:47"}
+{"model": "qwen/qwen3.8-27b", "spec": "infeasible_dds_400msps", "seed": 1, "cost_usd": 0.051511219999999996, "ts": "2026-10-08T13:32:18"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 1, "cost_usd": 0.0532035389, "ts": "2026-10-08T13:36:10"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 1, "cost_usd": 0.030086392, "ts": "2026-10-08T13:39:00"}
+{"model": "qwen/qwen3.8-27b", "spec": "high_precision", "seed": 2, "cost_usd": 0.02349888, "ts": "2026-10-08T13:40:43"}
+{"model": "qwen/qwen3.8-27b", "spec": "infeasible_dds_400msps", "seed": 2, "cost_usd": 0.0510667122, "ts": "2026-10-08T13:41:58"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 2, "cost_usd": 0.09147126570000001, "ts": "2026-10-08T13:45:44"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 2, "cost_usd": 0.0287442884, "ts": "2026-10-08T13:51:12"}
+{"model": "qwen/qwen3.8-27b", "spec": "infeasible_dds_400msps", "seed": 0, "cost_usd": 0.003721424, "ts": "2026-10-08T14:40:06"}
+{"model": "qwen/qwen3.8-27b", "spec": "infeasible_dds_400msps", "seed": 1, "cost_usd": 0.00300515, "ts": "2026-10-08T14:40:30"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 0, "cost_usd": 0.0106672039, "ts": "2026-10-08T14:40:33"}
+{"model": "qwen/qwen3.8-27b", "spec": "infeasible_dds_400msps", "seed": 2, "cost_usd": 0.0034121614, "ts": "2026-10-08T14:40:49"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 0, "cost_usd": 0.0117983109, "ts": "2026-10-08T14:40:56"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 1, "cost_usd": 0.0094872758, "ts": "2026-10-08T14:41:17"}
+{"model": "qwen/qwen3.8-27b", "spec": "high_precision", "seed": 0, "cost_usd": 0.0124419204, "ts": "2026-10-08T14:41:35"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 2, "cost_usd": 0.005840865, "ts": "2026-10-08T14:41:45"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 1, "cost_usd": 0.0130604913, "ts": "2026-10-08T14:41:58"}
+{"model": "qwen/qwen3.8-27b", "spec": "high_precision", "seed": 1, "cost_usd": 0.0063848762, "ts": "2026-10-08T14:42:27"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 2, "cost_usd": 0.007149598, "ts": "2026-10-08T14:42:32"}
+{"model": "qwen/qwen3.8-27b", "spec": "high_precision", "seed": 2, "cost_usd": 0.009142252, "ts": "2026-10-08T14:43:41"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 0, "cost_usd": 0.007897592, "ts": "2026-10-09T07:43:51", "milestone": "m2", "note": "pilot"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 0, "cost_usd": 0.0086998177, "ts": "2026-10-09T07:44:52", "milestone": "m2", "note": "pilot"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "dds_250msps", "seed": 0, "cost_usd": 0.067986, "ts": "2026-10-09T07:49:15", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "dds_250msps", "seed": 0, "cost_usd": 0.011348609999999999, "ts": "2026-10-09T07:49:22", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 0, "cost_usd": 0.0078209523, "ts": "2026-10-09T07:49:40", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "dds_250msps", "seed": 1, "cost_usd": 0.07696599999999999, "ts": "2026-10-09T07:49:49", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "dds_250msps", "seed": 2, "cost_usd": 0.06825200000000001, "ts": "2026-10-09T07:50:18", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 1, "cost_usd": 0.007190083, "ts": "2026-10-09T07:50:33", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "dds_250msps", "seed": 3, "cost_usd": 0.070582, "ts": "2026-10-09T07:50:47", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "dds_250msps", "seed": 4, "cost_usd": 0.08743000000000001, "ts": "2026-10-09T07:51:21", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 2, "cost_usd": 0.007680869900000001, "ts": "2026-10-09T07:51:37", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "high_precision", "seed": 0, "cost_usd": 0.078194, "ts": "2026-10-09T07:51:56", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 3, "cost_usd": 0.006391366000000001, "ts": "2026-10-09T07:52:09", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "high_precision", "seed": 1, "cost_usd": 0.066586, "ts": "2026-10-09T07:52:30", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "dds_250msps", "seed": 4, "cost_usd": 0.007665844999999999, "ts": "2026-10-09T07:52:50", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "dds_250msps", "seed": 1, "cost_usd": 0.009110328000000001, "ts": "2026-10-09T07:52:57", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "high_precision", "seed": 2, "cost_usd": 0.06451799999999999, "ts": "2026-10-09T07:53:03", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "high_precision", "seed": 0, "cost_usd": 0.007599829, "ts": "2026-10-09T07:53:30", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "high_precision", "seed": 3, "cost_usd": 0.079588, "ts": "2026-10-09T07:53:40", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "high_precision", "seed": 4, "cost_usd": 0.064792, "ts": "2026-10-09T07:54:13", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "dds_250msps", "seed": 2, "cost_usd": 0.014056948, "ts": "2026-10-09T07:54:14", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "high_precision", "seed": 1, "cost_usd": 0.007515484, "ts": "2026-10-09T07:54:21", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "infeasible_dds_400msps", "seed": 0, "cost_usd": 0.035878, "ts": "2026-10-09T07:54:31", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "infeasible_dds_400msps", "seed": 1, "cost_usd": 0.033426, "ts": "2026-10-09T07:54:48", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "infeasible_dds_400msps", "seed": 2, "cost_usd": 0.03388, "ts": "2026-10-09T07:55:05", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "dds_250msps", "seed": 3, "cost_usd": 0.01293648, "ts": "2026-10-09T07:55:12", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "infeasible_dds_400msps", "seed": 3, "cost_usd": 0.035476, "ts": "2026-10-09T07:55:22", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "infeasible_dds_400msps", "seed": 4, "cost_usd": 0.032096, "ts": "2026-10-09T07:55:38", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "high_precision", "seed": 2, "cost_usd": 0.0072672681, "ts": "2026-10-09T07:55:49", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "low_area_control", "seed": 0, "cost_usd": 0.07764800000000001, "ts": "2026-10-09T07:56:04", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "high_precision", "seed": 3, "cost_usd": 0.009466895999999999, "ts": "2026-10-09T07:56:18", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "low_area_control", "seed": 1, "cost_usd": 0.068786, "ts": "2026-10-09T07:56:30", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "high_precision", "seed": 4, "cost_usd": 0.0072239949999999995, "ts": "2026-10-09T07:56:53", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "low_area_control", "seed": 2, "cost_usd": 0.077896, "ts": "2026-10-09T07:56:59", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "low_area_control", "seed": 3, "cost_usd": 0.087332, "ts": "2026-10-09T07:57:33", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "dds_250msps", "seed": 4, "cost_usd": 0.011188622999999998, "ts": "2026-10-09T07:57:41", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "infeasible_dds_400msps", "seed": 0, "cost_usd": 0.00353535, "ts": "2026-10-09T07:57:51", "milestone": "m2"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "low_area_control", "seed": 4, "cost_usd": 0.06754, "ts": "2026-10-09T07:57:58", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "infeasible_dds_400msps", "seed": 1, "cost_usd": 0.0040391315, "ts": "2026-10-09T07:58:16", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "infeasible_dds_400msps", "seed": 2, "cost_usd": 0.006303358199999999, "ts": "2026-10-09T07:58:48", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "high_precision", "seed": 0, "cost_usd": 0.008599882000000001, "ts": "2026-10-09T07:59:02", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "infeasible_dds_400msps", "seed": 3, "cost_usd": 0.004516875, "ts": "2026-10-09T07:59:06", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "infeasible_dds_400msps", "seed": 4, "cost_usd": 0.0043467434, "ts": "2026-10-09T07:59:18", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "high_precision", "seed": 1, "cost_usd": 0.009088359999999998, "ts": "2026-10-09T07:59:48", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "high_precision", "seed": 2, "cost_usd": 0.0071851400000000005, "ts": "2026-10-09T08:00:25", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 0, "cost_usd": 0.00758311, "ts": "2026-10-09T08:00:35", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 1, "cost_usd": 0.0087068296, "ts": "2026-10-09T08:01:12", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "high_precision", "seed": 3, "cost_usd": 0.00904825, "ts": "2026-10-09T08:01:49", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 2, "cost_usd": 0.009748903, "ts": "2026-10-09T08:02:42", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 3, "cost_usd": 0.01146494, "ts": "2026-10-09T08:03:49", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "high_precision", "seed": 4, "cost_usd": 0.017544419999999998, "ts": "2026-10-09T08:03:52", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "infeasible_dds_400msps", "seed": 0, "cost_usd": 0.007269572, "ts": "2026-10-09T08:04:29", "milestone": "m2"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 4, "cost_usd": 0.0091853966, "ts": "2026-10-09T08:04:35", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "infeasible_dds_400msps", "seed": 1, "cost_usd": 0.00777913, "ts": "2026-10-09T08:05:15", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "infeasible_dds_400msps", "seed": 2, "cost_usd": 0.013205955, "ts": "2026-10-09T08:06:06", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "infeasible_dds_400msps", "seed": 3, "cost_usd": 0.0056415300000000005, "ts": "2026-10-09T08:06:41", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "infeasible_dds_400msps", "seed": 4, "cost_usd": 0.009231498, "ts": "2026-10-09T08:07:33", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 0, "cost_usd": 0.018020941999999998, "ts": "2026-10-09T08:10:07", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 1, "cost_usd": 0.024270743, "ts": "2026-10-09T08:13:19", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 2, "cost_usd": 0.010510108, "ts": "2026-10-09T08:15:54", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 3, "cost_usd": 0.012151284, "ts": "2026-10-09T08:17:15", "milestone": "m2"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 4, "cost_usd": 0.010464414000000002, "ts": "2026-10-09T08:18:26", "milestone": "m2"}

@@ -1,0 +1,45 @@
+{
+ "milestone": "m2",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null
+ },
+ "spec": "high_precision",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "stopped",
+ "rounds": 4,
+ "coverage_rounds": 3,
+ "llm_calls": 5.0,
+ "llm_failures": 0.0,
+ "input_tokens": 12337.0,
+ "output_tokens": 7985.0,
+ "cost_usd": 0.009088359999999998,
+ "wall_s": 46.3,
+ "run_dir": "runs/eval_m2/high_precision/20261009-075902-bdaf",
+ "decisions": [
+  "map_front",
+  "map_front",
+  "map_front",
+  "stop"
+ ],
+ "overrides": [],
+ "n_evals": 400,
+ "hv_final": 90413.00629175536,
+ "hv_frac": 1.0,
+ "evals_to_95": 117,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=6",
+ "select_regret": 0.0,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

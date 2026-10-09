@@ -4,7 +4,9 @@
  * LLM node is one recorded call (llm_trace.jsonl), with its provider-reported tokens and cost
  * ticking into the counters; every explore step is one round's Send fan-out, one branch per
  * family, with the evaluations each branch made (report.md, checked against
- * evaluations.csv); code's hard rules are shown where the report records them.
+ * evaluations.csv); code's hard rules are shown where the report records them. M2's graph adds
+ * a back_annotate node after select (L5: the selected design's estimates against any measured
+ * data); M1's graph had none, so M1 runs never visit it.
  */
 import type { Call, Job, RunData } from "./runs";
 
@@ -15,6 +17,7 @@ export const NODES = [
   "explore_family",
   "analyse",
   "select",
+  "back_annotate",
   "report",
 ] as const;
 export type Node = (typeof NODES)[number];
@@ -26,6 +29,7 @@ export type TraceKind =
   | "explore"
   | "rule"
   | "select"
+  | "annotate"
   | "report";
 
 export type TraceFrame = {
@@ -97,8 +101,11 @@ export function traceFrames(run: RunData): TraceFrame[] {
     });
     if (r.rules.length > 0) push({ kind: "rule", node: "analyse" });
   }
-  if (run.status !== "infeasible" && run.status !== "no_feasible")
+  if (run.status !== "infeasible" && run.status !== "no_feasible") {
     push({ kind: "select", node: "select" });
+    if (run.milestone === "m2")
+      push({ kind: "annotate", node: "back_annotate" });
+  }
   push({ kind: "report", node: "report" });
   return frames;
 }

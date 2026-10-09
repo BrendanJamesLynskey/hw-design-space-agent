@@ -18,3 +18,4 @@ src/data/
 vendor/
 .lighthouseci/
 .venv/
+content/record/

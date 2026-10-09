@@ -59,3 +59,19 @@ export const Calculator = dynamic(() => import("./Calculator"), {
   ssr: false,
   loading: loading("calculator"),
 });
+export const DescentWidget = dynamic(() => import("./DescentWidget"), {
+  ssr: false,
+  loading: loading("animation"),
+});
+export const MeasuredScatter = dynamic(() => import("./MeasuredScatter"), {
+  ssr: false,
+  loading: loading("animation"),
+});
+export const HighPrecisionStory = dynamic(
+  () => import("./HighPrecisionStory"),
+  { ssr: false, loading: loading("animation") },
+);
+export const M1M2Shift = dynamic(() => import("./M1M2Shift"), {
+  ssr: false,
+  loading: loading("animation"),
+});

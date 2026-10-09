@@ -37,9 +37,10 @@ const PAGES: [string, string[]][] = [
   ["/case-study", [commit, "bit-exact", "data-pending-widget"]],
   [
     "/results",
-    [commit, "Where the agent lost", "data-pending-widget", "eval/results.md"],
+    [commit, "Where it got worse", "data-pending-widget", "eval/results.md"],
   ],
-  ["/roadmap", [commit, "M4", "pull/1"]],
+  ["/roadmap", [commit, "M4", "pull/1", "pull/4"]],
+  ["/record", [commit, "Decision log", "decision-timeline"]],
   [
     "/about",
     [commit, "linkedin.com/in/brendan-lynskey-a891705", "BrendanJamesLynskey"],

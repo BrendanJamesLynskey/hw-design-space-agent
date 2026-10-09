@@ -1,0 +1,42 @@
+{
+ "milestone": "m2",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null
+ },
+ "spec": "infeasible_dds_400msps",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "infeasible",
+ "rounds": 1,
+ "coverage_rounds": 0,
+ "llm_calls": 2.0,
+ "llm_failures": 0.0,
+ "input_tokens": 7788.0,
+ "output_tokens": 1785.0,
+ "cost_usd": 0.033426,
+ "wall_s": 16.3,
+ "run_dir": "runs/eval_m2/infeasible_dds_400msps/20261009-075431-5f3f",
+ "decisions": [
+  "infeasible"
+ ],
+ "overrides": [],
+ "n_evals": 100,
+ "hv_final": 0.0,
+ "hv_frac": null,
+ "evals_to_95": null,
+ "selected_meets_spec": false,
+ "selected_key": null,
+ "select_regret": null,
+ "declared_infeasible": true,
+ "infeasibility_correct": true
+}

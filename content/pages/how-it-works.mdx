@@ -6,7 +6,7 @@ Each level offers its own power, performance and area trade-offs, and each costs
 
 <LadderTable column="ppa" />
 
-At the vendored commit, milestone 1 is done: L0 and L1 are live and every result on this site comes from them. Everything below L1 is planned, and nothing on this site animates a planned level as if it had run.
+At the vendored commit, milestones 1 and 2 are done: spec intake (L0), analytical exploration (L1), RTL simulation (L3), synthesis (L4), gate-level simulation of the netlist and back-annotation (L5) are live. System-level (SimPy) and cycle-level simulation are planned for milestone 3, and nothing on this site animates a planned level as if it had run. Exploration itself still happens at L1, where a design costs microseconds to score; the lower levels check, measure and correct what L1 chose.
 
 ## The design principle: the LLM never produces a number
 
@@ -20,13 +20,15 @@ It is also in the types. Each LLM call names a Pydantic schema (`ExplorationPlan
 
 ## The graph, replayed
 
-The agent is a LangGraph `StateGraph`. `intake` turns the spec into a validated `Spec`; `confirm_spec` stops for a human with `interrupt()`; `propose` asks the LLM for a plan; `explore_family` runs once per family, fanned out in parallel with `Send`, each branch an Optuna NSGA-II study inside the box the LLM chose; `analyse` merges the results, computes the Pareto front and its hypervolume, shows the LLM a compact summary and asks what next. Code then applies hard rules the LLM cannot override: the round cap, the budget, a stop when the hypervolume gains less than 1% in a round, and no "infeasible" verdict while feasible designs exist.
+The agent is a LangGraph `StateGraph`. `intake` turns the spec into a validated `Spec`; `confirm_spec` stops for a human with `interrupt()`; `propose` asks the LLM for a plan; `explore_family` runs once per family, fanned out in parallel with `Send`, each branch an Optuna NSGA-II study inside the box the LLM chose; `analyse` merges the results, computes the Pareto front and its hypervolume, shows the LLM a compact summary and asks what next. Code then applies hard rules the LLM cannot override: the round cap, the budget, and no "infeasible" verdict while feasible designs exist. After `select`, milestone 2's graph adds `back_annotate`: the selected design's estimates against any measured synthesis data, and a flag if the winner would change.
 
-The replay below walks one recorded run through that graph. Pick any of the <V of="runs" fmt="int" /> scored runs. The quoted decisions are the LLM's own words from the trace, and the counters add up the usage OpenRouter reported for each call <Prov kind="measured" />. Failed calls are shown too: they return no valid answer and report no cost, which is why the provider-reported total undercounts the key's real usage.
+Milestone 2 also changed how the agent spends its budget, to map the whole trade-off curve and not only the corner the spec's selection rule cares about. The LLM gained a `map_front` decision, which asks code for a front-mapping round: NSGA-II over the ranges of the families on the front so far. And 40% of the budget is held in reserve: before a run stops, code spends whatever is left on one final front-mapping round, with no LLM call.
+
+The replay below walks one recorded run through that graph. Pick any of the <V of="m2.runs" fmt="int" /> M2 runs or the <V of="m1.runs" fmt="int" /> M1 runs. The quoted decisions are the LLM's own words from the trace, and the counters add up the usage OpenRouter reported for each call <Prov kind="measured" />. Failed calls are shown too: they return no valid answer, and most report no cost.
 
 <HowTrace />
 
-Two things to look for. On the infeasible spec, the LLM itself returns `infeasible` and names throughput as the binding constraint; code only checks that no feasible design exists before accepting it. And on many runs the last word is code's, not the LLM's: the LLM asks to `refine`, the hypervolume gained less than 1% that round, and the hard rule stops the run. That rule is why the agents stop early and map less of the front than NSGA-II, as the [results](/results) show.
+Three things to look for. On the infeasible spec, the LLM itself returns `infeasible` and names throughput as the binding constraint; code only checks that no feasible design exists before accepting it. In M1 the last word was often code's: the LLM asked to `refine`, the hypervolume gained less than 1% that round, and that rule stopped the run early, which is why the M1 agents mapped less of the front than NSGA-II. In M2, watch for `map_front` and for the final round planned by code: that is how the agents closed the gap, as the [results](/results) show.
 
 ## Verification at every level
 
@@ -34,12 +36,22 @@ A level is only useful if its numbers can be trusted, so every level is checked 
 
 <LadderTable column="check" />
 
-In M1 that means two checks: the bit-accurate golden model produces exactly the reference RTL's output codes on all 65,536 input angles (Icarus Verilog, in the repository's CI), and every eval run is graded against the exhaustive ground truth of all <V of="designs" fmt="int" /> designs. This site adds a third: its TypeScript ports of the golden model and the cost model match the Python exactly, in its own CI.
+The golden model is the anchor: it produces exactly the reference RTL's output codes on all 65,536 input angles (Icarus Verilog, in the repository's CI). Milestone 2's generator turns any explored design into SystemVerilog, and every generated design is checked against that model, output code by output code, in two simulators, then again as a synthesised netlist. Here is one design, the exhaustive grid's winner for `low_area_control`, taken all the way down:
+
+<HowDescent />
+
+Across the whole generator, the repository's sweep covers every family:
+
+<VerificationTable />
+
+Every eval run is also graded against the exhaustive ground truth of all <V of="designs" fmt="int" /> designs, and this site adds its own check: its TypeScript ports of the golden model and the cost model match the Python exactly, in its own CI.
 
 ## Many agents at once
 
-There are two kinds of parallelism. Inside a run, `Send` fans `explore_family` out across the families the LLM chose, so the studies run side by side and a reducer merges their evaluations. Across runs, every run is an independent graph with its own SQLite checkpoint, so runs can be queued and run side by side, and a run interrupted for human input, or killed, resumes from its last completed step. That is what makes a fleet of agents running 24/7 possible, each evaluating a real design decision. The eval was a small fleet:
+There are two kinds of parallelism. Inside a run, `Send` fans `explore_family` out across the families the LLM chose, so the studies run side by side and a reducer merges their evaluations. Across runs, every run is an independent graph with its own SQLite checkpoint, so runs can be queued and run side by side, and a run interrupted for human input, or killed, resumes from its last completed step. That is what makes a fleet of agents running 24/7 possible, each evaluating a real design decision. Each eval was a small fleet:
 
-<FleetTimeline />
+<FleetTimeline ms="m2" />
 
-That timeline is measured, not a projection: <V of="runs" fmt="int" /> runs, <V of="calls.total" fmt="int" /> LLM calls, up to <V of="fleet.max" fmt="int" /> runs at once. What a larger fleet would cost is on the [results](/results#calculator) page, worked out from these measured runs.
+<FleetTimeline ms="m1" />
+
+Those timelines are measured, not projections: M2 ran <V of="m2.runs" fmt="int" /> runs with <V of="m2.calls.total" fmt="int" /> LLM calls, up to <V of="m2.fleet.max" fmt="int" /> at once; M1 ran <V of="m1.runs" fmt="int" /> runs with <V of="m1.calls.total" fmt="int" /> calls, up to <V of="m1.fleet.max" fmt="int" /> at once. What a larger fleet would cost is on the [results](/results#calculator) page, worked out from the measured runs.

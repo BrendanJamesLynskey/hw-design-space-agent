@@ -9,10 +9,16 @@
  * edits can't leak in), into `vendor/hw_dse/<same path>`:
  *
  * - README.md (the roadmap table the ladder badges are read from) and eval/results.md;
- * - the exhaustive ground truth, the baselines and the 48 agent-run summaries (eval/data);
+ * - the exhaustive ground truth, the M1 and M2 baselines and every agent-run summary
+ *   (eval/data/agent for M1, agent_m2 and agent_m2_pilot for M2);
  * - the precomputed exact accuracy table (eval/data/accuracy_table.csv.gz);
- * - every recorded run trace (eval/data/traces: llm_trace.jsonl, evaluations.csv.gz, report.md);
- * - the example specs and the cost model's calibration file.
+ * - every recorded run trace (eval/data/traces, M2's under traces/m2: llm_trace.jsonl,
+ *   evaluations.csv.gz, report.md, INDEX.md);
+ * - M2's ladder data: the L3 verification table (RTL and gate level), the formal results, the
+ *   L4 synthesis table, the Vivado measurements (both batches and the spot-check), the L5
+ *   refit reports, the key usage before and after the M2 runs and the spend ledger;
+ * - the worked example of one design up the ladder (docs/worked_example_m2.md);
+ * - the example specs, the cost model's calibration file and the two refit calibrations.
  *
  * `vendor/hw_dse/VENDORED.json` records the repository, the full commit hash and each file's
  * SHA-256; the commit must already be on the repository's `origin`. tests/unit/vendor.test.ts
@@ -58,7 +64,26 @@ const paths = [
   "eval/data/baselines.json",
   "eval/data/accuracy_table.csv.gz",
   "src/hw_dse/models/calibration_artix7.yaml",
+  "src/hw_dse/models/calibration_artix7_refit_vivado-2025.2.yaml",
+  "src/hw_dse/models/calibration_artix7_refit_yosys-nextpnr.yaml",
+  "docs/worked_example_m2.md",
+  "eval/data/README.md",
+  "eval/data/baselines_m2.json",
+  "eval/data/key_usage_m2.json",
+  "eval/data/spend_ledger.jsonl",
+  "eval/data/l3_verification.csv",
+  "eval/data/formal_results.csv",
+  "eval/data/l4_synthesis.csv",
+  "eval/data/vivado_measured.csv",
+  "eval/data/vivado_measured_2.csv",
+  "eval/data/vivado_spotcheck.csv",
+  "eval/data/l5_refit_vivado-2025.2.json",
+  "eval/data/l5_refit_vivado-2025.2.md",
+  "eval/data/l5_refit_yosys-nextpnr.json",
+  "eval/data/l5_refit_yosys-nextpnr.md",
   ...tree("eval/data/agent").filter((p) => p.endsWith(".json")),
+  ...tree("eval/data/agent_m2").filter((p) => p.endsWith(".json")),
+  ...tree("eval/data/agent_m2_pilot").filter((p) => p.endsWith(".json")),
   ...tree("eval/data/traces").filter((p) =>
     /(INDEX\.md|llm_trace\.jsonl|evaluations\.csv\.gz|report\.md)$/.test(p),
   ),

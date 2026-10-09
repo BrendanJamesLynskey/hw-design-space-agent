@@ -1,0 +1,47 @@
+{
+ "milestone": "m2",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null
+ },
+ "spec": "dds_250msps",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "converged",
+ "rounds": 3,
+ "coverage_rounds": 1,
+ "llm_calls": 3.0,
+ "llm_failures": 0.0,
+ "input_tokens": 7403.0,
+ "output_tokens": 14506.0,
+ "cost_usd": 0.009110328000000001,
+ "wall_s": 215.4,
+ "run_dir": "runs/eval_m2/dds_250msps/20261009-074922-af83",
+ "decisions": [
+  "widen",
+  "add_family"
+ ],
+ "overrides": [
+  "'add_family' overridden to stop: HV gain 0.51% < epsilon 1.00%",
+  "code: before stopping (converged), one front-mapping round with the remaining 200 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ],
+ "n_evals": 400,
+ "hv_final": 18663.709022039417,
+ "hv_frac": 0.945285979200853,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=17,n_iter=15,angle_guard=2,frac_guard=2,rounding=round",
+ "select_regret": 0.07217694994179287,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

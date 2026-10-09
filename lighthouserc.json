@@ -1,8 +1,8 @@
 {
   "ci": {
     "collect": {
-      "startServerCommand": "pnpm start -p 3000",
-      "startServerReadyPattern": "Ready",
+      "startServerCommand": "node scripts/serve-warm.mjs",
+      "startServerReadyPattern": "Warm and ready",
       "url": [
         "http://localhost:3000/",
         "http://localhost:3000/why",
@@ -10,6 +10,7 @@
         "http://localhost:3000/case-study",
         "http://localhost:3000/results",
         "http://localhost:3000/roadmap",
+        "http://localhost:3000/record",
         "http://localhost:3000/about"
       ],
       "numberOfRuns": 3

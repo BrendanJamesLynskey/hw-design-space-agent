@@ -46,7 +46,9 @@ for (const scheme of ["light", "dark"] as const) {
   }
 }
 
-test("every ladder level carries a badge; only L0 and L1 are live", async ({
+const LIVE = ["L0", "L1", "L3", "L4", "GL", "L5"];
+
+test("every ladder level carries a badge; only M1's and M2's levels are live", async ({
   page,
 }) => {
   await page.goto("/");
@@ -60,7 +62,7 @@ test("every ladder level carries a badge; only L0 and L1 are live", async ({
     await expect(badge).toHaveCount(1);
     await expect(badge).toHaveAttribute(
       "data-badge",
-      id === "L0" || id === "L1" ? "live" : "planned",
+      LIVE.includes(id!) ? "live" : "planned",
     );
   }
   // the spec card never sits on a planned level, at any step
@@ -99,7 +101,14 @@ test("the required wording and the Knuth quote", async ({ page }) => {
 test("no email address anywhere; contact is GitHub and LinkedIn", async ({
   page,
 }) => {
-  for (const path of ["/", "/why", "/case-study", "/about"]) {
+  for (const path of [
+    "/",
+    "/why",
+    "/case-study",
+    "/results",
+    "/record",
+    "/about",
+  ]) {
     await page.goto(path);
     const html = await page.content();
     expect(html).not.toMatch(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}/);
@@ -151,4 +160,69 @@ test("about: personal projects only, no interview repos, the education list", as
     "MSc Low Power Systems Integration",
     "Diploma in Mathematics",
   ]);
+});
+
+test("the record: nine sections, the decision log as a timeline, linked from nav and About", async ({
+  page,
+}) => {
+  await page.goto("/record");
+  await expect(page.locator("h1")).toHaveText(
+    "Project record: how it was built and why",
+  );
+  await expect(
+    page.locator("main section[id], article section[id]"),
+  ).toHaveCount(9);
+  const tl = page.getByTestId("decision-timeline");
+  await expect(tl.locator("[data-decision]")).not.toHaveCount(0);
+  const dates = await tl
+    .locator("li[data-date]")
+    .evaluateAll((els) => els.map((e) => e.getAttribute("data-date")));
+  expect([...dates].sort()).toEqual(dates);
+  await page.goto("/about");
+  await expect(
+    page.getByRole("link", { name: "project record" }),
+  ).toHaveAttribute("href", "/record");
+  await expect(
+    page
+      .getByRole("navigation", { name: "Site" })
+      .getByRole("link", { name: "Record" }),
+  ).toHaveAttribute("href", "/record");
+});
+
+test("the roadmap: M1 and M2 done (with the Vivado follow-up), M3 and M4 planned with no results", async ({
+  page,
+}) => {
+  await page.goto("/roadmap");
+  for (const [m, s] of [
+    ["M1", "done"],
+    ["M2", "done"],
+    ["M3", "planned"],
+    ["M4", "planned"],
+  ] as const)
+    await expect(page.locator(`li[data-milestone="${m}"]`)).toHaveAttribute(
+      "data-status",
+      s,
+    );
+  const m2 = page.locator('li[data-milestone="M2"]');
+  await expect(m2).toContainText("Vivado 2025.2 on 14 generated designs");
+  await expect(m2.getByRole("link", { name: /#4/ })).toHaveAttribute(
+    "href",
+    "https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent/pull/4",
+  );
+  const m3 = page.locator('li[data-milestone="M3"]');
+  await expect(m3).toContainText("Deep Agents");
+  await expect(m3).toContainText("No pull request yet.");
+  await expect(m3).toContainText("no results yet");
+});
+
+test("results lead with M1 → M2, and link results.md at the vendored commit", async ({
+  page,
+}) => {
+  await page.goto("/results");
+  const h2 = await page.locator("article h2").allTextContents();
+  expect(h2[0]).toBe("M1 → M2");
+  expect(h2[1]).toBe("Where it got worse");
+  await expect(
+    page.locator("a[data-repo-file='eval/results.md']"),
+  ).toHaveAttribute("href", /\/blob\/[0-9a-f]{40}\/eval\/results\.md$/);
 });
