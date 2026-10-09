@@ -5,6 +5,7 @@ import { LadderHero } from "@/components/dse/lazy";
 import { CostTable, HeadlineTable } from "@/components/dse/Tables";
 import { V } from "@/components/mdx/V";
 import { COMMIT, site } from "@/lib/dse/data";
+import { ladder } from "@/lib/dse/ladder";
 import { AGENT_REPO, agentFile } from "@/lib/site";
 
 const LINK =
@@ -19,7 +20,6 @@ const BTN =
  */
 export default function HomePage(): JSX.Element {
   const commit = site.vendored.commit;
-  const planOnly = site.ladder.filter((l) => l.plan_only);
   return (
     <main className="mx-auto max-w-5xl px-6 py-12 sm:py-16">
       <p className="font-mono text-xs uppercase tracking-widest text-accent dark:text-indigo-300">
@@ -32,18 +32,20 @@ export default function HomePage(): JSX.Element {
         Give it one high-level spec. A LangGraph agent chooses which
         architectures to explore, a classic optimiser searches them on tested
         models, and the agent reads the results, decides what to try next, and
-        picks the design. The plan is to take that one spec down the whole
-        fidelity ladder: system-level simulation, cycle-level simulation, RTL,
-        synthesis and gate-level simulation of the netlist, each offering its
-        own power, performance and area trade-offs, with regression tests
-        against the golden model at every level. Today the first two levels are
-        live; the rest are badged with the milestone that builds them.
+        picks the design. That one spec then goes down the fidelity ladder: RTL
+        generated and simulated in two simulators, synthesis and place and
+        route, gate-level simulation of the netlist, and back-annotation of the
+        measurements into the cost model, each level offering its own power,
+        performance and area view, with regression tests against the golden
+        model at every level. System-level (SimPy) and cycle-level simulation
+        come next; they are badged with the milestone that builds them.
       </p>
 
       <LadderHero
         hero={site.hero}
         ladder={site.ladder}
         spec={site.specs[site.hero.spec]!}
+        worked={ladder.worked}
       />
 
       <section
@@ -92,36 +94,57 @@ export default function HomePage(): JSX.Element {
 
       <section aria-labelledby="results" className="mt-12">
         <h2 id="results" className="text-2xl font-semibold tracking-tight">
-          What milestone 1 found
+          What the eval found, M1 → M2
         </h2>
         <p className="mt-4 max-w-3xl text-neutral-700 dark:text-neutral-300">
           The CORDIC sin/cos case study has {<V of="designs" fmt="int" />}{" "}
           possible designs, few enough to score every one, so each run is graded
-          against the exact answer. On {<V of="runs" fmt="int" />} recorded runs
-          with real models, the honest result is a split:{" "}
-          <strong>the agent is the better selector</strong>, and{" "}
-          <strong>NSGA-II is the better front-mapper</strong>. On every feasible
-          spec an LLM agent picked a design closer to the true optimum than
-          either baseline, and <V of="regret.agent_beats_nsga2" fmt="int" /> of
-          the <V of="regret.agent_rows" fmt="int" /> model-and-spec pairs beat
-          NSGA-II&apos;s mean regret. But on two of the three, the agents dive
-          at the spec&apos;s corner and stop once it stops improving, so plain
-          NSGA-II maps the whole trade-off curve far better (hypervolume{" "}
-          <V of="dds_250msps.nsga2_hv" fmt="f3" /> against at most{" "}
-          <V of="dds_250msps.best_agent_hv" fmt="f3" /> on dds_250msps, and{" "}
-          <V of="low_area_control.nsga2_hv" fmt="f3" /> against at most{" "}
-          <V of="low_area_control.best_agent_hv" fmt="f3" /> on
-          low_area_control). That is the division of labour the design intends:
-          the agent finds the critical 3% cheaply, and exhaustive front-mapping
-          stays the job of a classic optimiser, which the agent drives.
+          against the exact answer. Milestone 1 ({<V of="m1.runs" fmt="int" />}{" "}
+          runs with real models) found a split:{" "}
+          <strong>the agent was the better selector</strong>, and{" "}
+          <strong>NSGA-II the better front-mapper</strong>, because the agents
+          dived at the spec&apos;s corner and stopped early. Milestone 2 (
+          {<V of="m2.runs" fmt="int" />} runs, five seeds) gave the agent a way
+          to map the whole trade-off curve, and <strong>closed the gap</strong>:
+          every model now covers <V of="glance.hv_ratio_min" fmt="f2" />–
+          <V of="glance.hv_ratio_max" fmt="f2" />× NSGA-II&apos;s hypervolume on
+          every feasible spec (M1: as little as{" "}
+          <V of="glance.m1_hv_ratio_min" fmt="f2" />
+          ×), while still selecting a better design than NSGA-II in{" "}
+          <V of="glance.regret_beats" fmt="int" /> of the{" "}
+          <V of="glance.regret_cells" fmt="int" /> model-and-spec cells. It got
+          worse in places: Qwen lost on{" "}
+          <span className="font-mono">high_precision</span> (one bad seed),
+          DeepSeek&apos;s selection slipped, and the agent now always spends the
+          full budget.{" "}
+          <Link href="/results" className={LINK}>
+            The full results
+          </Link>{" "}
+          open with those.
         </p>
         <HeadlineTable />
-        <p className="max-w-3xl text-neutral-700 dark:text-neutral-300">
+        <p className="mt-4 max-w-3xl text-neutral-700 dark:text-neutral-300">
+          <strong>Measured, not just estimated.</strong> The ground truth&apos;s
+          winners were generated as RTL, verified bit for bit in two simulators
+          and at the gate level, and synthesised: the repository&apos;s
+          open-source flow has <V of="l4.points" fmt="int" /> measured points
+          and Vivado 2025.2 <V of="vivado.designs" fmt="int" /> designs.
+          Refitting the cost model to them changes no spec&apos;s winner, and on{" "}
+          <span className="font-mono">high_precision</span>, where the margin is
+          thinnest, routed timing confirms the choice.{" "}
+          <Link
+            href="/case-study#estimates-against-measurements"
+            className={LINK}
+          >
+            See the measurements
+          </Link>
+          .
+        </p>
+        <p className="mt-4 max-w-3xl text-neutral-700 dark:text-neutral-300">
           <strong>The infeasible spec.</strong> Asked for 400 MSPS, every model
-          on every seed ({<V of="infeasible.llm_declared" fmt="int" />} of{" "}
-          {<V of="infeasible.llm_runs" fmt="int" />} runs) declared the spec
-          infeasible itself and named throughput as the binding constraint. The
-          exhaustive grid agrees: the fastest design anywhere reaches{" "}
+          on every seed of both milestones declared the spec infeasible itself
+          and named throughput as the binding constraint. The exhaustive grid
+          agrees: the fastest design anywhere reaches{" "}
           <V of="infeasible.best_msps" fmt="f1" /> MSPS
           <Prov kind="estimate" />.
         </p>
@@ -132,26 +155,32 @@ export default function HomePage(): JSX.Element {
           What it costs to run
         </h2>
         <p className="mt-4 max-w-3xl text-neutral-700 dark:text-neutral-300">
-          The price of the LLM is part of the result. A complete exploration of
-          one spec cost between <V of="cost.min_per_run" fmt="usd" /> and{" "}
-          <V of="cost.max_per_run" fmt="usd" /> per run depending on the model,
-          and took <V of="cost.min_wall_s" fmt="s" /> to{" "}
-          <V of="cost.max_wall_s" fmt="s" /> on average. With reasoning turned
-          off, Qwen3.8-27B was about <V of="cost.qwen.cheaper" fmt="x" />{" "}
-          cheaper per run and finished in <V of="cost.qwen.speedup" fmt="x" />{" "}
-          less wall-clock time than with its default reasoning.
+          The price of the LLM is part of the result. In M2, a complete
+          exploration of one spec cost between{" "}
+          <V of="m2.cost.min_per_run" fmt="usd" /> and{" "}
+          <V of="m2.cost.max_per_run" fmt="usd" /> per run depending on the
+          model, and took <V of="m2.cost.min_wall_s" fmt="s" /> to{" "}
+          <V of="m2.cost.max_wall_s" fmt="s" /> on average; all{" "}
+          <V of="m2.runs" fmt="int" /> runs cost{" "}
+          <V of="m2.total_usd" fmt="usd" /> provider-reported. In M1, turning
+          Qwen3.8-27B&apos;s reasoning off made it about{" "}
+          <V of="m1.cost.qwen.cheaper" fmt="x" /> cheaper per run and{" "}
+          <V of="m1.cost.qwen.speedup" fmt="x" /> faster by wall-clock.
         </p>
-        <CostTable />
+        <CostTable ms="m2" />
         <p className="max-w-3xl text-neutral-700 dark:text-neutral-300">
           <strong>Labour-saving, round the clock.</strong> Each run is an
           independent, checkpointed LangGraph thread, so several agents can run
-          24/7, each evaluating a real design decision; the eval above is 48 of
-          them. That is what the architecture enables, not a measured fleet.{" "}
+          24/7, each evaluating a real design decision; the M2 eval above is{" "}
+          <V of="m2.runs" fmt="int" /> of them, up to{" "}
+          <V of="m2.fleet.max" fmt="int" /> at once. That is what the
+          architecture enables, not a measured round-the-clock fleet.{" "}
           <span data-projection>
-            <em>Projection</em>, from the measured means: one Sonnet 5.5 agent
-            running back to back for a day would finish about{" "}
-            <V of="proj.sonnet.runs_per_day" fmt="int" /> explorations for about{" "}
-            <V of="proj.sonnet.usd_per_day" fmt="usd" /> (ignoring rate limits).
+            <em>Projection</em>, from the measured M2 means: one Sonnet 5.5
+            agent running back to back for a day would finish about{" "}
+            <V of="m2.proj.sonnet.runs_per_day" fmt="int" /> explorations for
+            about <V of="m2.proj.sonnet.usd_per_day" fmt="usd" /> (ignoring rate
+            limits).
           </span>
         </p>
       </section>
@@ -184,11 +213,19 @@ export default function HomePage(): JSX.Element {
           <a href={agentFile("README.md", commit)} className={LINK}>
             README at {COMMIT}
           </a>
-          , where M1 is done and M2–M4 are planned.{" "}
-          {planOnly.map((l) => l.name).join(" and ")} are the project&apos;s
-          plan for{" "}
-          {[...new Set(planOnly.map((l) => l.milestone))].join(" and ")} and are
-          not yet listed in that README.
+          , where{" "}
+          {site.milestones
+            .filter((m) => m.status === "done")
+            .map((m) => m.id)
+            .join(" and ")}{" "}
+          are done and{" "}
+          {site.milestones
+            .filter((m) => m.status !== "done")
+            .map((m) => m.id)
+            .join(" and ")}{" "}
+          are planned. The README&apos;s L2 is &ldquo;cycle-level / system
+          simulation&rdquo;; SimPy as its system-level engine is the
+          project&apos;s plan.
         </p>
       </section>
 

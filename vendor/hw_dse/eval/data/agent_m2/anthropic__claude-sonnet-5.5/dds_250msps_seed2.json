@@ -1,0 +1,47 @@
+{
+ "milestone": "m2",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null
+ },
+ "spec": "dds_250msps",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "stopped",
+ "rounds": 4,
+ "coverage_rounds": 1,
+ "llm_calls": 4.0,
+ "llm_failures": 0.0,
+ "input_tokens": 18726.0,
+ "output_tokens": 3080.0,
+ "cost_usd": 0.06825200000000001,
+ "wall_s": 29.0,
+ "run_dir": "runs/eval_m2/dds_250msps/20261009-074949-b300",
+ "decisions": [
+  "refine",
+  "refine",
+  "stop"
+ ],
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 160 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ],
+ "n_evals": 400,
+ "hv_final": 18615.746387137227,
+ "hv_frac": 0.9428567511066392,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=19,n_iter=15,angle_guard=2,frac_guard=0,rounding=trunc",
+ "select_regret": 0.06519208381839355,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

@@ -23,10 +23,12 @@ import {
   firstResultCycle,
 } from "@/lib/dse/datapath";
 import { arch, type Family, type Params } from "@/lib/dse/families";
-import { heroFrames, roundOf } from "@/lib/dse/hero";
+import { DESCENT, heroFrames, roundOf } from "@/lib/dse/hero";
+import { ladder } from "@/lib/dse/ladder";
 
 const hero = site.hero;
 const spec = site.specs[hero.spec]!;
+const w = ladder.worked;
 
 describe("hero: one spec, every level", () => {
   const frames = heroFrames(hero, site.ladder);
@@ -60,26 +62,70 @@ describe("hero: one spec, every level", () => {
       [...hero.feasible_bits.slice(0, last.evaluated)].filter((c) => c === "1")
         .length,
     ).toBe(last.feasible);
+    // one analyse frame per LLM-decided round; code's last front-mapping round has none
+    expect(frames.filter((f) => f.phase === "analyse")).toHaveLength(
+      hero.rounds.filter((r) => r.llm_call).length,
+    );
   });
 
-  it("every frame has a caption, and the planned frame names the milestones", () => {
+  it("takes the selected design down the live levels only, in order", () => {
+    expect(hero.selected.key).toBe(w.key);
+    const down = frames.filter((f) => DESCENT.some((d) => d.phase === f.phase));
+    expect(down.map((f) => f.level)).toEqual(["L3", "L4", "GL", "L5"]);
+    expect(frames.some((f) => f.level === "SYS" || f.level === "L2")).toBe(
+      false,
+    );
+    // a ladder whose lower levels are planned stops the descent there
+    const m1ladder = site.ladder.map((l) =>
+      l.milestone === "M2" ? { ...l, status: "planned" as const } : l,
+    );
+    expect(
+      heroFrames(hero, m1ladder).filter((f) =>
+        DESCENT.some((d) => d.phase === f.phase),
+      ),
+    ).toHaveLength(0);
+  });
+
+  it("every frame has a caption, from the run and the worked example", () => {
     for (const f of frames)
-      expect(heroCaption(f, hero, spec, site.ladder).length).toBeGreaterThan(
+      expect(heroCaption(f, hero, spec, site.ladder, w).length).toBeGreaterThan(
         20,
       );
+    const cap = (phase: string) =>
+      heroCaption(
+        frames.find((f) => f.phase === phase)!,
+        hero,
+        spec,
+        site.ladder,
+        w,
+      );
     expect(
-      heroCaption(frames[frames.length - 1]!, hero, spec, site.ladder),
-    ).toMatch(/planned \(M2, M3\)/);
-    expect(heroCaption(frames[0]!, hero, spec, site.ladder)).toMatch(
-      /max error ≤ 2\^-20/,
+      heroCaption(frames[frames.length - 1]!, hero, spec, site.ladder, w),
+    ).toMatch(/2 levels are planned \(M3\)/);
+    expect(heroCaption(frames[0]!, hero, spec, site.ladder, w)).toMatch(
+      /max error ≤ 2\^-10/,
+    );
+    expect(cap("select")).toContain("the true optimum");
+    expect(cap("rtl")).toContain(
+      "Verilator 5.020 and Icarus Verilog 12.0 simulate all 32,768 input angles: 0 mismatches",
+    );
+    expect(cap("synth")).toContain("216 LUTs, 107 FFs, 150.7 MHz");
+    expect(cap("gate")).toContain("0 mismatches, latency 15");
+    expect(cap("annotate")).toContain("LUTs 159 → 216");
+    expect(cap("annotate")).toContain("10 MSPS against ≥ 1");
+    const code = frames.find(
+      (f) => f.phase === "round" && hero.rounds[f.round - 1]!.by_code,
+    )!;
+    expect(heroCaption(code, hero, spec, site.ladder, w)).toContain(
+      "front-mapping round",
     );
   });
 
   it("assigns evaluations to rounds", () => {
     expect(roundOf(hero, 0)).toBe(1);
-    expect(roundOf(hero, 100)).toBe(2);
-    expect(roundOf(hero, 399)).toBe(4);
-    expect(roundOf(hero, 400)).toBe(4);
+    expect(roundOf(hero, hero.rounds[0]!.cumulative_evals)).toBe(2);
+    expect(roundOf(hero, 399)).toBe(hero.rounds.length);
+    expect(roundOf(hero, 400)).toBe(hero.rounds.length);
   });
 });
 

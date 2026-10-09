@@ -6,7 +6,8 @@
  */
 import Link from "next/link";
 
-import { COMMIT, site } from "@/lib/dse/data";
+import { COMMIT, ev, site } from "@/lib/dse/data";
+import { fmtInt } from "@/lib/format";
 import {
   AGENT_REPO,
   CONTEXT_URL,
@@ -67,7 +68,7 @@ const SOFTWARE: Item[] = [
   },
   {
     title: "Testing and CI",
-    body: "Parity tests between languages with no tolerance, frame tests on every animation, end-to-end tests at desktop and phone widths in light and dark mode, accessibility scans and Lighthouse budgets in CI; RTL checked against golden models with Icarus in CI.",
+    body: "Parity tests between languages with no tolerance, frame tests on every animation, end-to-end tests at desktop and phone widths in light and dark mode, accessibility scans and Lighthouse budgets in CI; in the agent's CI, generated RTL checked against the golden model in two simulators, formal proofs, gate-level simulation and a synthesis smoke test.",
     links: [
       { href: `${GITHUB_URL}/actions`, label: "this site's CI" },
       { href: `${AGENT_REPO}/actions`, label: "the agent's CI" },
@@ -92,9 +93,10 @@ const SOFTWARE: Item[] = [
 const HARDWARE: Item[] = [
   {
     title: "FPGA and RTL",
-    body: "SystemVerilog and VHDL, Xilinx certified, UltraScale+. Public examples: the synthesisable CORDIC modules this project starts from, a parameterised AXI4 crossbar, a MESI cache controller, and an AHB-to-MII Ethernet MAC in VHDL with its testbench and verification plans.",
+    body: "SystemVerilog and VHDL, Xilinx certified, UltraScale+. Public examples: the synthesisable CORDIC modules this project starts from, and this project's generator of verified SystemVerilog for four CORDIC architectures (synthesised with Yosys, nextpnr-xilinx and Vivado 2025.2); a parameterised AXI4 crossbar, a MESI cache controller, and an AHB-to-MII Ethernet MAC in VHDL with its testbench and verification plans.",
     links: [
       { href: ownerRepo("CORDIC"), label: "CORDIC" },
+      { href: AGENT_REPO, label: "HW_Design_Space_Agent" },
       { href: ownerRepo("AXI4_Crossbar"), label: "AXI4_Crossbar" },
       {
         href: ownerRepo("Cache_Controller_MESI"),
@@ -233,6 +235,22 @@ export default function AboutPage(): JSX.Element {
         </p>
       </section>
 
+      <section aria-labelledby="record" className="mt-12">
+        <h2 id="record" className="text-xl font-semibold tracking-tight">
+          How it was built, and why
+        </h2>
+        <p className="mt-3 max-w-3xl text-sm text-neutral-700 dark:text-neutral-300">
+          The{" "}
+          <Link href="/record" className={A}>
+            project record
+          </Link>{" "}
+          is the engineering log: the principles every milestone follows, how
+          the work is planned, done and independently verified with AI coding
+          agents, every decision with its alternatives and reasons, what review
+          found, and what is still missing.
+        </p>
+      </section>
+
       <section aria-labelledby="site" className="mt-12">
         <h2 id="site" className="text-xl font-semibold tracking-tight">
           About this site
@@ -242,15 +260,18 @@ export default function AboutPage(): JSX.Element {
           <a href={AGENT_REPO} className={A}>
             HW_Design_Space_Agent
           </a>{" "}
-          at commit {COMMIT} ({site.trace_runs} recorded run traces: the 48
-          scored runs and one that crashed before scoring; {site.trace_calls}{" "}
-          LLM calls), vendored byte for byte with its hashes, or from the
-          TypeScript ports of its golden model and cost model, which match the
-          Python reference exactly. A Python script regenerates the site&apos;s
-          data from the vendored files and checks every results row against the
-          repository&apos;s own results table; the site&apos;s CI fails if
-          anything drifts. Nothing calls a language model at runtime. The design
-          and the animation framework come from the{" "}
+          at commit {COMMIT} (
+          {ev("m1").trace_runs + ev("m2").trace_runs + site.spend.m2.pilot_runs}{" "}
+          recorded run traces: M1&apos;s {ev("m1").costs.runs} scored runs and
+          one that crashed before scoring, M2&apos;s {ev("m2").costs.runs} runs
+          and its {site.spend.m2.pilot_runs}-run pilot;{" "}
+          {fmtInt(site.trace_calls)} LLM calls), vendored byte for byte with its
+          hashes, or from the TypeScript ports of its golden model and cost
+          model, which match the Python reference exactly. A Python script
+          regenerates the site&apos;s data from the vendored files and checks
+          every results row against the repository&apos;s own results table; the
+          site&apos;s CI fails if anything drifts. Nothing calls a language
+          model at runtime. The design and the animation framework come from the{" "}
           <a href={HARNESSES_URL} className={A}>
             agent sites
           </a>

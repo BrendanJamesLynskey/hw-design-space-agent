@@ -1,0 +1,47 @@
+{
+ "milestone": "m2",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null
+ },
+ "spec": "high_precision",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "converged",
+ "rounds": 3,
+ "coverage_rounds": 1,
+ "llm_calls": 3.0,
+ "llm_failures": 0.0,
+ "input_tokens": 12364.0,
+ "output_tokens": 3979.0,
+ "cost_usd": 0.06451799999999999,
+ "wall_s": 32.9,
+ "run_dir": "runs/eval_m2/high_precision/20261009-075230-cff1",
+ "decisions": [
+  "refine",
+  "refine"
+ ],
+ "overrides": [
+  "'refine' overridden to stop: HV gain 0.00% < epsilon 1.00%",
+  "code: before stopping (converged), one front-mapping round with the remaining 200 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ],
+ "n_evals": 400,
+ "hv_final": 88340.85934001996,
+ "hv_frac": 0.9770813178687063,
+ "evals_to_95": 6,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=26,n_iter=22,angle_guard=3,frac_guard=0,rounding=round,m=6",
+ "select_regret": 0.034737987605726384,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

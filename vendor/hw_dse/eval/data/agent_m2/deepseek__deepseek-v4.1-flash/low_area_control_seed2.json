@@ -1,0 +1,48 @@
+{
+ "milestone": "m2",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null
+ },
+ "spec": "low_area_control",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "stopped",
+ "rounds": 5,
+ "coverage_rounds": 3,
+ "llm_calls": 6.0,
+ "llm_failures": 1.0,
+ "input_tokens": 16490.0,
+ "output_tokens": 11836.0,
+ "cost_usd": 0.010510108,
+ "wall_s": 155.0,
+ "run_dir": "runs/eval_m2/low_area_control/20261009-081319-e153",
+ "decisions": [
+  "widen",
+  "map_front",
+  "map_front",
+  "stop"
+ ],
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 60 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ],
+ "n_evals": 400,
+ "hv_final": 15423.803338703838,
+ "hv_frac": 0.9255076372141017,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=16,angle_guard=0,frac_guard=2,rounding=trunc",
+ "select_regret": 0.08786767041670923,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

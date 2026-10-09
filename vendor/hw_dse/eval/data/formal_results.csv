@@ -1,0 +1,8 @@
+job,kind,key,mode,depth,status,seconds,yosys,sby,solver
+equiv_m2_trunc,equivalence,"pipelined_m:data_width=8,n_iter=7,angle_guard=0,frac_guard=0,rounding=trunc,m=2",prove (k-induction),13,PASS,15.6,Yosys 0.33 (git sha1 2584903a060),SBY v0.69,z3 Z3 version 4.8.12 - 64 bit
+equiv_m3_round,equivalence,"pipelined_m:data_width=8,n_iter=9,angle_guard=-1,frac_guard=2,rounding=round,m=3",prove (k-induction),15,PASS,2.7,Yosys 0.33 (git sha1 2584903a060),SBY v0.69,z3 Z3 version 4.8.12 - 64 bit
+equiv_m4_round,equivalence,"pipelined_m:data_width=8,n_iter=8,angle_guard=2,frac_guard=1,rounding=round,m=4",prove (k-induction),14,PASS,33.2,Yosys 0.33 (git sha1 2584903a060),SBY v0.69,z3 Z3 version 4.8.12 - 64 bit
+latency_iterative,latency,"iterative:data_width=8,n_iter=6,angle_guard=0,frac_guard=0,rounding=trunc",prove (k-induction),26,PASS,1.4,Yosys 0.33 (git sha1 2584903a060),SBY v0.69,z3 Z3 version 4.8.12 - 64 bit
+latency_unrolled_k,latency,"unrolled_k:data_width=8,n_iter=9,angle_guard=0,frac_guard=2,rounding=round,k=4",prove (k-induction),20,PASS,30.4,Yosys 0.33 (git sha1 2584903a060),SBY v0.69,z3 Z3 version 4.8.12 - 64 bit
+latency_pipelined,latency,"pipelined:data_width=8,n_iter=7,angle_guard=0,frac_guard=0,rounding=trunc",prove (k-induction),26,PASS,1.4,Yosys 0.33 (git sha1 2584903a060),SBY v0.69,z3 Z3 version 4.8.12 - 64 bit
+latency_pipelined_m,latency,"pipelined_m:data_width=8,n_iter=7,angle_guard=0,frac_guard=0,rounding=trunc,m=3",prove (k-induction),18,PASS,0.8,Yosys 0.33 (git sha1 2584903a060),SBY v0.69,z3 Z3 version 4.8.12 - 64 bit

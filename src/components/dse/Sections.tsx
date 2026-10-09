@@ -4,10 +4,15 @@
  */
 import type { ReactNode } from "react";
 
-import { site, why } from "@/lib/dse/data";
+import { ev, site, why } from "@/lib/dse/data";
+import { ladder } from "@/lib/dse/ladder";
 
 import {
   Calculator,
+  DescentWidget,
+  HighPrecisionStory,
+  M1M2Shift,
+  MeasuredScatter,
   CordicWidget,
   DatapathWidget,
   HillClimbWidget,
@@ -68,5 +73,37 @@ export function ResultsRace(): JSX.Element {
 }
 
 export function ResultsCalculator(): JSX.Element {
-  return <Calculator models={site.costs.models} />;
+  return <Calculator models={ev("m2").costs.models} />;
+}
+
+/** One design down the ladder (How it works): the worked example and its family's proofs. */
+export function HowDescent(): JSX.Element {
+  return (
+    <DescentWidget
+      worked={ladder.worked}
+      formal={ladder.formal.rows.filter(
+        (r) => r.family === ladder.worked.family,
+      )}
+    />
+  );
+}
+
+export function CaseScatter(): JSX.Element {
+  return (
+    <MeasuredScatter
+      scatter={ladder.scatter}
+      nFit={ladder.l5.vivado.n_fit_points}
+    />
+  );
+}
+
+export function CaseHighPrecision(): JSX.Element {
+  return <HighPrecisionStory hp={ladder.high_precision} />;
+}
+
+export function ResultsShift(): JSX.Element {
+  const labels = Object.fromEntries(
+    ev("m2").costs.models.map((m) => [m.model, m.label]),
+  );
+  return <M1M2Shift glance={site.glance} labels={labels} />;
 }

@@ -1,53 +1,82 @@
-Milestone 1 asks one question: on the same budget of evaluations, does an LLM steering the exploration do better than plain optimisers with no LLM? The CORDIC design space is small enough (<V of="designs" fmt="int" /> designs) to score every design, so every run is graded against the exact answer. Each method ran three seeds on each of four specs, 400 evaluations per run at most. The agents used three real models through OpenRouter, one of them (Qwen3.8-27B) both with its default reasoning and with reasoning off: <V of="runs" fmt="int" /> recorded runs, <V of="calls.total" fmt="int" /> LLM calls, <V of="total_usd" fmt="usd" /> of provider-reported usage.
+The eval asks one question: on the same budget of evaluations, does an LLM steering the exploration do better than plain optimisers with no LLM? The CORDIC design space is small enough (<V of="designs" fmt="int" /> designs) to score every design, so every run is graded against the exact answer, always with the same (M1) cost model so the milestones are comparable.
 
-## Where the agent lost
+Milestone 1 found a split: the agent picked better designs than NSGA-II and random search, but mapped the trade-off curve far worse, because it dived at the spec's corner and stopped early. Milestone 2 set out to close that gap without losing the selection lead: a `map_front` decision, a 40% front-mapping reserve that code spends before a run stops, and five seeds instead of three. It ran three models through OpenRouter, Sonnet 5.5, DeepSeek V4.1 Flash and Qwen3.8-27B with reasoning off: <V of="m2.runs" fmt="int" /> runs, <V of="m2.calls.total" fmt="int" /> LLM calls, <V of="m2.total_usd" fmt="usd" /> of provider-reported usage. Every table below is mean ± population standard deviation over the seeds.
 
-Plainly, first. **NSGA-II maps the trade-off curve better than any agent on two of the three feasible specs.** On `dds_250msps` it covers <V of="dds_250msps.nsga2_hv" fmt="f3" /> of the true front's hypervolume, against <V of="dds_250msps.min_agent_hv" fmt="f3" />–<V of="dds_250msps.best_agent_hv" fmt="f3" /> for the agents; on `low_area_control`, <V of="low_area_control.nsga2_hv" fmt="f3" /> against <V of="low_area_control.min_agent_hv" fmt="f3" />–<V of="low_area_control.best_agent_hv" fmt="f3" />. The agents dive at the corner of the space the spec cares about, the front stops growing there, and the 1% hypervolume-gain rule ends the run with budget unspent. Random search beats every agent on hypervolume on those two specs as well.
+## M1 → M2
 
-And on selection, one model-and-spec pair lost too: Qwen3.8-27B with reasoning off, on `low_area_control`, picked designs <V of="low_area_control.qwen_off_regret" fmt="spct" /> worse than the optimum on average, against NSGA-II's <V of="low_area_control.nsga2_regret" fmt="spct" />. The other <V of="regret.agent_beats_nsga2" fmt="int" /> of the <V of="regret.agent_rows" fmt="int" /> pairs beat NSGA-II's mean regret.
+<ResultsShift />
 
-## Where it won
+**The front-mapping gap is closed.** Every M2 model now covers <V of="glance.hv_ratio_min" fmt="f2" />–<V of="glance.hv_ratio_max" fmt="f2" />× NSGA-II's hypervolume on every feasible spec, where in M1 the agents reached <V of="glance.m1_hv_ratio_min" fmt="f2" />–<V of="glance.m1_hv_ratio_max" fmt="f2" />× on the two specs they lost. **And the selection lead mostly survives:** mean regret is below NSGA-II's in <V of="glance.regret_beats" fmt="int" /> of the <V of="glance.regret_cells" fmt="int" /> model-and-spec cells.
 
-**The agent is the better selector.** On every feasible spec, the best agent picked a design closer to the true optimum than either baseline: <V of="dds_250msps.best_agent_regret" fmt="spct" /> against NSGA-II's <V of="dds_250msps.nsga2_regret" fmt="spct" /> on `dds_250msps`, <V of="high_precision.best_agent_regret" fmt="spct" /> against <V of="high_precision.nsga2_regret" fmt="spct" /> on `high_precision`, <V of="low_area_control.best_agent_regret" fmt="spct" /> against <V of="low_area_control.nsga2_regret" fmt="spct" /> on `low_area_control`. On `high_precision`, whose true front is a single point, the agents also win on hypervolume (Sonnet 5.5 covers <V of="high_precision.sonnet_hv" fmt="f3" />; evaluations to 95%: <V of="high_precision.sonnet_e95" fmt="str" />, against NSGA-II's <V of="high_precision.nsga2_e95" fmt="str" />). **And on the infeasible spec, every model on every seed declared it infeasible itself** (<V of="infeasible.llm_declared" fmt="int" /> of <V of="infeasible.llm_runs" fmt="int" /> runs), naming throughput as the binding constraint, usually after 100–200 evaluations rather than the whole budget. The baselines can only report that they found nothing.
+## Where it got worse
 
-That split is the division of labour the design intends. The agent finds the critical 3% cheaply: the right design for this spec, or the proof that none exists. Mapping the whole front exhaustively stays the job of a classic optimiser, which the agent drives.
+Plainly, first.
+
+- **Qwen on `high_precision`** lost to NSGA-II on selection: <V of="glance.qwen_hp_regret_m2" fmt="spct" /> mean regret (± <V of="glance.qwen_hp_regret_m2_std" fmt="pct" />) against NSGA-II's <V of="m2.high_precision.nsga2_regret" fmt="spct" />, up from <V of="glance.qwen_hp_regret_m1" fmt="spct" /> in M1. One seed accounts for it: its first box for `pipelined_m` was too narrow to reach the accuracy target, the front became a single `pipelined` design, and front-mapping only revisits the families on the front, so the winner's family never came back. That seed selected a design <V of="glance.qwen_hp_worst_seed" fmt="spct" /> from the optimum; the median of its five seeds is <V of="glance.qwen_hp_median" fmt="spct" />. The same seed pulls its `high_precision` hypervolume below NSGA-II's (the one cell under 1.0 above). The repository proposes a fix for milestone 3 and did not apply it after seeing the eval.
+- **DeepSeek's selection got worse:** <V of="glance.ds_dds_regret_m1" fmt="spct" /> → <V of="glance.ds_dds_regret_m2" fmt="spct" /> on `dds_250msps` and <V of="glance.ds_low_regret_m1" fmt="spct" /> → <V of="glance.ds_low_regret_m2" fmt="spct" /> on `low_area_control`. It chose `map_front` in <V of="glance.mf_deepseek" fmt="int" /> of its <V of="glance.mf_runs" fmt="int" /> feasible-spec runs (Qwen <V of="glance.mf_qwen" fmt="int" />, Sonnet <V of="glance.mf_sonnet" fmt="int" />), spending its rounds on coverage rather than on the corner. It still beats NSGA-II on both.
+- **The agent now always uses the whole budget** on feasible specs, 400 evaluations like the baselines, by design: the reserve spends what is left on mapping. M1's "fewer evaluations" came with its narrow fronts.
+- Five seeds is still a small sample: several cells overlap within one standard deviation (DeepSeek on `low_area_control`, for one).
+
+## Where it held
+
+The infeasible spec is still caught every time: every model on every seed declared it infeasible itself (<V of="m2.infeasible.llm_declared" fmt="int" /> of <V of="m2.infeasible.llm_runs" fmt="int" /> runs), naming throughput as the binding constraint, usually after 100–200 evaluations. The baselines can only report that they found nothing.
+
+<GlanceTable metric="hv_frac" />
+
+<GlanceTable metric="select_regret" />
 
 ## Pareto replay
 
-Pick a run and watch it explore, round by round: what the LLM asked for, what code found, the front so far against the true front, and the LLM's verdict on each round in its own words.
+Pick a run, M2 or M1, and watch it explore round by round: what the LLM asked for, what code found, the front so far against the true front, and the LLM's verdict on each round in its own words. M2's front-mapping rounds are marked; the last one is code's alone.
 
 <ResultsReplay />
 
 ## The hypervolume race
 
-How quickly each method covers the true front, evaluation by evaluation. Watch the agents' lines go flat when their runs stop, while NSGA-II keeps climbing on `dds_250msps` and `low_area_control`.
+How quickly each method covers the true front, evaluation by evaluation. Switch to M1 to see the agents' lines go flat when their runs stopped; in M2 they keep climbing to the end of the budget.
 
 <ResultsRace />
 
-## Every spec, every method
+## Every spec, every method (M2)
 
 The selected design of every seed, its regret, the front coverage, and what the LLM cost on that spec: tokens, dollars per run and dollars per evaluated design. The baselines use no LLM.
 
-<SpecResultsTable spec="dds_250msps" />
+<SpecResultsTable spec="dds_250msps" ms="m2" />
 
-<SpecResultsTable spec="low_area_control" />
+<SpecResultsTable spec="low_area_control" ms="m2" />
 
-<SpecResultsTable spec="high_precision" />
+<SpecResultsTable spec="high_precision" ms="m2" />
 
-<SpecResultsTable spec="infeasible_dds_400msps" />
+<SpecResultsTable spec="infeasible_dds_400msps" ms="m2" />
 
-## What the LLM cost, by model
+## What the LLM cost, by model (M2)
 
-<CostTable />
+<CostTable ms="m2" />
 
-Model choice matters more than the totals suggest. Qwen3.8-27B with its default reasoning failed <V of="calls.qwen_failed" fmt="int" /> of its <V of="calls.qwen" fmt="int" /> calls, <V of="calls.qwen_length" fmt="int" /> of them by reaching the output-token limit, mostly spent on reasoning; with reasoning off it was about <V of="cost.qwen.cheaper" fmt="x" /> cheaper per run and needed <V of="cost.qwen.speedup" fmt="x" /> less wall-clock, and it still beat NSGA-II's selection regret on two of the three feasible specs.
+A complete exploration of one spec cost between <V of="m2.cost.min_per_run" fmt="usd" /> and <V of="m2.cost.max_per_run" fmt="usd" /> per run, and five seeds of one spec between <V of="m2.cost.qwen_off.per_spec" fmt="usd" /> (Qwen, reasoning off) and <V of="m2.cost.sonnet.per_spec" fmt="usd" /> (Sonnet). For M2, three ways of counting the spend agree to within a cent; M1's provider-reported figure undercounted the key:
+
+<SpendTable />
 
 <div id="calculator" />
 
 ## Cost and labour
 
-The architecture lets several agents run round the clock, each evaluating a real design decision. What that costs is a projection, and the calculator builds it only from the measured runs above. The engineer-time side is yours to fill in: there are no salary assumptions here.
+The architecture lets several agents run round the clock, each evaluating a real design decision. What that costs is a projection, and the calculator builds it only from the measured M2 runs above. The engineer-time side is yours to fill in: there are no salary assumptions here.
 
 <ResultsCalculator />
 
-The repository's own tables are in [eval/results.md](https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent/blob/0082ccd9a04d3da99285df65aec7db1e94c1bd1f/eval/results.md); every row this page shows is checked against it when the site's data is built.
+## Milestone 1, archived
+
+M1's runs are kept as they were: three seeds, four model configurations (Qwen3.8-27B also with its default reasoning), <V of="m1.runs" fmt="int" /> runs, <V of="m1.total_usd" fmt="usd" /> provider-reported. NSGA-II mapped the front better on two of the three feasible specs (hypervolume <V of="m1.dds_250msps.nsga2_hv" fmt="f3" /> against the agents' <V of="m1.dds_250msps.min_agent_hv" fmt="f3" />–<V of="m1.dds_250msps.best_agent_hv" fmt="f3" /> on `dds_250msps`, <V of="m1.low_area_control.nsga2_hv" fmt="f3" /> against <V of="m1.low_area_control.min_agent_hv" fmt="f3" />–<V of="m1.low_area_control.best_agent_hv" fmt="f3" /> on `low_area_control`), while <V of="m1.regret.agent_beats_nsga2" fmt="int" /> of the <V of="m1.regret.agent_rows" fmt="int" /> model-and-spec pairs beat NSGA-II's mean regret. With reasoning off, Qwen was about <V of="m1.cost.qwen.cheaper" fmt="x" /> cheaper per run and needed <V of="m1.cost.qwen.speedup" fmt="x" /> less wall-clock; with its default reasoning it failed <V of="m1.calls.qwen_failed" fmt="int" /> of its <V of="m1.calls.qwen" fmt="int" /> calls, <V of="m1.calls.qwen_length" fmt="int" /> of them by reaching the output-token limit. M2 ran Qwen with reasoning off only.
+
+<SpecResultsTable spec="dds_250msps" ms="m1" />
+
+<SpecResultsTable spec="low_area_control" ms="m1" />
+
+<SpecResultsTable spec="high_precision" ms="m1" />
+
+<SpecResultsTable spec="infeasible_dds_400msps" ms="m1" />
+
+<CostTable ms="m1" />
+
+The repository's own tables are in <RepoFile path="eval/results.md">eval/results.md</RepoFile>; every row this page shows is checked against it when the site's data is built.

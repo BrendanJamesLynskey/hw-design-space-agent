@@ -14,9 +14,10 @@ import { useStepper } from "@/components/anim/useStepper";
 import { Segmented } from "@/components/ui/Controls";
 import { useSvgFont } from "@/components/viz/useSvgFont";
 import { raceCaption } from "@/lib/dse/captions";
+import { MS_LABEL, type MsKey } from "@/lib/dse/data";
 import {
   methodAt,
-  race,
+  races,
   raceSteps,
   stoppedBy,
   type RaceMethod,
@@ -44,9 +45,14 @@ const SPECS = ["dds_250msps", "low_area_control", "high_precision"] as const;
 
 export default function HvRace(): JSX.Element {
   const [specName, setSpec] = useState<string>(SPECS[0]);
+  const [ms, setMs] = useState<MsKey>("m2");
+  const race = races[ms];
   const spec = race.specs[specName]!;
   const steps = useMemo(() => raceSteps(spec), [spec]);
-  const stepper = useStepper(steps.length, { stepMs: 260, resetKey: specName });
+  const stepper = useStepper(steps.length, {
+    stepMs: 260,
+    resetKey: `${ms}|${specName}`,
+  });
   const e = steps[stepper.step]!;
   const font = useSvgFont(W);
   const { h: H, m: M } = font.narrow ? NARROW : WIDE;
@@ -66,17 +72,17 @@ export default function HvRace(): JSX.Element {
       title="The hypervolume race"
       summary={
         <>
-          Fraction of the true front&apos;s hypervolume covered after each
-          evaluation, mean of 3 seeds, {spec.budget} evaluations per run.
-          Baselines are re-run with the repository&apos;s code at the vendored
-          commit and reproduce the recorded results exactly; agents are their
-          recorded runs.
+          {MS_LABEL[ms]}: fraction of the true front&apos;s hypervolume covered
+          after each evaluation, mean of {race.seeds} seeds, {spec.budget}{" "}
+          evaluations per run. Baselines are re-run with the repository&apos;s
+          code at the vendored commit and reproduce the recorded results
+          exactly; agents are their recorded runs.
         </>
       }
       stepper={stepper}
       stepLabel="evaluations"
       countFrom={0}
-      caption={raceCaption(e, spec, specName)}
+      caption={raceCaption(e, spec, specName, MS_LABEL[ms])}
       testId="race-widget"
       visual={
         <div className="min-w-0">
@@ -85,7 +91,7 @@ export default function HvRace(): JSX.Element {
             viewBox={`0 0 ${W} ${H}`}
             className="w-full"
             role="img"
-            aria-label={`Hypervolume fraction against evaluations for ${specName}, after ${e} evaluations`}
+            aria-label={`${MS_LABEL[ms]}: hypervolume fraction against evaluations for ${specName}, after ${e} evaluations`}
           >
             {[0, 0.25, 0.5, 0.75, 1].map((v) => (
               <g key={v}>
@@ -202,18 +208,30 @@ export default function HvRace(): JSX.Element {
             })}
           </ul>
           <p className="mt-1 text-[0.7rem] text-neutral-600 dark:text-neutral-400">
-            ● where every seed of an agent had stopped (the 1% hypervolume-gain
-            rule or the LLM&apos;s own stop).
+            ● where every seed of an agent had stopped (M1: the 1%
+            hypervolume-gain rule or the LLM&apos;s own stop; M2 spends the
+            whole budget).
           </p>
         </div>
       }
       params={
-        <Segmented
-          label="Spec"
-          value={specName}
-          options={SPECS.map((s) => ({ value: s, label: s }))}
-          onChange={setSpec}
-        />
+        <>
+          <Segmented
+            label="Milestone"
+            value={ms}
+            options={(["m2", "m1"] as const).map((m) => ({
+              value: m,
+              label: `${MS_LABEL[m]} (${races[m].seeds} seeds)`,
+            }))}
+            onChange={(m) => setMs(m as MsKey)}
+          />
+          <Segmented
+            label="Spec"
+            value={specName}
+            options={SPECS.map((s) => ({ value: s, label: s }))}
+            onChange={setSpec}
+          />
+        </>
       }
     />
   );

@@ -3,10 +3,12 @@
  * covered after e evaluations, per feasible spec. The curves are exported by
  * scripts/export_dse.py: NSGA-II and random search re-run with the repository's own code at the
  * vendored commit (each re-run reproduces the recorded result exactly), the agents from their
- * recorded evaluations. Each method's line is the mean of its three seeds; a run that stopped
- * early keeps its final value (it spent no more evaluations).
+ * recorded evaluations, for each milestone. Each method's line is the mean of its seeds (3 in
+ * M1, 5 in M2); a run that stopped early keeps its final value (it spent no more evaluations).
  */
 import RACE from "@/data/race.json";
+
+import type { MsKey } from "./data";
 
 export type RaceSeed = {
   seed: number;
@@ -31,9 +33,17 @@ export type RaceSpec = {
   methods: RaceMethod[];
 };
 
-export type Race = { step: number; specs: Record<string, RaceSpec> };
+export type Race = {
+  step: number;
+  milestone: MsKey;
+  seeds: number;
+  specs: Record<string, RaceSpec>;
+};
 
-export const race = RACE as unknown as Race;
+/** Each milestone's race: M1 (3 seeds per method), M2 (5). */
+export const races = RACE as unknown as Record<MsKey, Race>;
+/** The latest milestone's race. */
+export const race = races.m2;
 
 /** One seed's HV fraction after `e` evaluations (its final value once it has stopped). */
 export function seedAt(s: RaceSeed, e: number, step = race.step): number {

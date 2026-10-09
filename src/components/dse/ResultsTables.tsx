@@ -3,7 +3,15 @@
  * src/data/site.json, whose rows scripts/export_dse.py checks against the repository's
  * results.md (and whose per-spec costs it checks add up to the per-model totals).
  */
-import { RUN_DATE, site, type Selection } from "@/lib/dse/data";
+import {
+  MS_LABEL,
+  ev,
+  runDate,
+  runsOf,
+  site,
+  type MsKey,
+  type Selection,
+} from "@/lib/dse/data";
 import { fleetSpan, maxConcurrent } from "@/lib/dse/fleet";
 import { designName, fmtInt, signedPct, trim } from "@/lib/format";
 
@@ -31,16 +39,23 @@ function Sel({ s, best }: { s: Selection; best: string | null }): JSX.Element {
   );
 }
 
-export function SpecResultsTable({ spec }: { spec: string }): JSX.Element {
-  const rows = site.results[spec]!;
-  const tables = site.spec_tables[spec]!;
+export function SpecResultsTable({
+  spec,
+  ms = "m2",
+}: {
+  spec: string;
+  ms?: MsKey;
+}): JSX.Element {
+  const e = ev(ms);
+  const rows = e.results[spec]!;
+  const tables = e.spec_tables[spec]!;
   const gt = site.ground_truth[spec]!;
   const s = site.specs[spec]!;
   const feasible = gt.feasible;
   const best = gt.selected?.key ?? null;
   return (
     <>
-      <p className="mt-6 text-sm" data-testid={`results-caption-${spec}`}>
+      <p className="mt-6 text-sm" data-testid={`results-caption-${ms}-${spec}`}>
         <span className="font-mono font-semibold">{spec}</span>: {s.description}{" "}
         {feasible ? (
           <>
@@ -60,13 +75,13 @@ export function SpecResultsTable({ spec }: { spec: string }): JSX.Element {
       </p>
       <div
         role="region"
-        aria-label={`Results for ${spec}`}
+        aria-label={`${MS_LABEL[ms]} results for ${spec}`}
         tabIndex={0}
         className="focus-ring relative my-4 max-w-full overflow-x-auto rounded"
       >
         <table
           className="w-full min-w-[56rem] text-sm"
-          data-testid={`results-${spec}`}
+          data-testid={`results-${ms}-${spec}`}
         >
           <thead>
             <tr>
@@ -148,10 +163,13 @@ export function SpecResultsTable({ spec }: { spec: string }): JSX.Element {
           </tbody>
         </table>
         <p className="mt-2 text-xs text-neutral-600 dark:text-neutral-400">
-          3 seeds per method. Regret, HV and evaluations to 95% are the
-          repository&apos;s results.md rows; tokens and dollars are this
-          spec&apos;s 3 runs, <Prov kind="measured" /> provider-reported
-          (OpenRouter, {RUN_DATE}).
+          {MS_LABEL[ms]}: {e.seeds} seeds per method, mean ± population standard
+          deviation. Regret, HV and evaluations to 95% are the repository&apos;s
+          results.md rows; tokens and dollars are this spec&apos;s {e.seeds}{" "}
+          runs, <Prov kind="measured" /> provider-reported (OpenRouter,{" "}
+          {runDate(ms)}).
+          {ms === "m2" &&
+            " The agents now spend the whole budget on feasible specs: code maps the front with whatever is left before a run stops."}
         </p>
       </div>
     </>
@@ -165,22 +183,22 @@ const MODEL_COLOUR: Record<string, string> = {
   "qwen/qwen3.8-27b, reasoning off": "#CC79A7",
 };
 
-/** The eval's 48 runs on a timeline: four fleets of agents running at once. */
-export function FleetTimeline(): JSX.Element {
-  const runs = site.runs;
+/** A milestone's runs on a timeline: fleets of agents running at once. */
+export function FleetTimeline({ ms = "m2" }: { ms?: MsKey }): JSX.Element {
+  const runs = runsOf(ms);
   const end = fleetSpan(runs);
-  const models = site.costs.models;
+  const models = ev(ms).costs.models;
   const first = runs[0]!.start_utc;
   return (
     <figure
-      data-testid="fleet"
+      data-testid={`fleet-${ms}`}
       className="my-8 min-w-0 rounded-lg border border-neutral-200 bg-neutral-50 p-4 dark:border-neutral-800 dark:bg-neutral-900"
     >
       <figcaption>
         <p className="font-mono text-[0.65rem] uppercase tracking-widest text-neutral-500 dark:text-neutral-400">
-          Measured · the eval of {RUN_DATE}
+          Measured · the {MS_LABEL[ms]} eval of {runDate(ms)}
         </p>
-        <p className="mt-1 font-semibold">A fleet of runs</p>
+        <p className="mt-1 font-semibold">A fleet of runs ({MS_LABEL[ms]})</p>
         <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400">
           Each bar is one of the {runs.length} scored runs: when it started (its
           run directory&apos;s UTC timestamp, from {first}) and how long it took

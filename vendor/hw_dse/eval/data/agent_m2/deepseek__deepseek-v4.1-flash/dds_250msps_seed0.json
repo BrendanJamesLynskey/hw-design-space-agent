@@ -1,0 +1,45 @@
+{
+ "milestone": "m2",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null
+ },
+ "spec": "dds_250msps",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "stopped",
+ "rounds": 4,
+ "coverage_rounds": 3,
+ "llm_calls": 5.0,
+ "llm_failures": 0.0,
+ "input_tokens": 14061.0,
+ "output_tokens": 8225.0,
+ "cost_usd": 0.011348609999999999,
+ "wall_s": 37.4,
+ "run_dir": "runs/eval_m2/dds_250msps/20261009-074844-f588",
+ "decisions": [
+  "map_front",
+  "map_front",
+  "map_front",
+  "stop"
+ ],
+ "overrides": [],
+ "n_evals": 400,
+ "hv_final": 17429.751569536173,
+ "hv_frac": 0.8827880760560761,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=19,n_iter=15,angle_guard=3,frac_guard=0,rounding=trunc",
+ "select_regret": 0.08149010477299193,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

@@ -54,6 +54,25 @@ const CLIPS: Clip[] = [
     fps: 0.75,
   },
   { name: "hv-race", path: "/results", widget: "race-widget", fps: 8 },
+  {
+    name: "design-down-the-ladder",
+    path: "/how-it-works",
+    widget: "descent-widget",
+    fps: 0.75,
+  },
+  {
+    name: "measured-vs-estimate",
+    path: "/case-study",
+    widget: "scatter-widget",
+    fps: 0.75,
+  },
+  {
+    name: "high-precision",
+    path: "/case-study",
+    widget: "hp-widget",
+    fps: 0.75,
+  },
+  { name: "m1-to-m2", path: "/results", widget: "shift-widget", fps: 0.75 },
 ];
 
 async function main(): Promise<void> {

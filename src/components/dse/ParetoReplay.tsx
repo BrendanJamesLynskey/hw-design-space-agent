@@ -19,7 +19,7 @@ import { site, type Design } from "@/lib/dse/data";
 import { extent, pointsOf, replayFrames, staircase } from "@/lib/dse/replay";
 import { FAMILIES } from "@/lib/dse/runs";
 import { fmtInt, pct, trim } from "@/lib/format";
-import { OKABE_ITO } from "@/lib/viz/palette";
+import { FAMILY_COLOUR, OKABE_ITO } from "@/lib/viz/palette";
 
 import { useRun } from "./useRun";
 
@@ -27,13 +27,6 @@ const W = 640;
 const WIDE = { h: 320, m: { l: 58, r: 14, t: 14, b: 46 } };
 /** Phones: a taller picture and wider margins for the (enlarged) labels. */
 const NARROW = { h: 560, m: { l: 92, r: 14, t: 14, b: 70 } };
-
-export const FAMILY_COLOUR: Record<string, string> = {
-  iterative: OKABE_ITO.sky,
-  unrolled_k: OKABE_ITO.purple,
-  pipelined: OKABE_ITO.blue,
-  pipelined_m: OKABE_ITO.green,
-};
 
 const AXIS: Record<string, string> = {
   luts: "LUTs",
@@ -44,6 +37,7 @@ const AXIS: Record<string, string> = {
 
 export default function ParetoReplay(): JSX.Element {
   const { run, controls } = useRun({
+    ms: "m2",
     spec: "dds_250msps",
     model: "deepseek/deepseek-v4.1-flash",
     seed: 0,

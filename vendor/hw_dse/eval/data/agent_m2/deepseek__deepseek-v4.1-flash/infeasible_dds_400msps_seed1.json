@@ -1,0 +1,43 @@
+{
+ "milestone": "m2",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null
+ },
+ "spec": "infeasible_dds_400msps",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "infeasible",
+ "rounds": 2,
+ "coverage_rounds": 0,
+ "llm_calls": 3.0,
+ "llm_failures": 0.0,
+ "input_tokens": 8061.0,
+ "output_tokens": 11061.0,
+ "cost_usd": 0.00777913,
+ "wall_s": 46.0,
+ "run_dir": "runs/eval_m2/infeasible_dds_400msps/20261009-080429-ce54",
+ "decisions": [
+  "widen",
+  "infeasible"
+ ],
+ "overrides": [],
+ "n_evals": 200,
+ "hv_final": 0.0,
+ "hv_frac": null,
+ "evals_to_95": null,
+ "selected_meets_spec": false,
+ "selected_key": null,
+ "select_regret": null,
+ "declared_infeasible": true,
+ "infeasibility_correct": true
+}

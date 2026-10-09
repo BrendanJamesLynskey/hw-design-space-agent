@@ -3,7 +3,7 @@
  * comes from src/data/site.json, whose rows scripts/export_dse.py checks against the repo's
  * results.md.
  */
-import { RUN_DATE, site } from "@/lib/dse/data";
+import { MS_LABEL, ev, runDate, site, type MsKey } from "@/lib/dse/data";
 import { designName, fmtInt, signedPct, trim } from "@/lib/format";
 
 import { Prov } from "./Badges";
@@ -34,11 +34,13 @@ function Scroll({
 
 const FEASIBLE = ["dds_250msps", "low_area_control", "high_precision"] as const;
 
+/** The headline per feasible spec: M2 (5 seeds), with M1 (3 seeds) beside it. */
 export function HeadlineTable(): JSX.Element {
+  const g = site.glance;
   return (
-    <Scroll label="Headline results per spec">
+    <Scroll label="Headline results per spec, M1 and M2">
       <table
-        className="w-full min-w-[40rem] text-sm"
+        className="w-full min-w-[44rem] text-sm"
         data-testid="headline-table"
       >
         <thead>
@@ -46,26 +48,35 @@ export function HeadlineTable(): JSX.Element {
             <th className={TH}>Spec</th>
             <th className={TH}>True best design (exhaustive)</th>
             <th className={TH}>
-              Selection regret: best agent / NSGA-II / random
+              Selection regret, M2: best agent / NSGA-II (M1 best agent)
             </th>
-            <th className={TH}>Front coverage (HV): best agent / NSGA-II</th>
+            <th className={TH}>
+              Front coverage, agent HV ÷ NSGA-II&apos;s: M1 → M2
+            </th>
           </tr>
         </thead>
         <tbody>
           {FEASIBLE.map((s) => {
-            const g = site.ground_truth[s]!;
-            const rows = site.results[s]!;
-            const agents = rows.filter((r) => r.agent);
-            const best = agents.reduce((a, b) =>
-              (b.regret_mean ?? 9) < (a.regret_mean ?? 9) ? b : a,
+            const gt = site.ground_truth[s]!;
+            const sel = gt.selected!;
+            const m2 = ev("m2").results[s]!;
+            const m1 = ev("m1").results[s]!;
+            const best = (rows: typeof m2) =>
+              rows
+                .filter((r) => r.agent)
+                .reduce((a, b) =>
+                  (b.regret_mean ?? 9) < (a.regret_mean ?? 9) ? b : a,
+                );
+            const b2 = best(m2);
+            const b1 = best(m1);
+            const ns = m2.find((r) => r.method === "nsga2")!;
+            const ratios = g.models.map(
+              (m) => g.specs[s]![m]!.hv_vs_nsga2_text!,
             );
-            const bestHv = agents.reduce((a, b) =>
-              (b.hv_frac_mean ?? 0) > (a.hv_frac_mean ?? 0) ? b : a,
-            );
-            const ns = rows.find((r) => r.method === "nsga2")!;
-            const rnd = rows.find((r) => r.method === "random")!;
-            const sel = g.selected!;
-            const agentWinsHv = bestHv.hv_frac_mean! > ns.hv_frac_mean!;
+            const lo = (i: 0 | 1) =>
+              Math.min(...ratios.map((r) => Number(r[i])));
+            const hi = (i: 0 | 1) =>
+              Math.max(...ratios.map((r) => Number(r[i])));
             return (
               <tr key={s} data-spec={s}>
                 <td className={`${TD} font-mono`}>{s}</td>
@@ -79,27 +90,20 @@ export function HeadlineTable(): JSX.Element {
                   <Prov kind="exact" />
                 </td>
                 <td className={TD}>
-                  <strong>{signedPct(best.regret_mean!)}</strong> ({best.label})
-                  {" / "}
-                  {signedPct(ns.regret_mean!)} / {signedPct(rnd.regret_mean!)}
+                  <strong>{signedPct(b2.regret_mean!)}</strong> ({b2.label}) /{" "}
+                  {signedPct(ns.regret_mean!)}
+                  <span className="block text-xs text-neutral-600 dark:text-neutral-400">
+                    M1: {signedPct(b1.regret_mean!)} ({b1.label})
+                  </span>
                 </td>
                 <td className={TD}>
-                  {agentWinsHv ? (
-                    <strong>{bestHv.hv_frac_mean!.toFixed(3)}</strong>
-                  ) : (
-                    bestHv.hv_frac_mean!.toFixed(3)
-                  )}{" "}
-                  ({bestHv.label}) /{" "}
-                  {agentWinsHv ? (
-                    ns.hv_frac_mean!.toFixed(3)
-                  ) : (
-                    <strong>{ns.hv_frac_mean!.toFixed(3)}</strong>
-                  )}
-                  {!agentWinsHv && (
-                    <span className="block text-xs text-neutral-600 dark:text-neutral-400">
-                      NSGA-II maps this front better
-                    </span>
-                  )}
+                  {lo(0).toFixed(2)}–{hi(0).toFixed(2)} →{" "}
+                  <strong>
+                    {lo(1).toFixed(2)}–{hi(1).toFixed(2)}
+                  </strong>
+                  <span className="block text-xs text-neutral-600 dark:text-neutral-400">
+                    1.00 = NSGA-II&apos;s hypervolume
+                  </span>
                 </td>
               </tr>
             );
@@ -107,20 +111,26 @@ export function HeadlineTable(): JSX.Element {
         </tbody>
       </table>
       <p className="mt-2 text-xs text-neutral-600 dark:text-neutral-400">
-        Mean of 3 seeds, 400 evaluations per run, scored against the exhaustive
-        ground truth. Regret: how much worse the selected design is than the
-        true optimum on the spec&apos;s selection metric (lower is better). HV:
-        fraction of the true front&apos;s hypervolume reached (higher is
-        better). Bold marks the better method.
+        Means over seeds (M1: 3, M2: 5), 400 evaluations per run, scored against
+        the exhaustive ground truth with the unchanged M1 cost model. Regret:
+        how much worse the selected design is than the true optimum on the
+        spec&apos;s selection metric (lower is better). Coverage: each of the
+        three M2 models&apos; mean hypervolume over NSGA-II&apos;s on the same
+        milestone&apos;s seeds (the range over models). Numbers are the
+        repository&apos;s results.md rows.
       </p>
     </Scroll>
   );
 }
 
-export function CostTable(): JSX.Element {
+export function CostTable({ ms = "m2" }: { ms?: MsKey }): JSX.Element {
+  const costs = ev(ms).costs;
   return (
-    <Scroll label="Measured LLM cost per model">
-      <table className="w-full min-w-[40rem] text-sm" data-testid="cost-table">
+    <Scroll label={`Measured LLM cost per model, ${MS_LABEL[ms]}`}>
+      <table
+        className="w-full min-w-[40rem] text-sm"
+        data-testid={`cost-table-${ms}`}
+      >
         <thead>
           <tr>
             <th className={TH}>Model (OpenRouter ID)</th>
@@ -134,7 +144,7 @@ export function CostTable(): JSX.Element {
           </tr>
         </thead>
         <tbody>
-          {site.costs.models.map((m) => (
+          {costs.models.map((m) => (
             <tr key={m.model} data-model={m.model}>
               <td className={`${TD} font-mono`}>{m.model_id}</td>
               <td className={TD}>{m.reasoning}</td>
@@ -142,7 +152,12 @@ export function CostTable(): JSX.Element {
               <td className={TD}>
                 {fmtInt(m.input_tokens)} / {fmtInt(m.output_tokens)}
               </td>
-              <td className={TD}>${m.cost_per_run.toFixed(4)}</td>
+              <td className={TD}>
+                ${m.cost_per_run.toFixed(4)}
+                <span className="block text-xs text-neutral-600 dark:text-neutral-400">
+                  ± {m.cost_per_run_std.toFixed(4)}
+                </span>
+              </td>
               <td className={TD}>${m.cost_per_spec.toFixed(4)}</td>
               <td className={TD}>${m.cost_per_eval.toFixed(6)}</td>
               <td className={TD}>{trim(m.wall_s_mean)} s</td>
@@ -151,13 +166,16 @@ export function CostTable(): JSX.Element {
         </tbody>
       </table>
       <p className="mt-2 text-xs text-neutral-600 dark:text-neutral-400">
-        <Prov kind="measured" /> Provider-reported usage and cost from
-        OpenRouter, runs of {RUN_DATE}; {site.costs.runs} runs, $
-        {site.costs.total_usd.toFixed(4)} in total. That undercounts: calls that
-        failed inside the client carry no usage, and the key&apos;s usage was
-        about $2.5. &ldquo;Per spec&rdquo; is 3 seeds of one spec; &ldquo;per
+        <Prov kind="measured" /> {MS_LABEL[ms]}: provider-reported usage and
+        cost from OpenRouter, runs of {runDate(ms)}; {costs.runs} runs, $
+        {costs.total_usd.toFixed(4)} in total.{" "}
+        {ms === "m2"
+          ? `The key's own usage rose by $${site.spend.m2.key_usd.toFixed(2)} between the readings taken before and after the M2 runs.`
+          : `That undercounts: calls that failed inside the client carry no usage, and the key's usage was about $${site.spend.m1.key_usd_approx.toFixed(1)}.`}{" "}
+        &ldquo;Per spec&rdquo; is {ev(ms).seeds} seeds of one spec; &ldquo;per
         evaluated design&rdquo; divides by every evaluation the runs made (every
-        one scored by code, none by the LLM).
+        one scored by code, none by the LLM). ± is the population standard
+        deviation over runs.
       </p>
     </Scroll>
   );

@@ -1,0 +1,48 @@
+{
+ "milestone": "m2",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null
+ },
+ "spec": "high_precision",
+ "seed": 4,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "stopped",
+ "rounds": 5,
+ "coverage_rounds": 3,
+ "llm_calls": 5.0,
+ "llm_failures": 0.0,
+ "input_tokens": 12407.0,
+ "output_tokens": 19979.0,
+ "cost_usd": 0.017544419999999998,
+ "wall_s": 123.2,
+ "run_dir": "runs/eval_m2/high_precision/20261009-080149-93b8",
+ "decisions": [
+  "add_family",
+  "map_front",
+  "map_front",
+  "stop"
+ ],
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 60 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ],
+ "n_evals": 400,
+ "hv_final": 88975.83745500397,
+ "hv_frac": 0.9841044016154737,
+ "evals_to_95": 210,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=27,n_iter=22,angle_guard=-1,frac_guard=0,rounding=round,m=6",
+ "select_regret": 0.024051680275484454,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

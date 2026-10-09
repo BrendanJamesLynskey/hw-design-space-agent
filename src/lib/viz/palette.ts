@@ -69,3 +69,11 @@ export const STATE_COLOUR = {
 
 /** Muted ("done", "idle") greys: Tailwind neutral-400 and neutral-600. */
 export const MUTED = { light: "#a3a3a3", dark: "#525252" } as const;
+
+/** One colour per CORDIC architecture family (every chart of designs). */
+export const FAMILY_COLOUR: Record<string, string> = {
+  iterative: OKABE_ITO.sky,
+  unrolled_k: OKABE_ITO.purple,
+  pipelined: OKABE_ITO.blue,
+  pipelined_m: OKABE_ITO.green,
+};

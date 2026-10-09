@@ -80,3 +80,16 @@ CI fails if the vendored files, the pinned reference and the exported data
 disagree. The export also fails if any results row it produces is not in the
 repo's `eval/results.md` verbatim, and the ladder badges follow the README's
 roadmap table, so a milestone flips to live only when the README says done.
+
+Then (part C1's checklist, 2026-10-09):
+
+- new data files go into `scripts/vendor-dse.ts`'s list and, if they carry numbers the
+  site shows, into `scripts/export_dse.py` / `scripts/export_ladder.py` with a check
+  against the repo's own text;
+- `src/app/roadmap/page.tsx` holds each milestone's words and pull requests (`ADDS`,
+  `PLAN_NOTE`, `PRS`); the results.md link is `<RepoFile>` and follows the vendored commit;
+- the project record (`/record`) renders `content/record/project_record.md`, a copy of the
+  planner's record. Replace it with the planner's latest, then run
+  `pnpm vitest run tests/unit/record.test.ts`: every number the record states is checked
+  against the site's data, and the repository wins where they disagree (fix the copy and
+  report the discrepancy). Prettier ignores the file so the planner's formatting stays.

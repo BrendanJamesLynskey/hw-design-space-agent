@@ -8,7 +8,7 @@
 import { useId, useState } from "react";
 
 import { calculate, parseEntry } from "@/lib/dse/calc";
-import { RUN_DATE, type ModelCost } from "@/lib/dse/data";
+import { runDate, type ModelCost } from "@/lib/dse/data";
 import { fmtInt, fmtUsd, trim } from "@/lib/format";
 
 import { Prov } from "./Badges";
@@ -68,7 +68,7 @@ export default function Calculator({
   models: ModelCost[];
 }): JSX.Element {
   const [specs, setSpecs] = useState("10");
-  const [runs, setRuns] = useState("3");
+  const [runs, setRuns] = useState("5");
   const [parallel, setParallel] = useState("4");
   const [chosen, setChosen] = useState<string[]>([models[0]!.model]);
   const [rate, setRate] = useState("");
@@ -96,9 +96,9 @@ export default function Calculator({
       <p className="mt-1 font-semibold">Cost and labour calculator</p>
       <p className="mt-1 text-xs text-neutral-600 dark:text-neutral-400">
         The agent side uses each model&apos;s measured mean cost, wall-clock and
-        evaluations per run (OpenRouter, runs of {RUN_DATE}). The people side is
-        yours: enter your own rate and how long a manual trade-off study takes
-        you. Nothing is filled in for you.
+        evaluations per run in the M2 eval (OpenRouter, runs of {runDate("m2")}
+        ). The people side is yours: enter your own rate and how long a manual
+        trade-off study takes you. Nothing is filled in for you.
       </p>
       <div className="mt-4 grid min-w-0 gap-3 sm:grid-cols-3">
         <Field
@@ -109,7 +109,7 @@ export default function Calculator({
         />
         <Field
           label="Runs per spec, per model"
-          hint="the eval used 3 seeds"
+          hint="the M2 eval used 5 seeds"
           value={runs}
           onChange={setRuns}
           testId="calc-runs"
@@ -187,8 +187,7 @@ export default function Calculator({
             LLM cost: <strong>{fmtUsd(out.llmUsd)}</strong> (
             {out.evaluations > 0 ? `$${out.usdPerDesign.toPrecision(2)}` : "$0"}{" "}
             per evaluated design)
-            <Prov kind="measured" /> means; provider-reported, so it undercounts
-            failed calls.
+            <Prov kind="measured" /> means, provider-reported per run.
           </li>
           <li data-testid="calc-time">
             Agent wall-clock: {hours(out.agentHoursSerial)} one after another,{" "}
@@ -206,8 +205,10 @@ export default function Calculator({
         <p className="mt-2 text-xs text-neutral-600 dark:text-neutral-400">
           Not counted: the compute for the evaluations themselves, the
           engineer&apos;s time to write a spec and review the result, and the
-          levels not built yet (synthesis and simulation will cost much more per
-          design than the L1 models).
+          lower levels: an M2 run explores at L1, and synthesising or simulating
+          a design at L3–L5 costs far more per design than the L1 models (the
+          repository&apos;s 39-point open-source synthesis sweep takes about 10
+          minutes on 4 cores).
         </p>
       </div>
     </section>
