@@ -89,3 +89,21 @@ python -m hw_dse.synth.recalibrate --measured eval/data/l4_synthesis.csv --measu
 | `levers_offline.json`, `levers_offline_round2.json` | offline tuning of the whole-curve levers by replaying the recorded M1 LLM decisions (`eval/tune_levers.py`). |
 | `traces/` | M1 live-run traces; `traces/m2/` the M2 ones (`INDEX.md` in each). |
 | `accuracy_table.csv.gz` | exact accuracy of every numeric configuration (golden model). |
+
+## Milestone 3
+
+| file / directory | what | written by |
+|---|---|---|
+| `ground_truth_m3.json` | system specs: exhaustive truth (system metrics simulated), the L1-bound view, the MSPS-only view | `eval/run_eval.py ground-truth-m3` |
+| `l2_cycle_validation.csv` | L2 cycle model vs generated RTL, per-edge comparison on bursty traces (Verilator, Icarus) | `python -m hw_dse.l2.validate` |
+| `m2_replay.json` | the 60 M2 runs replayed through the M3 graph, field by field | `eval/m3_offline.py replay` |
+| `m3_mapfront_fix.json` | the map_front fix (unconditional and gated) on the M2 specs, replayed decisions + heuristic architect | `eval/m3_offline.py mapfront` |
+| `baselines_m3.json` | NSGA-II / random on the system specs, + the L2 shortlist step, scored on simulated feasibility | `eval/run_eval.py baselines-m3` |
+| `agent_m3/` | structured graph, live, system specs, 5 seeds × 3 models | `eval/run_eval.py agent-m3` |
+| `campaign_m3/` | campaign agent (Deep Agents), live, memory off, all six specs | `eval/run_eval.py campaign-m3` |
+| `campaign_m3_memory/`, `campaign_m3_memory_store.json` | campaign agent with memory on over a fixed sequence; the Store's contents after the eval (one store per seed; every entry carries its run IDs) | `eval/run_eval.py memory-m3` |
+| `m3_pilot/` | the live pilots, including the failed first campaign pilot (`*_attempt1.json`) | `--pilot` |
+| `key_usage_m3.json` | key usage snapshots (free endpoint; the key is never recorded) | `eval/run_eval.py key-usage --tag ...` |
+| `spend_ledger.jsonl` | every live run's provider-reported cost; M3 rows carry `milestone: m3` and an `arm` | the live commands |
+| `traces/m3/` | every M3 live run's LLM trace (+ tool log, inner reports, evaluations), with `INDEX.md`; campaigns also `pool_keys.json.gz` (the L1 pool, so every campaign can be re-scored) | `scripts/archive_traces_m3.py`, then `eval/m3_rescore.py` |
+| (rows with `before_b1`) | M3 rows re-scored after the L2 fix (selection over every L1-feasible design); the old values are kept | `eval/m3_rescore.py` |

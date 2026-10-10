@@ -1,0 +1,19 @@
+# The DDS of dds_250msps written the way a radio engineer would: by its
+# spectral purity at the sample rate, measured on the synthesiser itself.
+name: dds_sfdr
+description: >
+  DDS phase-to-amplitude converter at 200 MS/s feeding a mixer through a
+  16-deep FIFO; the NCO must never stall (sustained 200 MS/s) and the
+  synthesised tone needs SFDR >= 90 dBc. Max error <= 2^-13. Minimise LUTs.
+constraints:
+  - {metric: throughput_msps, op: ">=", value: 200}
+  - {metric: max_abs_err, op: "<=", value: "2^-13"}
+  - {metric: sys_stall_frac, op: "<=", value: 0.0}
+  - {metric: sys_sfdr_dbc, op: ">=", value: 90}
+objectives:
+  - {metric: luts, direction: min, ref: 4000}
+  - {metric: accuracy_bits, direction: max, ref: 13}
+select_by: luts
+select_direction: min
+budget: {total_evals: 400, evals_per_round: 100, max_rounds: 4, hv_epsilon: 0.01}
+system: {kind: dds_mixer, sample_rate_msps: 200, fifo_depth: 16, n_samples: 4000}

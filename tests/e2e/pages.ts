@@ -22,6 +22,8 @@ export const ANIMATIONS = [
   ["/case-study", "scatter-widget"],
   ["/case-study", "hp-widget"],
   ["/results", "shift-widget"],
+  ["/how-it-works", "system-widget"],
+  ["/how-it-works", "cycle-widget"],
 ] as const;
 
 /** Widgets load after the page: allow for a slow runner. */

@@ -1,0 +1,87 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "low_area_control",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 15,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "add_family",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-175008-280b/dse/low_area_control/20261009-175010-dd86",
+   "notes": "Area-dominated spec: minimise LUTs+FFs subject to throughput>=1 MSPS and max_abs_err<=2^-10. Favour small iterative/unrolled families with modest data width; keep accuracy_bits>=10. No system scenario expected, so L2 may be a no-op.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "facts_only",
+  "shortlist": [],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "iterative",
+    "latency": 15,
+    "ii": 15
+   },
+   "dds_sfdr_dbc": 79.76455292186158,
+   "dds_snr_db": 69.97080496201086,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "reason": "the spec has no system scenario: nothing to re-select",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=16) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 20.0,
+ "llm_failures": 0.0,
+ "input_tokens": 89421.0,
+ "output_tokens": 20054.0,
+ "cost_usd": 0.022115343000000003,
+ "wall_s": 93.1,
+ "run_dir": "runs/campaign_m3/20261009-175008-280b",
+ "run_id": "20261009-175008-280b",
+ "final_text": "The single spec in the queue, `low_area_control` (field-oriented motor control needing sin/cos at \u22651 MSPS with max error \u22642^-10, minimising LUTs+FFs), is finalized. I spent the full 400-eval L1 budget via `run_dse`, which returned a 40-design feasible, non-dominated front; the area-optimal point by the spec's rule (min luts_plus_ffs) is `iterative:data_width=16,n_iter=12,angle_guard=1,frac_guard=0,rounding=trunc` at luts_plus_ffs=260 (163 LUTs + 97 FFs), accuracy_bits=10.1, throughput 13.2 MSPS and max_abs_err=0.000887 (2^-10.14) \u2014 comfortably inside both constraints, with the iterative family dominating for area and extra iterations buying roughly 10\u201330 LUT/FF per accuracy bit. L2 `simulate_system` found no system scenario (only DDS SFDR/SNR facts; selection unchanged), and the L3\u2013L5 ladder via the `ladder` subagent produced no new evidence: `verify_rtl` and `synthesize` had no recorded rows for this selection, and `back_annotate` returned `no_measured_data` with no winner change, so `reexplore` was correctly skipped. The selection therefore stands on L1 estimates (cost model, M1 calibration) with exact golden-model errors, and the spec is closed.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 14922.033710809203,
+ "hv_frac": 0.8953988752867995,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=16,n_iter=12,angle_guard=1,frac_guard=0,rounding=trunc",
+ "select_regret": 0.03574628055537537,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

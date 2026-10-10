@@ -6,7 +6,7 @@ Each level offers its own power, performance and area trade-offs, and each costs
 
 <LadderTable column="ppa" />
 
-At the vendored commit, milestones 1 and 2 are done: spec intake (L0), analytical exploration (L1), RTL simulation (L3), synthesis (L4), gate-level simulation of the netlist and back-annotation (L5) are live. System-level (SimPy) and cycle-level simulation are planned for milestone 3, and nothing on this site animates a planned level as if it had run. Exploration itself still happens at L1, where a design costs microseconds to score; the lower levels check, measure and correct what L1 chose.
+At the vendored commit, milestones 1 to 3 are done and every level of the ladder is live: spec intake (L0), analytical exploration (L1), system-level simulation in SimPy and the cycle-accurate model (together the repository's L2, milestone 3), RTL simulation (L3), synthesis (L4), gate-level simulation of the netlist and back-annotation (L5). Milestone 4 (an ASIC cost model on an open PDK, a fleet of agents) is planned and has no results. Exploration itself still happens at L1, where a design costs microseconds to score; the lower levels check, measure and correct what L1 chose.
 
 ## The design principle: the LLM never produces a number
 
@@ -20,7 +20,7 @@ It is also in the types. Each LLM call names a Pydantic schema (`ExplorationPlan
 
 ## The graph, replayed
 
-The agent is a LangGraph `StateGraph`. `intake` turns the spec into a validated `Spec`; `confirm_spec` stops for a human with `interrupt()`; `propose` asks the LLM for a plan; `explore_family` runs once per family, fanned out in parallel with `Send`, each branch an Optuna NSGA-II study inside the box the LLM chose; `analyse` merges the results, computes the Pareto front and its hypervolume, shows the LLM a compact summary and asks what next. Code then applies hard rules the LLM cannot override: the round cap, the budget, and no "infeasible" verdict while feasible designs exist. After `select`, milestone 2's graph adds `back_annotate`: the selected design's estimates against any measured synthesis data, and a flag if the winner would change.
+The agent is a LangGraph `StateGraph`. `intake` turns the spec into a validated `Spec`; `confirm_spec` stops for a human with `interrupt()`; `propose` asks the LLM for a plan; `explore_family` runs once per family, fanned out in parallel with `Send`, each branch an Optuna NSGA-II study inside the box the LLM chose; `analyse` merges the results, computes the Pareto front and its hypervolume, shows the LLM a compact summary and asks what next. Code then applies hard rules the LLM cannot override: the round cap, the budget, and no "infeasible" verdict while feasible designs exist. After `select`, milestone 2's graph adds `back_annotate`: the selected design's estimates against any measured synthesis data, and a flag if the winner would change. Milestone 3 adds two more nodes, both code only: `l2_simulate` before it, which simulates every L1-feasible design of the run inside the spec's system and re-selects on the simulated numbers, and `l5_reexplore` after it, which re-explores around the measured designs under the refit cost model when a measurement flags a winner change.
 
 Milestone 2 also changed how the agent spends its budget, to map the whole trade-off curve and not only the corner the spec's selection rule cares about. The LLM gained a `map_front` decision, which asks code for a front-mapping round: NSGA-II over the ranges of the families on the front so far. And 40% of the budget is held in reserve: before a run stops, code spends whatever is left on one final front-mapping round, with no LLM call.
 
@@ -29,6 +29,24 @@ The replay below walks one recorded run through that graph. Pick any of the <V o
 <HowTrace />
 
 Three things to look for. On the infeasible spec, the LLM itself returns `infeasible` and names throughput as the binding constraint; code only checks that no feasible design exists before accepting it. In M1 the last word was often code's: the LLM asked to `refine`, the hypervolume gained less than 1% that round, and that rule stopped the run early, which is why the M1 agents mapped less of the front than NSGA-II. In M2, watch for `map_front` and for the final round planned by code: that is how the agents closed the gap, as the [results](/results) show.
+
+## L2: the design inside its system
+
+A throughput figure says how fast a design is on its own. A system asks something harder: 32 requests arriving at once on every control tick, bursts of 8 from a sensor front end, a DDS that stalls when its FIFO fills. Milestone 3 adds that rung. Every family obeys one interface contract (ready, valid, a latency and an initiation interval), which the generated RTL implements and the formal checks pin down; a cycle-accurate model implements the same contract, and SimPy models put it inside three systems: a DDS feeding a mixer, a control loop and a bursty request stream. Each design runs on its own clock at its estimated Fmax <Prov kind="estimate" />, so every system number is <Prov kind="simulated" />.
+
+During exploration, L1 screens a system constraint with an analytic bound that is optimistic by construction (each burst or tick served alone, starting on a clock edge), so L1 never discards a design L2 would accept. After `select`, L2 simulates every L1-feasible design the run evaluated and re-selects. That is cheap: the <V of="designs" fmt="int" /> designs share only <V of="m3.gt.tuples" fmt="int" /> distinct combinations of latency, initiation interval and Fmax, and the simulation is cached on them, which is also how the repository computes an exhaustive simulated ground truth for each system spec.
+
+Here is the spec where it matters. `multiaxis_control` asks for all 32 results of every 1 µs tick within 0.44 µs. Read in milestone-2 terms (throughput at the average rate, 32 MSPS) the best design is `pipelined_m` m=7 (<V of="m3.multi.msps_lf" fmt="int" /> LUT+FF); the L1 bound picks m=5 (<V of="m3.multi.bound_lf" fmt="int" />); the simulation picks m=4 (<V of="m3.multi.true_lf" fmt="int" />). The replay below runs the repository's SimPy model for all three.
+
+<HowSystem />
+
+m=4 and m=5 have the same numerics, and m=5 is smaller, so m=4 is _dominated_ in the L1 objectives: L2 has to look at every L1-feasible design, not only the L1 front. The first version of the `l2_simulate` node shortlisted from the front and could never reach m=4; the planner's review found it before the merge. Even sizing for the peak rate (32 requests in 0.44 µs, <V of="m3.multi.peak_floor" fmt="f1" /> MSPS) stops at m=5, so only the simulation gets to m=4, by a margin of <V of="m3.multi.miss" fmt="pct" />. The model aligns each request to the next CORDIC clock edge but has no synchroniser: a real clock-domain crossing would add about two destination cycles, which against that margin could move the winner again. The repository lists it as a limitation.
+
+### The cycle model, checked against the RTL
+
+A system model is only as good as its contract, so the cycle model is checked against the generated RTL itself, cycle for cycle. The repository's L3 harness gained a bursty mode (idle gaps before each angle) and a per-edge log; <V of="m3.l2.traces" fmt="int" /> traces over <V of="m3.l2.designs" fmt="int" /> designs, covering every family and both rounding modes, compare `ready`, `valid_out` and the output codes on every edge in Icarus Verilog and Verilator: <V of="m3.l2.passed" fmt="int" /> of <V of="m3.l2.traces" fmt="int" /> identical, <V of="m3.l2.edges" fmt="int" /> edges. The waveform below is the cycle model driven by the stimulus of one of those traces; this site checks that it takes exactly as many edges, accepts and results as the RTL log recorded.
+
+<HowCycle />
 
 ## Verification at every level
 
@@ -45,6 +63,14 @@ Across the whole generator, the repository's sweep covers every family:
 <VerificationTable />
 
 Every eval run is also graded against the exhaustive ground truth of all <V of="designs" fmt="int" /> designs, and this site adds its own check: its TypeScript ports of the golden model and the cost model match the Python exactly, in its own CI.
+
+## An optional outer loop: the campaign agent (experimental)
+
+Milestone 3 also tried a different kind of agent on top. A campaign agent, built on LangChain's Deep Agents harness (planning to-dos, a virtual file system, one sub-agent for the ladder, cross-run memory in a LangGraph Store), is meant for long-horizon work: take specs down the whole ladder, re-plan when a measurement changes the winner, carry lessons from one spec to the next. The structured graph stays the inner loop and is one of its tools (`run_dse`); the others are `explore_family`, `simulate_system`, `verify_rtl`, `synthesize`, `back_annotate`, `reexplore`, `finalize`, `recall` and `remember`. Code enforces the same 400 L1 evaluations per spec, refuses to finalise a system spec on L1 bounds or a flagged winner change that has not been re-explored, and stops a campaign after 40 model calls or four identical tool calls in a row.
+
+It is **experimental**: optional, off by default, and used by nothing in the structured graph or the command line. The repository measured it in an A/B against the structured graph and found no gain at a higher cost, which the [results](/results#ab) show in full.
+
+<CampaignToolsTable />
 
 ## Many agents at once
 

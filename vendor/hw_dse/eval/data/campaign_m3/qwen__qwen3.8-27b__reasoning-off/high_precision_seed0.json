@@ -1,0 +1,85 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "high_precision",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 15,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "converged",
+   "decisions": [
+    "map_front",
+    "add_family"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-174252-56e0/dse/high_precision/20261009-174305-7596",
+   "notes": "High-precision spec: max_abs_err <= 2^-20 (9.53674e-07) at >= 50 MSPS. Selection rule is min luts_plus_ffs, so favor designs that hit the error bound with minimal LUT+FF count; power_index is secondary. Consider pipelined families for throughput and iterative for area, but error bound likely needs enough iterations/precision.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "facts_only",
+  "shortlist": [],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 6,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 142.7441927066525,
+   "dds_snr_db": 131.4863710532501,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "reason": "the spec has no system scenario: nothing to re-select",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=25) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 19.0,
+ "llm_failures": 1.0,
+ "input_tokens": 71630.0,
+ "output_tokens": 4330.0,
+ "cost_usd": 0.008537687,
+ "wall_s": 123.9,
+ "run_dir": "runs/campaign_m3/20261009-174252-56e0",
+ "run_id": "20261009-174252-56e0",
+ "final_text": "Campaign complete \u2014 the single spec **high_precision** is finalized.\n\n**Summary:** The 400-evaluation structured DSE (L1) converged to a single feasible, non-dominated design on the front: `pipelined_m` with data_width=25, n_iter=24, angle_guard=2, m=6, rounding=round \u2014 2406 LUT+FF (2017 LUTs, 389 FFs), power_index 4.53, 59.9 MSPS throughput, and max_abs_err 8.15e-07 (2^-20.23), comfortably meeting the \u22642^-20 error and \u226550 MSPS constraints. L2 SimPy system simulation confirmed the selection (SFDR 142.7 dBc, SNR 131.5 dB, 1-cycle input rate, 6-cycle latency). L3/L4/L5 had no recorded measurement rows for this configuration (fresh W=25 RTL verification too heavy for a live campaign; no recorded synthesis), so back_annotate found nothing to compare and flagged no winner change \u2014 no reexplore was needed. The spec was finalized with the L2-confirmed selection, which minimizes luts_plus_ffs per the spec's selection rule.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 86558.04783579541,
+ "hv_frac": 0.9573627886731217,
+ "evals_to_95": 192,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=25,n_iter=24,angle_guard=2,frac_guard=0,rounding=round,m=6",
+ "select_regret": 0.06494123874182846,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

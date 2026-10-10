@@ -1,0 +1,61 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "infeasible_dds_400msps",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 11,
+ "tool_calls": 8,
+ "ladder": [
+  "run_dse",
+  "explore_family",
+  "explore_family"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 100,
+   "status": "infeasible",
+   "decisions": [
+    "infeasible"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-180202-7c78/dse/infeasible_dds_400msps/20261009-180215-cdd9",
+   "notes": "Spec is named infeasible: 400 MSPS single-lane with max_abs_err <= 2^-12. Explore pipelined families (pipelined, pipelined_m) for throughput, and unrolled_k for latency/throughput tradeoffs. Keep data width modest to minimize LUTs while meeting accuracy. If no design meets throughput>=400 with err<=2^-12, the front will be empty/infeasible \u2014 still map the closest feasible region (max throughput at best accuracy) so the selection rule (min LUTs) has candidates.",
+   "llm_declared_infeasible": true
+  }
+ ],
+ "l2": null,
+ "l3": null,
+ "l4": null,
+ "back_annotation": null,
+ "l5": null,
+ "llm_calls": 13.0,
+ "llm_failures": 0.0,
+ "input_tokens": 66180.0,
+ "output_tokens": 3358.0,
+ "cost_usd": 0.00766475,
+ "wall_s": 74.9,
+ "run_dir": "runs/campaign_m3/20261009-180202-7c78",
+ "run_id": "20261009-180202-7c78",
+ "final_text": "## Campaign Summary\n\n**Spec: infeasible_dds_400msps** \u2014 Wideband DDS requiring \u2265 400 MSPS single-lane sin/cos with max error \u2264 2\u207b\u00b9\u00b2, minimising LUTs on Artix-7.\n\nThe spec was declared **infeasible** and finalized with no design selected. All 400 L1 evaluations were spent across three exploration phases:\n\n1. **`run_dse` (100 evals):** The inner architect explored the structured DSE graph and declared the spec infeasible \u2014 no design met both the throughput (\u2265 400 MSPS) and accuracy (\u2264 2\u207b\u00b9\u00b2) constraints simultaneously.\n2. **`explore_family` pipelined (150 evals):** Swept data_width 8\u201328, n_iter 4\u201330, angle_guard \u22122\u20134, frac_guard 0\u20134. **0 feasible designs.**\n3. **`explore_family` unrolled_k (150 evals):** Swept k=2\u20138 (clamped from 2\u201316 by registry bounds) with the same data-width/iteration ranges. **0 feasible designs.**\n\nThe binding constraint is **throughput**: even the fastest pipeline and unrolled configurations cannot reach 400 MSPS while maintaining 12-bit accuracy on a single-lane CORDIC. No designs were available for L2 system simulation, L3 RTL verification, L4 synthesis, or L5 back-annotation. The spec was finalized as infeasible.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 0.0,
+ "hv_frac": null,
+ "evals_to_95": null,
+ "selected_meets_spec": false,
+ "selected_key": null,
+ "select_regret": null,
+ "declared_infeasible": true,
+ "infeasibility_correct": true
+}

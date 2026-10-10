@@ -1,0 +1,28 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": true,
+ "attempt": 1,
+ "spec": "multiaxis_control",
+ "seed": 0,
+ "model_requested": "qwen/qwen3.8-27b",
+ "reasoning": "off",
+ "failed": true,
+ "error": "stuck: the ladder sub-agent called ls('.') 250 times in a row; the call-limit guard did not stop it because LangChain swallows callback exceptions (raise_error was not set); the run was killed by hand",
+ "llm_calls": 264,
+ "input_tokens": 2067389,
+ "output_tokens": 11189,
+ "cost_usd": 0.057575501,
+ "run_dir": "runs/campaign_m3_pilot/20261009-172256-e183",
+ "ladder_before_loop": [
+  "run_dse(400)",
+  "simulate_system",
+  "task->ladder: verify_rtl, synthesize, back_annotate"
+ ],
+ "fixes": [
+  "callback raise_error=True",
+  "stop after 4 identical tool calls in a row",
+  "ls excluded",
+  "model-call cap 40"
+ ]
+}

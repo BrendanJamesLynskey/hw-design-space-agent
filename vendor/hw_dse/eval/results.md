@@ -298,3 +298,239 @@ One seed, the two specs the levers target, the cheapest model; recorded separate
 - low_area_control seed 1: stopped; decisions: refine → refine → refine → stop; HV 0.148; run `runs/eval/low_area_control/20261008-144056-2ab6`
 - low_area_control seed 2: stopped; decisions: refine → stop; HV 0.165; run `runs/eval/low_area_control/20261008-144158-572c`
 
+# Milestone 3: system-level specs (L2), the campaign agent, the A/B
+
+Everything below is generated from committed data as well. *simulated* = L2 SimPy system model (clock = the design's estimated Fmax) or the golden-model DDS; *estimate (L1 bound)* = the analytic bound L1 screens system constraints with. M3 runs use the same 400-evaluation budget per spec as M1/M2.
+
+## System specs: exhaustive ground truth, three views
+
+Truth = system metrics simulated for every one of the 635,040 designs (they share 1,092 distinct (latency, ii, Fmax) tuples). L1-bound view = what L1 screening sees. MSPS-only view = the same spec without its system constraints, throughput floor = the scenario's average offered rate (how it reads in M2 terms).
+
+| spec | system | feasible (simulated / L1 bound / MSPS-only) | true winner (simulated) | L1-bound winner | MSPS-only winner | winner changes vs MSPS-only |
+|---|---|---|---|---|---|---|
+| bursty_offload | bursty requests: bursts of 8 (0 ns apart) arriving as a Poisson process, 2 requests/us on average | 151,528 / 151,528 / 303,056 | `pipelined_m:data_width=15,n_iter=12,angle_guard=1,frac_guard=0,rounding=round,m=6` (745) | `pipelined_m:data_width=15,n_iter=12,angle_guard=1,frac_guard=0,rounding=round,m=6` (745) | `iterative:data_width=15,n_iter=12,angle_guard=1,frac_guard=0,rounding=round` (251) | **yes** |
+| dds_sfdr (ground truth only) | DDS feeding a mixer: one phase word every 5 ns (200 MS/s), FIFO depth 16, NCO stalls when it is full | 12,334 / 12,334 / 12,363 | `pipelined:data_width=18,n_iter=15,angle_guard=1,frac_guard=0,rounding=round` (905) | `pipelined:data_width=18,n_iter=15,angle_guard=1,frac_guard=0,rounding=round` (905) | `pipelined:data_width=18,n_iter=15,angle_guard=1,frac_guard=0,rounding=round` (905) | no |
+| multiaxis_control | control loop: a tick every 1 us issues 32 requests at once (32 requests/us on average) | 51,244 / 53,667 / 115,304 | `pipelined_m:data_width=17,n_iter=14,angle_guard=1,frac_guard=0,rounding=round,m=4` (1072) | `pipelined_m:data_width=17,n_iter=14,angle_guard=1,frac_guard=0,rounding=round,m=5` (1013) | `pipelined_m:data_width=17,n_iter=14,angle_guard=1,frac_guard=0,rounding=round,m=7` (953) | **yes** |
+
+- `bursty_offload` true winner: 608 LUTs / 137 FFs, 68.5 MSPS, 10.09 bits; sys_p99_latency_us = 0.1953 (limit 0.4) (simulated).
+- `dds_sfdr` true winner: 905 LUTs / 938 FFs, 264.5 MSPS, 13.04 bits; sys_stall_frac = 0 (limit 0), sys_sfdr_dbc = 100.3 (limit 90) (simulated).
+- `multiaxis_control` true winner: 800 LUTs / 272 FFs, 97.8 MSPS, 12.26 bits; sys_p99_batch_us = 0.378 (limit 0.44) (simulated).
+
+## L2 cycle model vs generated RTL
+
+48 short bursty traces (8 designs covering every family and both rounding modes x 3 seeds x Icarus Verilog 12.0, Verilator 5.020 2024-01-01), 28,424 clock edges: **48/48 identical** on ready, valid_out and the output codes (ready mismatches 0, valid 0, data 0). Source: `eval/data/l2_cycle_validation.csv`.
+
+## Comparability: the M2 runs replayed through the M3 graph
+
+**60/60 identical**: same decisions, status, rounds, front-mapping rounds, every evaluated design key in order, HV fraction, selection regret and selected design (`eval/data/m2_replay.json`). This is what allows the structured arm of the A/B to reuse the M2 live runs on the four M2 specs.
+
+## The map_front fix on the M2 specs (offline, scripted architects)
+
+Unconditional (every explored family without a feasible design gets a full-box share):
+
+| driver | spec | runs | HV M2 levers → fix-all | regret M2 levers → fix-all | runs whose selection changed |
+|---|---|---|---|---|---|
+| LLM replays (3 models x 5 seeds) | dds_250msps | 15 | 0.878 → 0.781 | +5.7% → +5.9% | 5 |
+| LLM replays (3 models x 5 seeds) | low_area_control | 15 | 0.895 → 0.885 | +3.4% → +3.4% | 0 |
+| LLM replays (3 models x 5 seeds) | high_precision | 15 | 0.951 → 0.966 | +8.0% → +5.2% | 10 |
+| LLM replays (3 models x 5 seeds) | infeasible_dds_400msps | 15 | n/a → n/a | n/a → n/a | 0 |
+| heuristic architect (fake) | dds_250msps | 5 | 0.885 → 0.856 | +6.5% → +7.3% | 2 |
+| heuristic architect (fake) | low_area_control | 5 | 0.870 → 0.870 | +3.7% → +3.7% | 0 |
+| heuristic architect (fake) | high_precision | 5 | 0.974 → 0.967 | +4.0% → +5.0% | 3 |
+| heuristic architect (fake) | infeasible_dds_400msps | 5 | n/a → n/a | n/a → n/a | 0 |
+
+Gated (the M3 default, `LEVERS_M3`; structural constraints must have been met by the family's own designs):
+
+| driver | spec | runs | HV M2 levers → fix | regret M2 levers → fix | runs whose selection changed |
+|---|---|---|---|---|---|
+| LLM replays (3 models x 5 seeds) | dds_250msps | 15 | 0.878 → 0.878 | +5.7% → +5.7% | 0 |
+| LLM replays (3 models x 5 seeds) | low_area_control | 15 | 0.895 → 0.885 | +3.4% → +3.4% | 0 |
+| LLM replays (3 models x 5 seeds) | high_precision | 15 | 0.951 → 0.974 | +8.0% → +4.0% | 1 |
+| LLM replays (3 models x 5 seeds) | infeasible_dds_400msps | 15 | n/a → n/a | n/a → n/a | 0 |
+| heuristic architect (fake) | dds_250msps | 5 | 0.885 → 0.885 | +6.5% → +6.5% | 0 |
+| heuristic architect (fake) | low_area_control | 5 | 0.870 → 0.870 | +3.7% → +3.7% | 0 |
+| heuristic architect (fake) | high_precision | 5 | 0.974 → 0.974 | +4.0% → +4.0% | 0 |
+| heuristic architect (fake) | infeasible_dds_400msps | 5 | n/a → n/a | n/a → n/a | 0 |
+
+The gated fix's `high_precision` gain comes from a single run (Qwen seed 1); it lowers HV on 4 `low_area_control` runs without changing a selection. `LEVERS_M3` stays the default for system specs only (owner's decision); the M2 specs keep `LEVERS_M2`.
+
+## Structured graph on the system specs (5 seeds)
+
+### multiaxis_control
+
+| method | runs | evals used | HV fraction at end | evals to 95% HV | selected meets spec | selection regret on luts_plus_ffs (optimal) | infeasibility called correctly |
+|---|---|---|---|---|---|---|---|
+| baseline (a): NSGA-II + L2 shortlist | 5 | 400 ± 0 | 0.806 ± 0.071 | not reached (0/5) | 5/5 | +16.0% ± 7.0 (0/5) | 5/5 |
+| baseline (b): random + L2 shortlist | 5 | 400 ± 0 | 0.633 ± 0.032 | not reached (0/5) | 5/5 | +33.1% ± 10.5 (0/5) | 5/5 |
+| structured: `anthropic/claude-sonnet-5.5` | 5 | 400 ± 0 | 0.839 ± 0.019 | not reached (0/5) | 5/5 | +3.2% ± 2.3 (1/5) | 5/5 |
+| structured: `deepseek/deepseek-v4.1-flash` | 5 | 400 ± 0 | 0.857 ± 0.016 | not reached (0/5) | 5/5 | +11.8% ± 5.0 (0/5) | 5/5 |
+| structured: `qwen/qwen3.8-27b, reasoning off` | 5 | 400 ± 0 | 0.841 ± 0.027 | not reached (0/5) | 5/5 | +4.9% ± 3.8 (1/5) | 5/5 |
+
+L2 changed the L1 selection in: `anthropic/claude-sonnet-5.5` 0/5; `deepseek/deepseek-v4.1-flash` 0/5; `qwen/qwen3.8-27b, reasoning off` 0/5 runs.
+
+### bursty_offload
+
+| method | runs | evals used | HV fraction at end | evals to 95% HV | selected meets spec | selection regret on luts_plus_ffs (optimal) | infeasibility called correctly |
+|---|---|---|---|---|---|---|---|
+| baseline (a): NSGA-II + L2 shortlist | 5 | 400 ± 0 | 0.840 ± 0.020 | not reached (0/5) | 5/5 | +26.7% ± 6.4 (0/5) | 5/5 |
+| baseline (b): random + L2 shortlist | 5 | 400 ± 0 | 0.733 ± 0.032 | not reached (0/5) | 5/5 | +31.7% ± 11.6 (0/5) | 5/5 |
+| structured: `anthropic/claude-sonnet-5.5` | 5 | 400 ± 0 | 0.859 ± 0.025 | not reached (0/5) | 5/5 | +9.1% ± 5.1 (0/5) | 5/5 |
+| structured: `deepseek/deepseek-v4.1-flash` | 5 | 400 ± 0 | 0.869 ± 0.013 | not reached (0/5) | 5/5 | +9.4% ± 8.8 (1/5) | 5/5 |
+| structured: `qwen/qwen3.8-27b, reasoning off` | 5 | 400 ± 0 | 0.838 ± 0.030 | not reached (0/5) | 5/5 | +15.8% ± 6.5 (0/5) | 5/5 |
+
+L2 changed the L1 selection in: `anthropic/claude-sonnet-5.5` 0/5; `deepseek/deepseek-v4.1-flash` 0/5; `qwen/qwen3.8-27b, reasoning off` 0/5 runs.
+
+## A/B: structured graph vs campaign agent (same specs, seeds, budget)
+
+Structured arm: the M2 live runs on the four M2 specs (replay-proven identical graph) and the fresh M3 runs on the system specs. Campaign arm: one single-spec campaign per (spec, seed), memory off, the same model as both the campaign agent and the inner architect. Failure = the campaign raised (stuck, call cap, provider error) or left the spec unfinalized. Cells: mean ± population std over seeds. **Scope, as accepted by the owner:** the campaign arm covers Qwen and DeepSeek on all six specs and Sonnet 5.5 on `multiaxis_control` only (a full Sonnet campaign arm was skipped for the spend cap). The campaign agent is experimental, optional and off by default.
+
+**HV fraction** (structured → campaign)
+
+| spec | `anthropic/claude-sonnet-5.5` | `deepseek/deepseek-v4.1-flash` | `qwen/qwen3.8-27b, reasoning off` |
+|---|---|---|---|
+| dds_250msps | 0.839 ± 0.079 → **—** | 0.897 ± 0.048 → **0.897 ± 0.059** | 0.898 ± 0.036 → **0.869 ± 0.004** |
+| high_precision | 0.975 ± 0.004 → **—** | 0.982 ± 0.012 → **0.980 ± 0.006** | 0.895 ± 0.159 → **0.895 ± 0.153** |
+| infeasible_dds_400msps | n/a → **—** | n/a → **n/a** | n/a → **n/a** |
+| low_area_control | 0.876 ± 0.025 → **—** | 0.919 ± 0.044 → **0.878 ± 0.051** | 0.889 ± 0.011 → **0.694 ± 0.304** |
+| multiaxis_control | 0.839 ± 0.019 → **0.833 ± 0.029** | 0.857 ± 0.016 → **0.831 ± 0.020** | 0.841 ± 0.027 → **0.817 ± 0.018** |
+| bursty_offload | 0.859 ± 0.025 → **—** | 0.869 ± 0.013 → **0.878 ± 0.010** | 0.838 ± 0.030 → **0.820 ± 0.069** |
+
+**selection regret** (structured → campaign)
+
+| spec | `anthropic/claude-sonnet-5.5` | `deepseek/deepseek-v4.1-flash` | `qwen/qwen3.8-27b, reasoning off` |
+|---|---|---|---|
+| dds_250msps | +5.5% ± 2.8 → **—** | +7.6% ± 1.2 → **+4.4% ± 3.5** | +4.0% ± 2.7 → **+5.0% ± 2.3** |
+| high_precision | +3.9% ± 0.6 → **—** | +2.7% ± 1.9 → **+3.1% ± 0.9** | +17.5% ± 27.2 → **+17.5% ± 26.1** |
+| infeasible_dds_400msps | n/a → **—** | n/a → **n/a** | n/a → **n/a** |
+| low_area_control | +1.4% ± 1.3 → **—** | +5.1% ± 3.3 → **+4.1% ± 1.2** | +3.7% ± 0.7 → **+54.8% ± 86.1** |
+| multiaxis_control | +3.2% ± 2.3 → **+5.7% ± 1.9** | +11.8% ± 5.0 → **+13.0% ± 6.7** | +4.9% ± 3.8 → **+6.0% ± 4.6** |
+| bursty_offload | +9.1% ± 5.1 → **—** | +9.4% ± 8.8 → **+14.3% ± 7.5** | +15.8% ± 6.5 → **+11.9% ± 5.9** |
+
+**L1 evaluations used** (structured → campaign)
+
+| spec | `anthropic/claude-sonnet-5.5` | `deepseek/deepseek-v4.1-flash` | `qwen/qwen3.8-27b, reasoning off` |
+|---|---|---|---|
+| dds_250msps | 400 ± 0 → **—** | 400 ± 0 → **400 ± 0** | 400 ± 0 → **400 ± 0** |
+| high_precision | 400 ± 0 → **—** | 400 ± 0 → **400 ± 0** | 400 ± 0 → **400 ± 0** |
+| infeasible_dds_400msps | 100 ± 0 → **—** | 180 ± 40 → **400 ± 0** | 100 ± 0 → **400 ± 0** |
+| low_area_control | 400 ± 0 → **—** | 400 ± 0 → **400 ± 0** | 400 ± 0 → **400 ± 0** |
+| multiaxis_control | 400 ± 0 → **400 ± 0** | 400 ± 0 → **400 ± 0** | 400 ± 0 → **400 ± 0** |
+| bursty_offload | 400 ± 0 → **—** | 400 ± 0 → **400 ± 0** | 400 ± 0 → **400 ± 0** |
+
+**Cost, tokens, time and failures per run** (structured → campaign, over the specs both arms ran for that model: all six for DeepSeek and Qwen, `multiaxis_control` only for Sonnet). Wall-clock is not controlled: structured, campaign and memory-on runs ran 3–4 at a time in this session, and the structured runs on the M2 specs come from the M2 session.
+
+| model | runs | input tokens / run | output tokens / run | cost / run (USD) | wall time / run (s) | failure rate |
+|---|---|---|---|---|---|---|
+| `anthropic/claude-sonnet-5.5` | 5 → 5 | 24382 ± 2632 → 85627 ± 4049 | 5081 ± 179 → 5301 ± 981 | 0.0996 ± 0.0070 → 0.2243 ± 0.0056 | 45 ± 4 → 62 ± 6 | 0/5 → 0/5 |
+| `deepseek/deepseek-v4.1-flash` | 30 → 30 | 13170 ± 3677 → 80312 ± 10673 | 13059 ± 4993 → 18724 ± 4620 | 0.0123 ± 0.0042 → 0.0199 ± 0.0048 | 99 ± 81 → 133 ± 117 | 0/30 → 0/30 |
+| `qwen/qwen3.8-27b, reasoning off` | 30 → 30 | 10112 ± 3572 → 89869 ± 28280 | 2948 ± 960 → 5006 ± 1177 | 0.0075 ± 0.0019 → 0.0108 ± 0.0024 | 60 ± 30 → 178 ± 91 | 0/30 → 4/30 |
+
+**L2 re-selections in the live runs.** Structured arm: 0/30. Campaign arm: 4/65 (anthropic/claude-sonnet-5.5 multiaxis_control seed 1, anthropic/claude-sonnet-5.5 multiaxis_control seed 2, deepseek/deepseek-v4.1-flash multiaxis_control seed 4, qwen/qwen3.8-27b, reasoning off multiaxis_control seed 4).
+
+**What the ladder steps returned in the campaign arm.** `verify_rtl`: recorded L3 row 1, fresh run 0, not verified 54 (of 55 runs that called it); `synthesize`: recorded measurements 1 of 55; `back_annotate`: compared 1 of 61. Most selections have W ≥ 15, which has no recorded L3/L4 data and is too large for a fresh exhaustive run inside a campaign.
+
+**What the campaign agent did** (tool sequence per run, condensed)
+
+`anthropic/claude-sonnet-5.5`:
+
+- multiaxis_control seed 0: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- multiaxis_control seed 1: run_dse → explore_family → explore_family → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(240)]
+- multiaxis_control seed 2: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- multiaxis_control seed 3: run_dse → explore_family → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(300)]
+- multiaxis_control seed 4: run_dse → explore_family → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(300)]
+
+`deepseek/deepseek-v4.1-flash`:
+
+- bursty_offload seed 0: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- bursty_offload seed 1: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- bursty_offload seed 2: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- bursty_offload seed 3: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- bursty_offload seed 4: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- dds_250msps seed 0: run_dse → verify_rtl → synthesize → back_annotate → reexplore → verify_rtl → synthesize → back_annotate [run_dse(400)]; L5 re-explore → `pipelined:data_width=18,n_iter=15,angle_guard=1,frac_guard=0,rounding=round`
+- dds_250msps seed 1: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- dds_250msps seed 2: run_dse → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- dds_250msps seed 3: run_dse → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- dds_250msps seed 4: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- high_precision seed 0: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- high_precision seed 1: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- high_precision seed 2: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- high_precision seed 3: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- high_precision seed 4: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- infeasible_dds_400msps seed 0: run_dse → explore_family → explore_family → back_annotate [run_dse(300)]
+- infeasible_dds_400msps seed 1: run_dse → explore_family → explore_family → explore_family → back_annotate [run_dse(100)]
+- infeasible_dds_400msps seed 2: run_dse → explore_family → explore_family → back_annotate [run_dse(200)]
+- infeasible_dds_400msps seed 3: run_dse → explore_family → explore_family → back_annotate [run_dse(200)]
+- infeasible_dds_400msps seed 4: run_dse → explore_family → explore_family → back_annotate [run_dse(200)]
+- low_area_control seed 0: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- low_area_control seed 1: run_dse → simulate_system → synthesize → verify_rtl → back_annotate [run_dse(400)]
+- low_area_control seed 2: run_dse → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- low_area_control seed 3: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- low_area_control seed 4: run_dse → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- multiaxis_control seed 0: run_dse → simulate_system → synthesize → verify_rtl → back_annotate [run_dse(400)]
+- multiaxis_control seed 1: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- multiaxis_control seed 2: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- multiaxis_control seed 3: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- multiaxis_control seed 4: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+
+`qwen/qwen3.8-27b, reasoning off`:
+
+- bursty_offload seed 0: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- bursty_offload seed 1: run_dse → simulate_system → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate [run_dse(400)]; **failed**: RuntimeError: campaign model call limit (40) exceeded
+- bursty_offload seed 2: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- bursty_offload seed 3: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- bursty_offload seed 4: run_dse → simulate_system → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate [run_dse(400)]; **failed**: RuntimeError: campaign model call limit (40) exceeded
+- dds_250msps seed 0: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- dds_250msps seed 1: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- dds_250msps seed 2: run_dse → simulate_system → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate [run_dse(400)]; **failed**: RuntimeError: campaign model call limit (40) exceeded
+- dds_250msps seed 3: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- dds_250msps seed 4: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- high_precision seed 0: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- high_precision seed 1: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- high_precision seed 2: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- high_precision seed 3: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- high_precision seed 4: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- infeasible_dds_400msps seed 0: run_dse → explore_family → explore_family → back_annotate [run_dse(200)]
+- infeasible_dds_400msps seed 1: run_dse → explore_family → explore_family [run_dse(100)]
+- infeasible_dds_400msps seed 2: run_dse → explore_family → explore_family → explore_family [run_dse(100)]
+- infeasible_dds_400msps seed 3: run_dse → explore_family → explore_family → explore_family [run_dse(100)]
+- infeasible_dds_400msps seed 4: run_dse → explore_family → explore_family → explore_family [run_dse(100)]
+- low_area_control seed 0: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- low_area_control seed 1: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- low_area_control seed 2: run_dse → simulate_system → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- low_area_control seed 3: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- low_area_control seed 4: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- multiaxis_control seed 0: run_dse → simulate_system → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize [run_dse(400)]; **failed**: RuntimeError: campaign model call limit (40) exceeded
+- multiaxis_control seed 1: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- multiaxis_control seed 2: run_dse → simulate_system → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- multiaxis_control seed 3: run_dse → simulate_system → verify_rtl → synthesize → back_annotate [run_dse(400)]
+- multiaxis_control seed 4: run_dse → simulate_system → verify_rtl → synthesize → back_annotate → verify_rtl → synthesize → back_annotate [run_dse(400)]
+
+## Memory on vs off (campaign agent, fixed spec sequence, seeds 0–2)
+
+Sequence: low_area_control → bursty_offload → dds_250msps → multiaxis_control. Memory on: one LangGraph Store per seed, carried from spec to spec (lessons written by code after each spec, plus the agent's own notes). Memory off: the campaign arm's runs for the same spec and seed. The first spec of the sequence starts with an empty store in both conditions. Store contents after the eval: `eval/data/campaign_m3_memory_store.json`.
+
+| model | spec (position) | HV off → on | regret off → on | evals off → on | cost off → on (USD) |
+|---|---|---|---|---|---|
+| `qwen/qwen3.8-27b, reasoning off` | low_area_control (1) | 0.564 ± 0.335 → 0.915 ± 0.016 | +89.2% ± 96.9 → +2.2% ± 3.1 | 400 ± 0 → 400 ± 0 | 0.0121 ± 0.0027 → 0.0126 ± 0.0011 |
+| `qwen/qwen3.8-27b, reasoning off` | bursty_offload (2) | 0.869 ± 0.028 → 0.881 ± 0.035 | +9.9% ± 6.9 → +11.1% ± 2.6 | 400 ± 0 → 400 ± 0 | 0.0126 ± 0.0012 → 0.0114 ± 0.0004 |
+| `qwen/qwen3.8-27b, reasoning off` | dds_250msps (3) | 0.872 ± 0.001 → 0.650 ± 0.213 | +5.0% ± 1.3 → +3.3% ± 1.3 | 400 ± 0 → 400 ± 0 | 0.0122 ± 0.0009 → 0.0104 ± 0.0006 |
+| `qwen/qwen3.8-27b, reasoning off` | multiaxis_control (4) | 0.826 ± 0.013 → 0.706 ± 0.079 | +4.1% ± 2.6 → +17.8% ± 10.8 | 400 ± 0 → 400 ± 0 | 0.0112 ± 0.0010 → 0.0128 ± 0.0025 |
+
+## M3 spend
+
+| ledger entry | runs | provider-reported cost (USD) |
+|---|---|---|
+| campaign | 65 | 2.0421 |
+| campaign (interrupted (restart after a scoring-bug fix), re-run [memory-on]) | 1 | 0.0090 |
+| campaign (interrupted (restart after a scoring-bug fix), re-run) | 1 | 0.0077 |
+| campaign (interrupted by a container restart, re-run) | 1 | 0.0008 |
+| campaign (lost to a scoring bug in run_eval (round tags), re-run) | 1 | 0.0207 |
+| campaign (memory-on) | 12 | 0.1416 |
+| campaign (pilot attempt 1 (failed: ls loop, killed)) | 1 | 0.0576 |
+| campaign (pilot) | 1 | 0.0177 |
+| structured | 30 | 1.1835 |
+| structured (pilot) | 1 | 0.0095 |
+| **total** | 114 | **3.4901** |
+
+Key usage snapshots (authoritative; `eval/data/key_usage_m3.json`): session_start 2026-10-09T16:28:55Z $4.1889; before_pilots 2026-10-09T17:20:44Z $4.1889; after_structured_pilot 2026-10-09T17:22:40Z $4.1963; check_no_run (campaign pilot skipped: file existed) 2026-10-09T17:22:47Z $4.2012; after_campaign_pilot1 2026-10-09T17:34:07Z $4.2598; after_campaign_pilot2 2026-10-09T17:38:03Z $4.2788; before_eval 2026-10-09T17:38:31Z $4.2805; after_qwen_deepseek_arms 2026-10-09T19:27:54Z $6.6944; after_sonnet_campaign_1 2026-10-09T19:29:11Z $6.7720; after_sonnet_campaigns 2026-10-09T19:33:50Z $7.7664; after_eval 2026-10-09T19:34:30Z $7.7664.
+

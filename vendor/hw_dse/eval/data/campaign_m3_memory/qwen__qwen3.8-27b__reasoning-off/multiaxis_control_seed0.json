@@ -1,0 +1,143 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": true,
+ "spec": "multiaxis_control",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 17,
+ "tool_calls": 13,
+ "ladder": [
+  "run_dse",
+  "explore_family",
+  "explore_family",
+  "explore_family",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 100,
+   "status": "stopped",
+   "decisions": [
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3_memory/20261009-174947-a817/dse/multiaxis_control/20261009-175002-84c1",
+   "notes": "Spec: 32 requests per 1us tick, all results back within 0.44us p99, err <= 2^-12, min LUTs+FFs. Throughput >= 32 MSPS. Lessons: pipelined_m won the bursty spec (bursts of 8, p99 0.4us) with dw=15, n_iter=14, m=7 (855 LUTs+FFs, 59.6 MSPS, sim p99 0.233us). Here bursts are 4x larger (32) with the same 0.44us window, so a deeper pipeline (larger m) is likely needed to drain 32 requests in ~0.44us; pipelined_m family is the prime candidate. pipelined (m=1) reached fronts in high-rate specs. unrolled_k has never reached a front on this device - deprioritize. L1 analytic p99 bound was optimistic vs SimPy in the bursty spec, so keep margin on the p99 constraint.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=15,n_iter=14,angle_guard=3,frac_guard=3,rounding=round,m=5",
+    "feasible": false,
+    "sys_p99_batch_us": 0.44647163000001455,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.43417633000000005
+    },
+    "violations": {
+     "sys_p99_batch_us <= 0.44": 0.014708250000033068
+    }
+   },
+   {
+    "key": "pipelined_m:data_width=15,n_iter=15,angle_guard=3,frac_guard=3,rounding=round,m=5",
+    "feasible": false,
+    "sys_p99_batch_us": 0.44647163000001455,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.43417633000000005
+    },
+    "violations": {
+     "sys_p99_batch_us <= 0.44": 0.014708250000033068
+    }
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=15,angle_guard=2,frac_guard=2,rounding=round,m=5",
+    "feasible": false,
+    "sys_p99_batch_us": 0.44647163000001455,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.43417633000000005
+    },
+    "violations": {
+     "sys_p99_batch_us <= 0.44": 0.014708250000033068
+    }
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=1,frac_guard=1,rounding=round,m=5",
+    "feasible": false,
+    "sys_p99_batch_us": 0.44647163000001455,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.43417633000000005
+    },
+    "violations": {
+     "sys_p99_batch_us <= 0.44": 0.014708250000033068
+    }
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=16,angle_guard=0,frac_guard=0,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.37802317500000937,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.36791514000000003
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": true,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 5,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 94.78684786912261,
+   "dds_snr_db": 80.86856121009644,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 5,
+  "why": "the L1 selection pipelined_m:data_width=15,n_iter=14,angle_guard=3,frac_guard=3,rounding=round,m=5 fails the simulated system constraints (sys_p99_batch_us <= 0.44 by 1.5%); the best shortlisted design that passes is pipelined_m:data_width=18,n_iter=16,angle_guard=0,frac_guard=0,rounding=round,m=4",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=18) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 19.0,
+ "llm_failures": 0.0,
+ "input_tokens": 141941.0,
+ "output_tokens": 4434.0,
+ "cost_usd": 0.009194257999999999,
+ "wall_s": 169.4,
+ "run_dir": "runs/campaign_m3_memory/20261009-174947-a817",
+ "run_id": "20261009-174947-a817",
+ "final_text": "Campaign complete \u2014 all specs finalized.\n\n**multiaxis_control** (16-axis motor control, 32 requests per 1 \u00b5s tick, p99 \u2264 0.44 \u00b5s, err \u2264 2\u207b\u00b9\u00b2, min LUTs+FFs): I spent the full 400-eval L1 budget \u2014 one structured `run_dse` round (100) plus three targeted `explore_family` studies in the pipelined_m family, progressively tightening toward the area corner (dw 14\u201317, n_iter 12\u201316, m 5\u20138). L1 mapped a 13-design front led by cheap m=5/dw=15 designs (~1070\u20131145 LUTs+FFs, analytic p99 0.434 \u00b5s). L2 SimPy was decisive: those m=5 designs simulated at p99 0.4465 \u00b5s and **failed** the 0.44 \u00b5s bound by 1.5%, flipping the winner to `pipelined_m: dw=18, n_iter=16, no guards, round, m=4` \u2014 1236 LUTs+FFs (est), 13 accuracy bits, 97.8 MSPS, err 2\u207b\u00b9\u00b3\u00b7\u2070\u00b2, simulated p99 0.378 \u00b5s. L3/L4 had no recorded rows and back_annotate returned no_measured_data (no winner change, reexplore refused), so I finalized directly. Lesson stored: the L1 analytic p99 bound is optimistic for 32-request bursts \u2014 keep \u22655% margin before trusting it.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 14239.384490101593,
+ "hv_frac": 0.6318266292756424,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=18,n_iter=16,angle_guard=0,frac_guard=0,rounding=round,m=4",
+ "select_regret": 0.15289657727419212,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "memory_lessons_before": "not recorded in the M3 eval (always None, review N6; recorded for runs after the fix); the store after each spec is in campaign_m3_memory_store.json"
+}

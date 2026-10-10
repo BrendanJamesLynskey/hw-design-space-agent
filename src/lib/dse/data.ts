@@ -5,7 +5,7 @@
 import SITE from "@/data/site.json";
 import WHY from "@/data/why.json";
 
-export type Prov = "exact" | "estimate" | "measured";
+export type Prov = "exact" | "estimate" | "measured" | "simulated";
 
 export type Design = {
   key: string;
@@ -283,9 +283,10 @@ export type Spend = {
 
 export type Site = {
   vendored: { repository: string; commit: string; committed: string };
-  milestones: { id: string; levels: string; status: string }[];
+  /** status: "done" | "in progress" | "planned"; note: the README's remark on it, if any. */
+  milestones: { id: string; levels: string; status: string; note?: string }[];
   /** Every row of the README's roadmap table (follow-up rows included). */
-  roadmap: { id: string; levels: string; status: string }[];
+  roadmap: { id: string; levels: string; status: string; note?: string }[];
   ladder: Level[];
   specs: Record<string, SpecInfo>;
   ground_truth: Record<string, GroundTruth>;

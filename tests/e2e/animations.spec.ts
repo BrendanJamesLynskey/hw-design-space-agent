@@ -11,9 +11,15 @@ async function step(fig: Locator): Promise<number> {
 }
 
 async function pause(fig: Locator): Promise<void> {
-  if ((await fig.getAttribute("data-playing")) === "true")
-    await fig.getByTestId("play").click();
-  await expect(fig).toHaveAttribute("data-playing", "false");
+  // a short animation can reach its last step (and stop) just as the click lands, which
+  // then restarts it: click again until it is paused
+  await expect(async () => {
+    if ((await fig.getAttribute("data-playing")) === "true")
+      await fig.getByTestId("play").click();
+    await expect(fig).toHaveAttribute("data-playing", "false", {
+      timeout: 1000,
+    });
+  }).toPass({ timeout: 10_000 });
 }
 
 function errors(page: Page): string[] {

@@ -1,0 +1,69 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "low_area_control",
+ "seed": 4,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 12,
+ "tool_calls": 7,
+ "ladder": [
+  "run_dse",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "add_family",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-184408-1ce0/dse/low_area_control/20261009-184411-8b5f",
+   "notes": "Area-dominated spec: minimise LUTs+FFs subject to throughput>=1 MSPS and max_abs_err<=2^-10. Favour small iterative/unrolled families with modest data width; avoid large pipelined structures that inflate area. Selection rule is min luts_plus_ffs.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": null,
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=14) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 17.0,
+ "llm_failures": 0.0,
+ "input_tokens": 68306.0,
+ "output_tokens": 11303.0,
+ "cost_usd": 0.014490649000000001,
+ "wall_s": 50.5,
+ "run_dir": "runs/campaign_m3/20261009-184408-1ce0",
+ "run_id": "20261009-184408-1ce0",
+ "final_text": "The single spec `low_area_control` is finalized. I spent its full 400-evaluation L1 budget via `run_dse`, which returned a 36-design feasible, non-dominated front; the best design by the spec's selection rule (min luts_plus_ffs) is `iterative:data_width=14,n_iter=16,angle_guard=3,frac_guard=2,rounding=trunc` with luts_plus_ffs=265 (luts=172, ffs=93), accuracy_bits=10.6, throughput_msps=10.4, and max_abs_err=0.000659 (2^-10.57) \u2014 comfortably meeting the throughput \u22651 MSPS and error \u22642^-10 constraints. This spec has no system scenario, so L2 `simulate_system` was not applicable. On the L3/L4/L5 rungs, `verify_rtl` had no recorded row (a fresh exhaustive W=14 run is too heavy for a live campaign), `synthesize` is not run live in campaigns, and `back_annotate` returned `no_measured_data`; consequently no WINNER CHANGE was flagged and no `reexplore` was triggered. All reported numbers carry their provenance: LUTs/FFs/throughput are cost-model estimates (M1 calibration), errors are exact from the golden model, and the L3/L4/L5 rungs are recorded/absent rather than freshly measured. The spec is closed with the above selection.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 13796.385022164362,
+ "hv_frac": 0.8278541565632018,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=14,n_iter=16,angle_guard=3,frac_guard=2,rounding=trunc",
+ "select_regret": 0.05574867707300008,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

@@ -9,13 +9,18 @@ models to verified RTL and real synthesis.
 
 The running example is a **CORDIC sin/cos unit on an Artix-7 FPGA**. Milestone 1 built
 spec intake, analytical exploration and an eval that asks the obvious question: *why use
-an LLM at all?* **Milestone 2 (this release)** climbs the rest of the ladder: a generator
-that turns any explored design into verified SystemVerilog (simulated in two simulators
-against the golden model, formally checked, simulated again at gate level after
-synthesis), open-source synthesis and place-and-route on the anchors' Artix-7 part, a
-back-annotation path that refits the cost model to measured data, and an agent that maps
-the whole trade-off curve instead of only the corner its selection rule cares about,
-re-evaluated over five seeds.
+an LLM at all?* Milestone 2 climbed the rest of the ladder: a generator that turns any
+explored design into verified SystemVerilog (simulated in two simulators against the
+golden model, formally checked, simulated again at gate level after synthesis),
+open-source synthesis and place-and-route on the anchors' Artix-7 part, a back-annotation
+path that refits the cost model to measured data, and an agent that maps the whole
+trade-off curve. **Milestone 3 (this release)** puts the design *in a system*: an **L2**
+rung with a cycle-accurate model of every family (checked cycle for cycle against the
+RTL) and SimPy models of a DDS, a control loop and a bursty request stream; specs with
+system-level constraints ("p99 latency ≤ 0.4 µs with bursts of 8") where the winner
+differs from the throughput-only view; an L5 loop that re-explores when a measurement
+changes the winner; and an optional outer **campaign agent** on LangChain Deep Agents,
+A/B-tested against the structured graph.
 
 **Showcase site:** [hw-design-space-agent.vercel.app](https://hw-design-space-agent.vercel.app/)
 ([source](https://github.com/BrendanJamesLynskey/hw-design-space-agent)) presents this
@@ -25,7 +30,7 @@ and the LLM cost per run.
 
 ## The design principle
 
-**The LLM is never the optimiser and never produces a PPA or accuracy number.**
+**The LLM is never the optimiser and never produces a PPA, accuracy or system-level number.**
 
 The LLM does the architect's job: it reads the spec, chooses architecture families and
 parameter ranges from a fixed registry, reads compact summaries of results, and decides
@@ -40,6 +45,9 @@ Deterministic code produces every number:
 | RTL correctness: output codes and latency of generated SystemVerilog, before and after synthesis | Verilator and Icarus simulations compared with the golden model, angle by angle; SymbiYosys proofs | *exact* |
 | LUTs, FFs, CARRY4s, Fmax | Yosys + nextpnr-xilinx (post-route) and Vivado 2025.2 (post-synthesis and post-route) on xc7a35tcpg236-1 | *measured (tool, version)* |
 | refitted cost-model constants, per-tool correction factors | least squares over measured points | *estimate* naming the refit calibration |
+| system metrics: sustained throughput under back-pressure, p50/p99 latency, batch latency, queue depth, utilisation (M3) | SimPy models of the spec's system, clocked at the design's estimated Fmax, driven by the cycle model's contract | *simulated (model, version)*, naming the clock it ran at |
+| the same system metrics during exploration (M3) | analytic bounds, optimistic by construction (L1 screening) | *estimate* (L1 analytic bound) |
+| DDS SNR / SFDR (M3) | the golden model's exact outputs for a coherent DDS tone, FFT | *simulated (golden-model DDS, ...)* |
 | the search itself | Optuna NSGA-II inside the LLM's ranges, plus code-driven front-mapping rounds; Pareto and hypervolume maths | — |
 
 This shows up in the types: the LLM's structured-output schemas
@@ -57,9 +65,10 @@ report.
 | **M1** | **L0** spec intake (NL/YAML → validated `Spec`, human confirmation) · **L1** analytical exploration (LLM-chosen families and ranges, Optuna multi-objective search over fast cost models, Pareto front) · baseline eval | **done** |
 | **M2** | **L3** SystemVerilog generator for every family, verified against the golden model (Verilator + Icarus, exhaustive for W ≤ 16), SymbiYosys proofs (W = 8) · **L4** open-source synthesis + place-and-route (Yosys + nextpnr-xilinx), gate-level simulation of the netlist · **L5** measured-points schema, per-tool refit of the cost model, back-annotation node that flags a winner change · whole-curve agent levers · 5-seed eval | **done** |
 | M2 follow-ups | **Vivado 2025.2 on 14 generated designs, refit `vivado-2025.2`** | **done** |
-| | re-explore automatically when back-annotation flags a winner change (today it reports) · measured power | planned |
-| M3 | **L2** cycle-level simulation for shortlisted candidates | planned |
-| M4 | more functions and targets (e.g. an ASIC gate-equivalent `CostModel`), richer family registry | planned |
+| | measured power · `high_precision` m=8 synthesised at a 20 ns constraint · per-family-class path factor (deferred, not rejected) | planned |
+| **M3** | **L2** cycle-accurate interface model per family (validated against the RTL cycle for cycle) + SimPy system models (DDS + mixer, control loop, bursty stream) · system-level constraints in specs, L1 bounds, L2 shortlist and re-selection · **L5 loop**: re-explore under the refit when a measured winner changes · `map_front` blind-spot fix (gated lever) · M2 replay proof · **campaign agent** on Deep Agents with cross-run memory · A/B and memory on/off eval | **done** (see the A/B for what the campaign agent did and did not achieve) |
+| | live L4 inside campaigns · any campaign-agent rework (only if the M4 fleet design needs it) | planned |
+| M4 | more functions and targets (an ASIC gate-equivalent `CostModel`), a fleet of agents, richer family registry, the write-up | planned |
 
 ## The fidelity ladder
 
@@ -67,10 +76,10 @@ report.
 |---|---|---|---|
 | L0 | spec intake: YAML or natural language → validated `Spec`, human confirmation | `spec.py`, `intake` node | done (M1) |
 | L1 | analytical exploration: golden-model accuracy (*exact*) + cost model (*estimate*), NSGA-II inside LLM-chosen boxes | `models/`, `explore.py`, agent | done (M1); front-mapping levers (M2) |
-| L2 | cycle-level / system simulation | — | planned (M3) |
+| L2 | cycle-accurate interface model per family; SimPy system models; L1 analytic bounds; shortlist + re-selection | `l2/`, `l2_simulate` node | **done (M3)**: 48/48 bursty traces identical to the RTL (Verilator + Icarus); 2 system specs change the winner |
 | L3 | parametrised SystemVerilog per family; Verilator + Icarus vs golden model; SymbiYosys | `rtl/`, `rtl_golden/`, `formal/` | **done (M2)**: 47 configurations × 2 simulators, 0 mismatches; 7 proofs |
 | L4 | synthesis + place-and-route; gate-level simulation of the netlist | `synth/flow.py`, `synth/gatesim.py` | **done (M2)** with Yosys 0.68 + nextpnr-xilinx: 39 measured points; 22 gate-level runs, 0 mismatches. Vivado 2025.2: 14 generated designs |
-| L5 | back-annotation: measured vs estimate, refit per tool, flag winner changes | `synth/recalibrate.py`, `back_annotate` node | **done (M2)** for comparison, refit and flagging; automatic re-exploration planned |
+| L5 | back-annotation: measured vs estimate, refit per tool, flag winner changes, re-explore | `synth/recalibrate.py`, `back_annotate` + `l5_reexplore` nodes | **done** (M2: comparison, refit, flagging; M3: re-exploration under the refit) |
 
 ## Agent graph
 
@@ -92,20 +101,25 @@ graph TD;
 	explore_family(explore_family)
 	analyse(analyse)
 	select(select)
+	l2_simulate(l2_simulate)
 	back_annotate(back_annotate)
+	l5_reexplore(l5_reexplore)
 	report(report)
 	__end__([<p>__end__</p>]):::last
 	__start__ --> intake;
 	analyse -.-> explore_family;
 	analyse -.-> report;
 	analyse -.-> select;
-	back_annotate --> report;
+	back_annotate -.-> l5_reexplore;
+	back_annotate -.-> report;
 	confirm_spec -.-> propose;
 	confirm_spec -.-> report;
 	explore_family --> analyse;
 	intake --> confirm_spec;
+	l2_simulate --> back_annotate;
+	l5_reexplore --> report;
 	propose -.-> explore_family;
-	select --> back_annotate;
+	select --> l2_simulate;
 	report --> __end__;
 	classDef default fill:#f2f0ff,line-height:1.2
 	classDef first fill-opacity:0
@@ -122,7 +136,9 @@ graph TD;
 | `explore_family` | code | one Optuna NSGA-II study per family, fanned out with `Send`; results appended by a reducer |
 | `analyse` | code → LLM → code | code merges the front, feasibility, hypervolume; LLM reads a compact summary and returns `refine` / `widen` / `add_family` / `map_front` / `infeasible` / `stop`; code applies the stopping rules and the whole-curve levers (below) |
 | `select` | human / code | `interrupt()` to pick a design off the front, or auto-select by the spec's rule |
+| `l2_simulate` (M3) | code | L2: every L1-feasible design the run evaluated is simulated in the spec's system (SimPy; cached per (latency, ii, Fmax), so a few dozen simulations), system constraints re-checked on simulated numbers, the best passing design becomes the selection; the report shows the top 5. Not just the L1 front: a design that passes L2 can be dominated in the L1 objectives by one that only passed the bound (the `multiaxis_control` case; fixed after review). No system scenario: the selected design's contract and DDS spectrum go in the report, nothing changes |
 | `back_annotate` | code | L5: measured data for the selected design (committed L4 CSV, or a fresh synthesis if configured) vs its estimates; front designs with measurements re-scored on the Vivado scale; flags a winner change in the report |
+| `l5_reexplore` (M3) | code | only after a flagged winner change: 60 evaluations (a separate L5 budget) of NSGA-II around the measured front designs under the `vivado-2025.2` refit; re-selection under the refit (`l5_selected`). The L1 evaluations and selection are untouched |
 | `report` | code | `runs/<spec>/<timestamp>/`: `report.md`, `pareto.png`, `evaluations.csv`, `llm_trace.jsonl` |
 
 State is checkpointed with LangGraph's `SqliteSaver`, so a run paused for human input,
@@ -475,13 +491,185 @@ changes (`eval/data/l5_refit_vivado-2025.2.md`). Vivado post-route rows are repo
 not fitted; a design measured twice by the same tool, version and flow is counted once
 (the CSV given first wins; the report flags the two rows if they differ by more than 0.5%). Any CSV in the measured-points schema works too.
 
+## L2: cycle-level and system simulation (M3)
+
+**The contract.** Every family obeys one interface contract, which the generated RTL
+implements and the formal checks prove at W = 8: `ready` high when an angle can be taken
+(always for the pipelined families, only in IDLE for the FSM ones), an angle accepted at an
+edge with `valid_in && ready`, the result on `valid_out` `latency` edges later (both edges
+counted), ready again `ii` edges after an accept (1, or `latency` for the FSM families).
+`src/hw_dse/l2/cycle.py` models it edge by edge, as a state machine per family, with the
+output codes from the golden model.
+
+**Validated against the RTL, cycle for cycle.** The L3 harness gained two optional
+plusargs (`+gaps=`: idle cycles before each angle, which turns the back-to-back stream into a
+bursty one; `+cycles=`: a per-edge log). `src/hw_dse/l2/validate.py` drives the generated RTL
+with a bursty trace, feeds the logged per-edge inputs into the cycle model, and compares
+`ready`, `valid_out` and the output codes on every edge: **48/48 traces identical** (8 designs
+covering every family, both rounding modes, N not a multiple of k or m, negative and positive
+angle guard; 3 seeds; Verilator 5.020 and Icarus 12; 28,424 edges;
+`eval/data/l2_cycle_validation.csv`). CI runs it (`tests/test_l2.py`; Icarus required in the
+test job, both simulators in the HDL job). A mutation (one cycle late) is caught.
+
+**SimPy system models** (`src/hw_dse/l2/system.py`; SimPy 4.1.2, a core dependency): a producer,
+an input FIFO and the CORDIC device process, which accepts at its clock edges by the same
+contract (edges as integers, so the arithmetic is exact; a unit test checks it request by
+request against the cycle model). The CORDIC runs at its estimated Fmax, the clock every
+throughput figure in the project assumes.
+
+| scenario | what | metrics |
+|---|---|---|
+| `dds_mixer` | an NCO emits a phase word every 1/fs into a FIFO; a full FIFO **stalls** the NCO (back-pressure) | sustained throughput, stall fraction, latency, queue depth, utilisation; SNR/SFDR of the DDS from the golden model's exact outputs (coherent 16k-point FFT) |
+| `control_loop` | a tick every 1/f_loop issues R requests at once (e.g. 16 axes × Park + inverse Park) | p99 batch latency (tick → last result), request latency, utilisation |
+| `bursty` | bursts of B requests, Poisson arrivals, fixed seed (every design sees the same trace) | p50/p99 latency, queue depth, throughput, utilisation |
+
+**L1 bounds, L2 truth.** During exploration a system constraint is screened with an analytic
+bound (`src/hw_dse/l2/bounds.py`: each burst or tick served alone, starting on a clock edge),
+which is optimistic by construction: in the simulation a request can only wait longer (clock
+alignment, backlog from earlier bursts), request by request, and percentiles are monotone
+under that ordering. So L1 never discards a design L2 would accept (tested on random
+contracts for every scenario). The `l2_simulate` node then simulates every L1-feasible design
+of the run and re-selects (the first version simulated only the top of the L1 front, which can
+miss the system winner: see the `multiaxis_control` bullet below).
+
+**System-level specs** (`specs/system/`), exhaustive ground truth in three views
+(`python eval/run_eval.py ground-truth-m3` → `eval/data/ground_truth_m3.json`):
+
+| spec | system constraint | MSPS-only winner | L1-bound winner | true (simulated) winner |
+|---|---|---|---|---|
+| `bursty_offload` | bursts of 8, 2 req/µs on average, p99 latency ≤ 0.4 µs, error ≤ 2⁻¹⁰ | `iterative` W=15 N=12 (251 LUT+FF) | `pipelined_m` W=15 N=12 m=6 (745) | **`pipelined_m` W=15 N=12 m=6** (745; p99 0.195 µs) |
+| `multiaxis_control` | 32 requests per 1 µs tick, all back within 0.44 µs (p99), error ≤ 2⁻¹² | `pipelined_m` W=17 N=14 m=7 (953) | `pipelined_m` m=5 (1013) | **`pipelined_m` m=4** (1072; 0.378 µs) |
+| `dds_sfdr` (ground truth only) | 200 MS/s with no NCO stall, SFDR ≥ 90 dBc, error ≤ 2⁻¹³ | `pipelined` W=18 N=15 | same | **same**: no change |
+
+* `bursty_offload`: the MSPS-only view keeps the 13.2-MSPS FSM winner of `low_area_control`
+  (6.6× the average rate), but it takes one request every 15 cycles, so the eighth request of
+  a burst waits for seven others; with Poisson bursts overlapping, its simulated p99 is
+  1.18 µs, 2.0× even the isolated-burst bound. No FSM design passes; the winner is a
+  `pipelined_m` at 3× the area. Here the L1 bound already decides (151,528 designs feasible
+  either way), and so would a back-of-envelope peak-rate floor: sizing for the burst
+  (8 requests in 0.4 µs = 20 MSPS) instead of the average rate gives the same winner and the
+  identical feasible set. So this spec shows that *average*-rate sizing is wrong, not that
+  simulation is needed.
+* `multiaxis_control`: the average rate needs 32 MSPS, the batch deadline ((32 − 1) + (latency − 1))
+  cycles in 0.44 µs, i.e. 77–82 MHz for these designs, and clock-edge alignment (a tick lands
+  between CORDIC edges, so up to one cycle passes before the first accept) costs a cycle the
+  bound ignores: 53,667 designs pass the bound, 51,244 the simulation, and the bound's winner
+  (m=5, simulated 0.4465 µs) misses the deadline by 1.5%, so L2 switches to m=4. A peak-rate
+  floor (32 / 0.44 µs = 72.7 MSPS) stops at m=5, the bound's winner; only the simulation gets to
+  m=4. m=4 has m=5's numerics and more area, so it is *dominated* in the L1 objectives: L2 has
+  to search every L1-feasible design, not the L1 front (a bug in the first version, found in
+  review). The model aligns to the next edge but has no synchroniser: a real CDC FIFO adds about
+  two destination cycles (~25 ns at 80 MHz), which against a 1.5% margin could move the winner
+  again (Limitations).
+* `dds_sfdr` is the honest negative, kept as evidence: for this design space a DDS's
+  system constraints (no stall at the sample rate, SFDR) reduce to the MSPS-only view (the
+  max-error winner already has 100.3 dBc SFDR; "no stall" is "throughput ≥ fs").
+
+[`docs/worked_example_m3.md`](docs/worked_example_m3.md) (`python scripts/worked_example_m3.py`)
+walks both effects with every number and its provenance.
+
+## Comparability with M2, and the `map_front` fix (M3)
+
+**Replay proof.** `tests/test_m2_replay.py` replays the committed M2 runs through today's
+graph with `ReplayArchitect` (the recorded LLM outputs): **60/60 identical**: decisions,
+status, rounds, front-mapping rounds, every evaluated design key in order, HV fraction,
+regret and selected design (`eval/data/m2_replay.json`; 4 runs in every test run, all 60 in
+CI). For a spec without a system scenario the graph keeps the M2 levers, the architect sees
+the byte-identical M2 system prompt, L2 attaches facts without changing the selection, and
+the L5 loop's evaluations are kept apart. That is what lets the A/B reuse the M2 live runs on
+the four M2 specs.
+
+**The fix.** M2's front-mapping round mapped only families *on* the front, so a family whose
+first box missed the accuracy target was never revisited (Qwen, `high_precision`, +71.7%
+regret). `LEVERS_M3` gives such families a full-box share of the mapping budget, **gated**:
+a structural constraint (throughput, latency, system timing) must have been met by one of
+the family's own designs; an accuracy constraint by any design (accuracy depends only on the
+numeric knobs every family shares). Offline, on the 60 recorded M2 decisions and the
+rule-based architect (`python eval/m3_offline.py mapfront` → `eval/data/m3_mapfront_fix.json`):
+
+| variant | dds_250msps HV / regret | low_area_control HV / regret | high_precision HV / regret | runs whose selection changed |
+|---|---|---|---|---|
+| M2 levers | 0.878 / +5.7% | 0.895 / +3.4% | 0.951 / +8.0% | — |
+| fix, unconditional | 0.781 / +5.9% | 0.885 / +3.4% | 0.966 / +5.2% | 15 of 45 |
+| **fix, gated (`LEVERS_M3`)** | 0.878 / +5.7% | 0.885 / +3.4% | **0.974 / +4.0%** | 1 of 45 (the blind-spot run) |
+
+The unconditional version spends budget on FSM families that can never reach 250 MSPS. The
+gate was refined on these same replays, so it is fitted to them; the heuristic architect is
+unchanged by it. The gated fix also moves HV without changing a selection: in 4 Sonnet
+`low_area_control` replays (seeds 0, 1, 3, 4; seed 3 goes 0.893 → 0.802) a family that was
+explored without a feasible design takes part of the mapping budget from the front families.
+Read the `high_precision` gain with care: it comes from a single run (Qwen seed 1, regret
+71.7% → 11.1%); the other 14 replays' selections are unchanged, and the gate lowers HV on 4
+`low_area_control` runs. **By the owner's decision, `LEVERS_M3` stays the default only for specs
+with a system scenario**; the M2 specs keep `LEVERS_M2`, so the M2 results stand as recorded.
+
+## Campaign agent on LangChain Deep Agents (M3)
+
+**Experimental: optional and off by default** (nothing in the structured graph or the CLI uses it;
+the A/B below found no gain). An outer agent (`src/hw_dse/campaign/`, `pip install -e '.[campaign]'`; Python ≥ 3.11,
+because `deepagents` 0.7 requires it; on 3.10 the campaign tests skip) for
+long-horizon work: take specs down the whole ladder, re-plan when a measurement changes the
+winner, work through a queue, carry lessons between runs. The structured graph stays the
+inner loop and is one of its tools.
+
+| tool | rung | numbers it returns |
+|---|---|---|
+| `run_dse(spec, evals, notes)` | L1 + L2: the structured graph (its architect is the same model) | estimates / exact; L2 simulated |
+| `explore_family(spec, family, evals, box)` | L1: one NSGA-II study in a box | estimates / exact |
+| `simulate_system(spec, top_k)` | L2 | simulated |
+| `verify_rtl(spec)` | L3: the committed L3 row, or a fresh exhaustive run for W ≤ 12 | exact, *recorded* or *fresh*, said which |
+| `synthesize(spec)` | L4: committed measurements only, never run live | *measured (tool, version), recorded* |
+| `back_annotate(spec)`, `reexplore(spec)` | L5 and the L5 loop | measured vs estimate; estimate under the refit |
+| `finalize(spec)` | closes a spec (selection by the spec's rule; L2-checked for system specs) | — |
+| `recall()`, `remember(key, lesson)` | cross-run memory | text |
+
+Rules enforced by code, not prompt: the same 400 L1 evaluations per spec as the structured
+graph (both L1 tools draw on it; overspending is refused); `finalize` refuses while a flagged
+winner change has not been re-explored; a system spec is never finalized on L1 bounds; a
+campaign stops after 40 model calls or 4 identical tool calls in a row (counted as a
+failure). The agent never sees the ground truth; scoring happens afterwards in the eval.
+
+**Memory** (`src/hw_dse/campaign/memory.py`): a LangGraph `InMemoryStore`, saved to JSON. Code
+writes lessons after every spec: per family (where it was explored, whether it reached a
+front), per spec class (what the front-mapping rounds gained), calibration history (every
+back-annotation verdict and L5 re-selection). The agent can add text notes, labelled as its
+own, with every number masked (since the review; the live eval's notes still carried copied
+numbers). Every entry carries the run IDs it came from; memory off means nothing is read or
+written. Store contents after the eval: `eval/data/campaign_m3_memory_store.json`.
+
+**What we found in `deepagents` (pinned `==0.7.23`, checked 2026-10-09):**
+
+* `create_deep_agent(model, tools, system_prompt, subagents, middleware, store, ...)` builds a
+  LangGraph agent with a state-backed virtual filesystem (`ls`, `read_file`, `write_file`,
+  `edit_file`, `glob`, `grep`, `delete`), a `task` tool for sub-agents (plus an auto-added
+  general-purpose sub-agent), summarisation and tool-call patching. It accepts a pre-built
+  LangChain chat model, so OpenRouter works through `ChatOpenAI` with `tool_choice` left on
+  auto (no forced tool choice, so the Sonnet 5.5 issue from M1 does not arise).
+* **The planning to-do tool is no longer in the default stack** in 0.7.x (only one built-in
+  model profile adds it). We add LangChain's `TodoListMiddleware` ourselves.
+* Tool and sub-agent trimming goes through a *harness profile* registered per
+  `provider:model` key: we switch off the general-purpose sub-agent and drop `ls`, `glob`,
+  `grep`, `delete`. We define one sub-agent, `ladder` (L3 → L4 → L5 for the current selection).
+* Long-term memory: the harness offers a `StoreBackend` that maps files onto a LangGraph
+  Store; we use the Store directly through typed tools instead, so every entry has a kind,
+  provenance (code or LLM) and run IDs.
+* Gotchas: LangChain **swallows exceptions raised in callbacks** unless the handler sets
+  `raise_error = True`. Our first live pilot's call cap therefore did not fire while Qwen
+  called `ls('.')` 250 times inside the sub-agent ($0.058, killed by hand). Parallel tool
+  calls run concurrently: their order in the ledger is not fixed, and in the live eval two
+  parallel `explore_family` calls could take the same seed index (it counted *finished* calls;
+  now taken at call start). `eval/m3_rescore.py` handles that when it rebuilds a campaign's pool.
+* A scripted chat model (`hw_dse.campaign.fake.ScriptedChatModel`) drives the whole harness
+  offline: `tests/test_campaign.py` checks the ladder, the sub-agent, to-dos, files, the
+  budget, the forced re-plan, memory read/write and the off switch, and the loop guards.
+
 ## Quick start
 
 ```bash
 git clone https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent.git
 cd HW_Design_Space_Agent
 python -m venv .venv && . .venv/bin/activate
-pip install -e '.[dev,openrouter]'      # extras: openai, anthropic, gemini, ollama
+pip install -e '.[dev,openrouter]'      # extras: openai, anthropic, gemini, ollama, campaign (Deep Agents)
 
 pytest                                   # < 60 s, offline, no LLM; tool tests skip if tools are absent
 
@@ -519,6 +707,22 @@ python scripts/run_l4_sweep.py          # L4 -> eval/data/l4_synthesis.csv (--yo
 python scripts/run_gate_sim.py          # gate-level rows of l3_verification.csv
 python -m hw_dse.synth.recalibrate --measured eval/data/l4_synthesis.csv --measured eval/data/vivado_spotcheck.csv --name yosys-nextpnr   # L5
 python scripts/worked_example.py        # docs/worked_example_m2.md
+python -m hw_dse.l2.validate            # L2: cycle model vs RTL -> eval/data/l2_cycle_validation.csv
+python scripts/worked_example_m3.py     # docs/worked_example_m3.md (Icarus optional)
+```
+
+**Milestone 3 eval** (live runs need `OPENROUTER_API_KEY`; everything else is offline):
+
+```bash
+python eval/run_eval.py ground-truth-m3                 # system specs, three views
+python eval/run_eval.py baselines-m3                    # NSGA-II / random + the L2 shortlist
+python eval/m3_offline.py replay|mapfront               # M2 replay proof; the map_front fix offline
+python eval/run_eval.py key-usage --tag before_eval     # free endpoint; the key is never recorded
+python eval/run_eval.py agent-m3    --model qwen/qwen3.8-27b --reasoning off   # structured arm, system specs
+python eval/run_eval.py campaign-m3 --model qwen/qwen3.8-27b --reasoning off   # campaign arm, all specs
+python eval/run_eval.py memory-m3   --model qwen/qwen3.8-27b --reasoning off --seeds 3
+python scripts/archive_traces_m3.py                     # traces -> eval/data/traces/m3/
+python eval/m3_rescore.py                               # re-select the live runs with today's L2 (offline); pool keys
 ```
 
 The reference RTL is vendored in `third_party/CORDIC/` (MIT, pinned commit `fe4775e`,
@@ -653,6 +857,97 @@ What this says, honestly:
   reasoning off made it **≈15× faster by wall-clock** (720 s vs 48 s per run on average)
   and ≈8× cheaper, not "~10×".
 
+## Eval M3: system specs, the A/B, memory on vs off
+
+Full tables, regenerated from committed data: the M3 section at the end of
+[`eval/results.md`](eval/results.md). Models re-confirmed in `/api/v1/models` with `tools` and
+`structured_outputs` on 2026-10-09 (no substitution). Cells are mean ± population std over seeds;
+400 L1 evaluations per spec for every method.
+
+**Structured graph on the new system specs** (5 seeds × 3 models, fresh live runs; baselines
+NSGA-II / random get the same L1 screening and the same L2 shortlist step; scored on
+*simulated* feasibility against the exhaustive ground truth):
+
+| spec | NSGA-II | random | Sonnet 5.5 | DeepSeek V4.1 Flash | Qwen3.8-27B, reasoning off |
+|---|---|---|---|---|---|
+| multiaxis_control HV | 0.806 ± 0.071 | 0.633 ± 0.032 | 0.839 ± 0.019 | 0.857 ± 0.016 | 0.841 ± 0.027 |
+| multiaxis_control regret | +16.0 ± 7.0% | +33.1 ± 10.5% | **+3.2 ± 2.3%** | +11.8 ± 5.0% | +4.9 ± 3.8% |
+| bursty_offload HV | 0.840 ± 0.020 | 0.733 ± 0.032 | 0.859 ± 0.025 | 0.869 ± 0.013 | 0.838 ± 0.030 |
+| bursty_offload regret | +26.7 ± 6.4% | +31.7 ± 11.6% | **+9.1 ± 5.1%** | +9.4 ± 8.8% | +15.8 ± 6.5% |
+
+Every selected design met the spec (simulated). The agents keep the M2 pattern: HV at or above
+NSGA-II (one exception: Qwen on `bursty_offload`, 0.838 vs 0.840) and much lower regret.
+**L2 changed the L1 selection in 0 of 30 structured runs** (their L1 selections passed the
+simulation) **and in 4 of 65 campaign runs**, all on `multiaxis_control` (Sonnet seeds 1–2,
+DeepSeek seed 4, Qwen seed 4), where the L1 pick, an m=5 design, missed `sys_p99_batch_us` by 1.5%.
+After the L2 fix (simulate every L1-feasible design, not the L1 front) two of those campaigns
+select a cheaper passing design (Sonnet seed 1: +15.8% → +6.6% regret; Qwen seed 4: +5.2% →
++3.5%); no structured run and no baseline changes (`eval/m3_rescore.py` rebuilds each run's L1
+evaluations from committed data and re-selects; rewritten rows keep their old values under
+`before_b1`).
+
+**A/B: structured graph vs campaign agent** (same specs, seeds and budget; the structured arm
+reuses the M2 live runs on the four M2 specs, which the replay proof allows, and the fresh runs
+above on the system specs; campaign = one single-spec campaign per spec and seed, memory off).
+**Scope, as accepted by the owner:** the campaign arm covers Qwen and DeepSeek on all six specs
+and Sonnet 5.5 on `multiaxis_control` only; a full Sonnet campaign arm (~$6.9) was skipped for
+the spend cap and will not be run for M3.
+
+| model | HV, mean over the 5 feasible specs (structured → campaign) | regret, same | cost / run | input tokens / run | wall / run | failures |
+|---|---|---|---|---|---|---|
+| DeepSeek V4.1 Flash (30 → 30 runs) | 0.905 → 0.893 | +7.3% → +7.8% | $0.012 → $0.020 | 13k → 80k | 99 → 133 s | 0/30 → 0/30 |
+| Qwen3.8-27B, reasoning off (30 → 30) | 0.872 → 0.819 | +9.2% → +19.0% | $0.008 → $0.011 | 10k → 90k | 60 → 178 s | 0/30 → **4/30** |
+| Sonnet 5.5 (`multiaxis_control` only, 5 → 5) | 0.839 → 0.833 | +3.2% → +5.7% | $0.100 → $0.224 | 24k → 86k | 45 → 62 s | 0 → 0 |
+
+(Per-spec cells in `eval/results.md`. Structured HV/regret for DeepSeek and Qwen are the means of
+their five per-spec means; the infeasible spec is excluded from HV/regret and was called
+correctly by every run of both arms. Wall-clock is not controlled: in this session structured,
+campaign and memory-on runs ran 3–4 at a time, and the structured M2-spec runs come from the M2
+session.)
+
+**The free-form loop loses, mildly, and costs more.** In 52 of 65 campaigns the agent spent its
+whole budget on one `run_dse(400)` (so its result is the structured graph's plus sampling noise)
+and then walked the ladder; it called `explore_family` in 13, `simulate_system` in 50, L3 in 55,
+`back_annotate` in 61 and `reexplore` once (the one flagged winner change it met). Where it
+deviated, it did not help: on `low_area_control` seed 0 its `notes` to the inner architect ("keep
+accuracy at the constraint floor") narrowed the first box and the run ended at HV 0.097,
++224% regret; on the infeasible spec it spent the remaining budget re-checking infeasibility
+(400 evaluations vs 100–180; still correct in 10/10). Qwen failed 4 of 30 campaigns by
+re-running verify/synthesize/back_annotate until the 40-call cap (every failed campaign had
+already used its 400 evaluations, so it is still scored). The campaign costs 1.4× (Qwen), 1.6×
+(DeepSeek) and 2.2× (Sonnet) per spec, with 3.5–9× the input tokens. What it did add is mostly
+form: it called the ladder's tools, but they rarely had anything to say: `verify_rtl` returned a
+recorded L3 row in 1 of 55 calls (no fresh run: every selection had W ≥ 15, too large for a live
+exhaustive run), `synthesize` found recorded measurements in 1 of 55, `back_annotate` compared
+in 1 of 61. The forced re-plan after a flagged winner change ran once; the structured graph does
+the same in code.
+
+**Memory on vs off** (Qwen, sequence `low_area_control → bursty_offload → dds_250msps →
+multiaxis_control`, seeds 0–2; off = the campaign arm's runs):
+
+| spec (position) | HV off → on | regret off → on |
+|---|---|---|
+| low_area_control (1, empty store in both) | 0.564 ± 0.335 → 0.915 ± 0.016 | +89.2 ± 96.9% → +2.2 ± 3.1% |
+| bursty_offload (2) | 0.869 ± 0.028 → 0.881 ± 0.035 | +9.9 ± 6.9% → +11.1 ± 2.6% |
+| dds_250msps (3) | 0.872 ± 0.001 → 0.650 ± 0.213 | +5.0 ± 1.3% → +3.3 ± 1.3% |
+| multiaxis_control (4) | 0.826 ± 0.013 → 0.706 ± 0.079 | +4.1 ± 2.6% → +17.8 ± 10.8% |
+
+**No benefit from memory is visible.** Position 1 has an empty store in both conditions, so its
+large gap is run-to-run noise of the campaign (the seed-0 `notes` outlier above), which also
+tells how wide the noise is at 3 seeds. Later in the sequence memory-on is worse on HV for
+`dds_250msps` and `multiaxis_control` and worse on regret for `multiaxis_control`. The lessons
+were sensible (e.g. "`unrolled_k`: explored in 3 specs (63 evaluations), on the front in 0; never
+reached a front on this device so far"); passing them to the inner architect as `notes` seems to
+narrow its boxes, as in the seed-0 outlier. 3 seeds, one model: weak evidence either way.
+
+**Spend** (`eval/data/spend_ledger.jsonl`, `eval/data/key_usage_m3.json`): the key's usage went
+from **$4.1889** (session start, 2026-10-09T16:28:55Z) to **$7.7664** (2026-10-09T19:34:30Z):
+**$3.58 for M3**, under the $5 cap. Provider-reported ledger: $3.49 over 114 entries (structured
+$1.19, campaign $2.30 incl. memory-on $0.15 and pilots $0.08); the gap is calls that fail inside
+the client and report no usage. Pilots on the cheapest model first: structured (Qwen,
+`multiaxis_control` seed 0) $0.0095; campaign attempt 1 failed ($0.058, the `ls` loop above),
+attempt 2 succeeded ($0.018).
+
 ## Limitations
 
 - **The eval's cost model is still the two-anchor Vivado calibration.** It is the default
@@ -700,9 +995,33 @@ What this says, honestly:
   documented angle sets (exhaustive for W ≤ 16, up to 131,072 deduplicated angles above, so a lower bound on
   the worst case there). Gate-level simulation is zero-delay on the Yosys netlist, not the
   post-route netlist. Formal proofs cover W = 8 only (larger widths are simulated).
-- **Back-annotation reports; it does not re-explore.** `back_annotate` flags a winner
-  change but does not restart the search, and it only sees front designs that have
-  measurements.
+- **The L5 loop re-explores under the refit, but only around measured designs, with a
+  separate 60-evaluation budget**, and its result (`l5_selected`) is an estimate under the refit;
+  it is not scored against the (M1-model) ground truth. `back_annotate` still only sees front
+  designs that have measurements.
+- **L2 is a model, not silicon.** System metrics run the CORDIC at its *estimated* Fmax; the
+  interface contract is verified against the RTL, the clock is not. The L1 bound can be far
+  from the simulation (bursty: p99 2× the bound for an FSM design), so a spec whose winner sits
+  near a system limit can have its whole L1 shortlist rejected at L2 (with a 1.0 µs limit on
+  `bursty_offload`, 186,457 designs pass the bound and 151,528 the simulation; not used in the eval).
+- **Two system specs, one of which an MSPS floor at the right rate already decides.** On
+  `bursty_offload` a peak-rate floor gives the same winner as the simulation; only
+  `multiaxis_control` needs the system model, and there the margin is 1.5%. L2 re-selected in 0
+  of 30 structured runs and 4 of 65 campaign runs. The DDS scenario's constraints reduce to the
+  MSPS-only view for this design space.
+- **Clock-edge alignment, not a synchroniser.** Requests are accepted at the next CORDIC edge;
+  a real clock-domain crossing (a two-flop or FIFO synchroniser) would add about two cycles,
+  which is not modelled and could change `multiaxis_control`'s winner again.
+- **The campaign A/B is small and partly reused.** Two models over all six specs (Sonnet only on
+  `multiaxis_control`, for the spend cap), 5 seeds; the structured arm on the M2 specs is the
+  M2 runs (identical graph by replay, but sampled on a different day). Memory on/off: one
+  model, 3 seeds. In the live eval the campaign agent's notes copied numbers from tool outputs
+  into memory, at least once inconsistently (Vivado-scale percentages next to a raw measured
+  pair), and those notes reached the next campaign's prompt and, through `run_dse(notes)`, the
+  inner architect (all 65 A/B campaigns passed notes). Since the review, every number in
+  LLM-authored text is masked before it is stored or forwarded (`mask_numbers`); the live runs
+  predate that.
+- **`deepagents` needs Python ≥ 3.11**; on 3.10 the campaign extra is skipped and its tests skip.
 - **Lever tuning used replays.** The levers were tuned on recorded M1 decisions; a replay
   cannot show how the LLM would react to different summaries. The live 5-seed eval is
   the test, and it is a small sample per model and spec.
@@ -738,19 +1057,23 @@ src/hw_dse/
   benchmark.py                 exhaustive ground truth, baselines, run scoring
   agent/                       LangGraph agent: graph (+ whole-curve levers), schemas, prompts,
                                LLM factory (+ ReplayArchitect), summariser, tracer, report,
-                               runner, backannotate (L5 node)
+                               runner, backannotate (L5 node + L5 loop), replay (M2 proof)
+  l2/                          M3: cycle model + RTL validation, SimPy systems, L1 bounds,
+                               DDS spectrum, the l2_simulate node's logic
+  campaign/                    M3: Deep Agents campaign agent: tools, memory, agent, fake model, runner
   cli.py                       hw-dse run | resume | ping | diagram
 third_party/CORDIC/            vendored reference RTL (MIT) + VENDORED.md
 rtl_golden/                    committed golden examples, one per family
 rtl_harness/                   stimulus/capture harnesses (reference RTL; generated RTL)
 formal/                        SymbiYosys jobs (.sby + wrapper modules)
-specs/                         example specs (YAML)
+specs/                         example specs (YAML); specs/system/: system-level specs (M3)
 eval/run_eval.py               ground truth, baselines, live agent runs, results.md
 eval/tune_levers.py            offline lever tuning by replaying recorded LLM decisions
+eval/m3_offline.py             M2 replay proof; the map_front fix, offline
 eval/data/                     every result table (see eval/data/README.md)
 scripts/                       L3/L4/gate/worked-example runners, chip database, vendoring check
 tests/                         offline pytest suite (no LLM output needed)
-docs/                          worked examples (M1 LLM run; M2 ladder)
+docs/                          worked examples (M1 LLM run; M2 ladder; M3 L2 rung)
 ```
 
 ## Licence

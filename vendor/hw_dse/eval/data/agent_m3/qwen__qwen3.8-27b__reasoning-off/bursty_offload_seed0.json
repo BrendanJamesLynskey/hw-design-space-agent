@@ -1,0 +1,52 @@
+{
+ "milestone": "m3",
+ "arm": "structured",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null,
+  "map_unfeasible_families": "reachable"
+ },
+ "spec": "bursty_offload",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "structured_method": "json_schema",
+ "status": "converged",
+ "rounds": 3,
+ "coverage_rounds": 1,
+ "llm_calls": 3.0,
+ "llm_failures": 0.0,
+ "input_tokens": 9013.0,
+ "output_tokens": 2821.0,
+ "cost_usd": 0.0065888299999999995,
+ "wall_s": 66.1,
+ "run_dir": "runs/eval_m3/bursty_offload/20261009-174438-96e9",
+ "decisions": [
+  "add_family",
+  "refine"
+ ],
+ "overrides": [
+  "'refine' overridden to stop: HV gain 0.00% < epsilon 1.00%",
+  "code: before stopping (converged), one front-mapping round with the remaining 200 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ],
+ "l1_selected_key": "pipelined_m:data_width=15,n_iter=12,angle_guard=4,frac_guard=0,rounding=round,m=4",
+ "l2_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 15079.704198059928,
+ "hv_frac": 0.855210979108185,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=15,n_iter=12,angle_guard=4,frac_guard=0,rounding=round,m=4",
+ "select_regret": 0.1306007449534803,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

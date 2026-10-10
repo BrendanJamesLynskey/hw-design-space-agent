@@ -1,0 +1,134 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "bursty_offload",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 14,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "refine",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-175420-f2fc/dse/bursty_offload/20261009-175423-a205",
+   "notes": "System spec: bursts of 8 requests, Poisson 2 req/us, p99 latency <= 0.4us. Latency is dominated by per-request service time, so favour low n_iter / pipelined families with high throughput; sys_* numbers are optimistic bounds until L2 simulation. Minimise luts_plus_ffs subject to throughput_msps>=2 and max_abs_err<=2^-10.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=16,n_iter=12,angle_guard=-1,frac_guard=1,rounding=trunc,m=6",
+    "feasible": true,
+    "sys_p99_latency_us": 0.1952660801326856,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.14590211
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=12,angle_guard=-1,frac_guard=1,rounding=trunc,m=7",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2327727265311405,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.16775384000000002
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=14,n_iter=12,angle_guard=2,frac_guard=3,rounding=trunc,m=6",
+    "feasible": true,
+    "sys_p99_latency_us": 0.1952660801326856,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.14590211
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=14,n_iter=12,angle_guard=2,frac_guard=3,rounding=trunc,m=7",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2327727265311405,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.16775384000000002
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=14,n_iter=12,angle_guard=2,frac_guard=2,rounding=round,m=8",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2667197848604992,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.18960557
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 4,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 80.08031918630539,
+   "dds_snr_db": 69.3544832374366,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 5,
+  "why": "the L1 selection passes the simulated system constraints",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=16) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 19.0,
+ "llm_failures": 0.0,
+ "input_tokens": 94536.0,
+ "output_tokens": 24849.0,
+ "cost_usd": 0.023506602659999997,
+ "wall_s": 127.0,
+ "run_dir": "runs/campaign_m3/20261009-175420-f2fc",
+ "run_id": "20261009-175420-f2fc",
+ "final_text": "The single spec in the queue, **bursty_offload**, is finalized. L1: `run_dse` spent the full 400-eval budget (4 rounds, architect path refine\u2192map_front\u2192map_front\u2192stop) and returned a 43-design feasible, non-dominated front over min luts_plus_ffs / max accuracy_bits, with the top-6 all `pipelined_m` designs. L2: `simulate_system` on the top 5 showed the analytic p99 bounds were optimistic by ~1.3\u20131.4\u00d7 (winner 0.146 \u2192 0.195 \u00b5s simulated), but every shortlisted design still passed the 0.4 \u00b5s p99 constraint and the L1 winner was unchanged. L3\u2013L5 (via the `ladder` subagent): `verify_rtl` and `synthesize` had no recorded rows for this design and `back_annotate` returned `no_measured_data`, so no WINNER CHANGE was flagged and `reexplore` was correctly skipped. The spec was finalized by its rule (min luts_plus_ffs) on `pipelined_m:data_width=16,n_iter=12,angle_guard=-1,frac_guard=1,rounding=trunc,m=6` \u2014 luts_plus_ffs=786 (643 LUTs + 143 FFs), accuracy_bits=10.1, max_abs_err=0.000901 (2^-10.12), throughput_msps=68.5, sys_p99_latency_us=0.195 (simulated) \u2014 satisfying all three constraints (throughput \u2265 2 Msps, err \u2264 2^-10, p99 \u2264 0.4 \u00b5s). Note: memory was switched off, so the lesson note was not stored.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 15718.017563759287,
+ "hv_frac": 0.8914114636327967,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=16,n_iter=12,angle_guard=-1,frac_guard=1,rounding=trunc,m=6",
+ "select_regret": 0.054785004017059616,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

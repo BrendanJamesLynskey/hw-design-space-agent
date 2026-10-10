@@ -1,0 +1,161 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "bursty_offload",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 12,
+ "tool_calls": 8,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "refine",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-181516-74e2/dse/bursty_offload/20261009-181524-0502",
+   "notes": "System spec: bursts of 8 requests, Poisson arrivals at 2 req/us; p99 latency <= 0.4us is tight, so the L1 analytic bound must be treated as optimistic \u2014 prefer designs with real throughput headroom (>= 2 Msps constraint, aim well above) and low per-request latency. Objective is min luts_plus_ffs with accuracy_bits >= 10 (max_abs_err <= 2^-10). Explore iterative and pipelined families broadly; keep the front well spread so L2 simulation has good candidates.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=15,n_iter=12,angle_guard=0,frac_guard=2,rounding=trunc,m=7",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2327727265311405,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.16775384000000002
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=15,n_iter=14,angle_guard=2,frac_guard=0,rounding=round,m=8",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2667197848604992,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.18960557
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=12,angle_guard=0,frac_guard=2,rounding=round,m=7",
+    "feasible": true,
+    "sys_p99_latency_us": 0.24503698121197523,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.17594384000000002
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=15,n_iter=14,angle_guard=2,frac_guard=1,rounding=round,m=5",
+    "feasible": true,
+    "sys_p99_latency_us": 0.1720217960011214,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.136455418
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=13,angle_guard=1,frac_guard=0,rounding=round,m=5",
+    "feasible": true,
+    "sys_p99_latency_us": 0.18304453762900083,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.14289041800000002
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=20,n_iter=13,angle_guard=-1,frac_guard=0,rounding=trunc,m=8",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2824924981798977,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.19896557
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=13,angle_guard=4,frac_guard=2,rounding=round,m=5",
+    "feasible": true,
+    "sys_p99_latency_us": 0.18304453762900083,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.14289041800000002
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=20,n_iter=13,angle_guard=1,frac_guard=0,rounding=trunc,m=6",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2229351750584319,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.16821432100000003
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 4,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 80.07988372980492,
+   "dds_snr_db": 69.14895534868995,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 8,
+  "why": "the L1 selection passes the simulated system constraints",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=15) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 17.0,
+ "llm_failures": 0.0,
+ "input_tokens": 81965.0,
+ "output_tokens": 24717.0,
+ "cost_usd": 0.020377565000000004,
+ "wall_s": 124.2,
+ "run_dir": "runs/campaign_m3/20261009-181516-74e2",
+ "run_id": "20261009-181516-74e2",
+ "final_text": "The single spec in the queue, `bursty_offload` (8-channel sensor front end, bursts of 8 Poisson arrivals at 2 req/us, p99 latency \u2264 0.4 us, max error \u2264 2^-10, min LUTs+FFs), is finalized. L1 used the full 400/400 budget via `run_dse`, which returned a 39-design feasible non-dominated front dominated by the `pipelined_m` family; L2 `simulate_system` on the top 8 showed the analytic p99 bounds were optimistic (e.g. 0.168 \u2192 0.233 us) but every candidate still passed the 0.4 us constraint, so the winner was unchanged. L3/L4/L5 produced no recorded rows for this design (`verify_rtl` not verified in-campaign, `synthesize` no recorded result, `back_annotate` returned `no_measured_data`), so no WINNER CHANGE was flagged and `reexplore` was correctly skipped. The finalized selection by the spec's rule (min luts_plus_ffs) is `pipelined_m:data_width=15,n_iter=12,angle_guard=0,frac_guard=2,rounding=trunc,m=7` with luts_plus_ffs=782 (LUTs 643, FFs 139), accuracy_bits=10, max_abs_err=0.000962 (2^-10.02), throughput 59.6 Msps (\u22652 required), and simulated sys_p99_latency_us=0.233 \u2014 all LUT/FF/throughput figures are estimates (cost model, M1 calibration), errors are exact from the golden model, and the p99 is simulated.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 15239.116569878695,
+ "hv_frac": 0.8642516876522309,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=15,n_iter=12,angle_guard=0,frac_guard=2,rounding=trunc,m=7",
+ "select_regret": 0.049369593950172576,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

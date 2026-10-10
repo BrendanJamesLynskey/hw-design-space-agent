@@ -1,0 +1,135 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": true,
+ "spec": "bursty_offload",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 14,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "add_family",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3_memory/20261009-174055-b15d/dse/bursty_offload/20261009-174112-08b3",
+   "notes": "Bursty spec: bursts of 8 requests 0 ns apart, Poisson 2 req/us, p99 latency <= 0.4 us. A single iterative CORDIC (12 iters, ~12 cycles @ 150 MHz = 80 ns) cannot drain an 8-deep burst before the next burst arrives (avg 0.5 us apart) \u2014 expect queue buildup and p99 violation. Prior campaigns: iterative family reached the front; pipelined/unrolled_k/pipelined_m never did on this device, but this spec's latency constraint may favor pipelined (1-cycle latency, throughput-limited) designs. Prior area-min winner: iterative dw=16, n_iter=12, truncation (267 LUTs+FFs, 10.5 acc bits). Selection rule: min luts_plus_ffs among feasible.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=15,n_iter=14,angle_guard=1,frac_guard=0,rounding=round,m=7",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2327727265311405,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.16775384000000002
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=1,frac_guard=0,rounding=round,m=8",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2667197848604992,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.18960557
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=14,angle_guard=0,frac_guard=0,rounding=round,m=8",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2667197848604992,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.18960557
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=14,angle_guard=-1,frac_guard=0,rounding=round,m=8",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2667197848604992,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.18960557
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=1,frac_guard=0,rounding=round,m=8",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2667197848604992,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.18960557
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 4,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 83.90866463775184,
+   "dds_snr_db": 73.5009163159591,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 5,
+  "why": "the L1 selection passes the simulated system constraints",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=15) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 19.0,
+ "llm_failures": 0.0,
+ "input_tokens": 98031.0,
+ "output_tokens": 5027.0,
+ "cost_usd": 0.011852941,
+ "wall_s": 151.7,
+ "run_dir": "runs/campaign_m3_memory/20261009-174055-b15d",
+ "run_id": "20261009-174055-b15d",
+ "final_text": "Campaign complete \u2014 all specs finalized.\n\n**Summary:** The single spec `bursty_offload` (8-channel sensor front end, bursts of 8 requests, Poisson 2 req/us, p99 latency \u2264 0.4 us, min LUTs+FFs) was taken down the full ladder. L1 (`run_dse`, all 400 evals) mapped a 38-design feasible Pareto front; the bursty latency constraint pushed the front toward pipelined_m designs (which, unlike prior campaigns, reached the front here). L2 SimPy simulation confirmed the top-5 all pass \u2014 the L1 analytic p99 bound was optimistic (0.168 \u2192 simulated 0.233 us) but comfortably under 0.4 us. L3/L4/L5 returned no recorded measured data for this design class (no L3 row, no L4 synthesis), so back_annotate found nothing to compare and no winner change was flagged. Final selection: **pipelined_m, data_width=15, n_iter=14, m=7** \u2014 855 LUTs+FFs (estimate), 10.6 accuracy bits, 59.6 MSPS throughput, max error 2^-10.63, simulated p99 latency 0.233 us.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 16361.74830881527,
+ "hv_frac": 0.9279191824534481,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=15,n_iter=14,angle_guard=1,frac_guard=0,rounding=round,m=7",
+ "select_regret": 0.14705564991938802,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "memory_lessons_before": "not recorded in the M3 eval (always None, review N6; recorded for runs after the fix); the store after each spec is in campaign_m3_memory_store.json"
+}

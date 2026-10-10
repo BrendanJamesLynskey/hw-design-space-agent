@@ -1,0 +1,69 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "low_area_control",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 13,
+ "tool_calls": 8,
+ "ladder": [
+  "run_dse",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "add_family",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-182124-ba17/dse/low_area_control/20261009-182130-7136",
+   "notes": "Area-critical sin/cos at >=1 MSPS, err <= 2^-10. Prefer small-LUT families (iterative / unrolled_k) with modest data widths; avoid large pipelined_m LUT multipliers. Selection rule: min luts_plus_ffs.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": null,
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=15) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 18.0,
+ "llm_failures": 0.0,
+ "input_tokens": 76232.0,
+ "output_tokens": 21285.0,
+ "cost_usd": 0.024072306999999998,
+ "wall_s": 130.6,
+ "run_dir": "runs/campaign_m3/20261009-182124-ba17",
+ "run_id": "20261009-182124-ba17",
+ "final_text": "The single spec in the queue, `low_area_control`, is finalized. I spent the full 400-eval L1 budget with `run_dse` (inner graph: map_front \u2192 add_family \u2192 map_front \u2192 stop), which produced 37 feasible non-dominated designs; the front is dominated by the `iterative` family, with the area-optimal corner at `data_width=15, n_iter=15, angle_guard=0, frac_guard=0, rounding=round` giving luts_plus_ffs=257 (166 LUTs + 91 FFs), max_abs_err=0.00081 (2^-10.27), throughput 11 MSPS \u2014 both constraints (\u22651 MSPS, \u22642^-10 error) met with margin, and accuracy_bits=10.3. Extra guard bits buy accuracy up to 2^-12.3 at +12\u2026+36 LUT+FF cost, so the min-area rule picks the 257-point. L2 was not applicable (the spec has no system scenario, so no sys_* bounds needed simulating). On the ladder, L3 `verify_rtl` and L4 `synthesize` returned no recorded rows for this design (a fresh W=15 exhaustive run is too heavy for a live campaign), and L5 `back_annotate` returned `no_measured_data` with no winner-change flag, so `reexplore` was correctly not triggered and the selection is unchanged; the L1 cost-model estimate (errors exact from the golden model) is the sole characterization. `finalize` recorded the selection, and the memory write was refused (memory switched off for this campaign).",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 13547.676454990069,
+ "hv_frac": 0.8129303616142104,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=15,angle_guard=0,frac_guard=0,rounding=round",
+ "select_regret": 0.02486530858814836,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

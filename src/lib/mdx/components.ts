@@ -29,7 +29,9 @@ import {
   CaseHighPrecision,
   CasePareto,
   CaseScatter,
+  HowCycle,
   HowDescent,
+  HowSystem,
   HowTrace,
   ResultsCalculator,
   ResultsRace,
@@ -37,6 +39,16 @@ import {
   ResultsShift,
   WhyClimb,
 } from "@/components/dse/Sections";
+import {
+  AbSpecTable,
+  AbTable,
+  CampaignToolsTable,
+  LeversTable,
+  M3SpendTable,
+  M3StructuredTable,
+  MemoryTable,
+  SystemSpecsTable,
+} from "@/components/dse/M3Tables";
 import { CostTable, HeadlineTable } from "@/components/dse/Tables";
 import { Eq } from "@/components/mdx/Eq";
 import { RepoFile } from "@/components/mdx/RepoFile";
@@ -77,4 +89,14 @@ export const mdxComponents: NonNullable<MDXRemoteProps["components"]> = {
   RefitTable,
   GlanceTable,
   SpendTable,
+  HowSystem,
+  HowCycle,
+  SystemSpecsTable,
+  M3StructuredTable,
+  AbTable,
+  AbSpecTable,
+  CampaignToolsTable,
+  MemoryTable,
+  LeversTable,
+  M3SpendTable,
 };

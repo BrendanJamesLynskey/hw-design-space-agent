@@ -1,0 +1,67 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "infeasible_dds_400msps",
+ "seed": 4,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 11,
+ "tool_calls": 11,
+ "ladder": [
+  "run_dse",
+  "explore_family",
+  "explore_family",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 200,
+   "status": "infeasible",
+   "decisions": [
+    "add_family",
+    "infeasible"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-184317-0689/dse/infeasible_dds_400msps/20261009-184327-41cd",
+   "notes": "Wideband DDS: need >=400 MSPS single-lane sin/cos with max_abs_err <= 2^-12, minimize LUTs. Explore pipelined/pipelined_m families for throughput; iterative/unrolled_k may not reach 400 MSPS single-lane. Prioritize feasible region on throughput and error.",
+   "llm_declared_infeasible": true
+  }
+ ],
+ "l2": null,
+ "l3": null,
+ "l4": null,
+ "back_annotation": {
+  "status": "skipped",
+  "winner_changed": null,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 14.0,
+ "llm_failures": 0.0,
+ "input_tokens": 66549.0,
+ "output_tokens": 8833.0,
+ "cost_usd": 0.007863281,
+ "wall_s": 51.3,
+ "run_dir": "runs/campaign_m3/20261009-184317-0689",
+ "run_id": "20261009-184317-0689",
+ "final_text": "The single spec in the queue, `infeasible_dds_400msps`, was taken down the full ladder and finalized as infeasible. I spent the entire 400-evaluation L1 budget: the structured `run_dse` graph consumed 200 evals (its inner architect declared the spec infeasible and added a family rather than finding a feasible point), then I spent the remaining 200 on two targeted NSGA-II studies \u2014 `pipelined` (100 evals, 0 feasible) and `pipelined_m` (100 evals, 0 feasible). No design anywhere in the explored space simultaneously satisfied `throughput_msps >= 400` and `max_abs_err <= 2^-12` on a single lane, so there was no front to shortlist. Consequently L2 `simulate_system` reported \"nothing feasible to simulate,\" L3 `verify_rtl` and L4 `synthesize` had no selected design, and L5 `back_annotate` was skipped (no winner change, so no `reexplore`). I finalized the spec with no selection, recording that all 400 L1 evaluations were spent and zero feasible designs were found \u2014 the spec is genuinely infeasible under its constraints, not merely under-explored.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 0.0,
+ "hv_frac": null,
+ "evals_to_95": null,
+ "selected_meets_spec": false,
+ "selected_key": null,
+ "select_regret": null,
+ "declared_infeasible": true,
+ "infeasibility_correct": true
+}

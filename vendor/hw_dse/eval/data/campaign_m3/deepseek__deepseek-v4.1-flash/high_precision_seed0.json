@@ -1,0 +1,87 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "high_precision",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 13,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-173956-60e3/dse/high_precision/20261009-174000-b313",
+   "notes": "Precision spec: max_abs_err <= 2^-20 (9.53674e-07) at >=50 MSPS; minimise luts_plus_ffs (select rule) and power_index. Tight error bound likely needs high data_width and/or many iterations; watch that throughput constraint is met. Explore iterative/unrolled/pipelined families broadly; prefer designs with margin on the error constraint since estimates are optimistic.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "facts_only",
+  "shortlist": [],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 6,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 144.63608317614728,
+   "dds_snr_db": 130.25785175908536,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "reason": "the spec has no system scenario: nothing to re-select",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=27) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 18.0,
+ "llm_failures": 0.0,
+ "input_tokens": 69278.0,
+ "output_tokens": 16423.0,
+ "cost_usd": 0.023997486999999998,
+ "wall_s": 214.4,
+ "run_dir": "runs/campaign_m3/20261009-173956-60e3",
+ "run_id": "20261009-173956-60e3",
+ "final_text": "The campaign queue held a single spec, `high_precision` (coherent demodulator: `max_abs_err <= 2^-20` at `>= 50 MSPS`, minimising `luts_plus_ffs` with `power_index` as the second objective, selected by min `luts_plus_ffs`). I spent the entire 400-evaluation L1 budget in one `run_dse` call; the structured graph mapped the front three times and stopped with a single feasible, non-dominated design: `pipelined_m:data_width=27,n_iter=22,angle_guard=-1,frac_guard=0,rounding=round,m=7` at luts_plus_ffs=2314, power_index=4.35, luts=1908, ffs=406, throughput_msps=52 (all cost-model estimates, M1 calibration) and max_abs_err=9.53e-07 (exact golden-model value, exactly 2^-20.00 \u2014 on the constraint with only 2 MSPS of throughput margin). L2 `simulate_system` found no system scenario for this spec, returning only DDS facts (SFDR 144.6 dBc, SNR 130.3 dB, simulated) with the selection unchanged. The L3/L4/L5 ladder returned no measured data for this design \u2014 `verify_rtl` had no recorded row (a fresh exhaustive W=27 run is too heavy for a live campaign), `synthesize` had no recorded synthesis row, and `back_annotate` reported `no_measured_data`, so no winner change was flagged and `reexplore` was correctly not triggered. I finalized `high_precision` with that selection and its provenance noted; the memory write was refused because memory is switched off for this campaign.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 88975.83745500397,
+ "hv_frac": 0.9841044016154737,
+ "evals_to_95": 182,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=27,n_iter=22,angle_guard=-1,frac_guard=0,rounding=round,m=7",
+ "select_regret": 0.024051680275484454,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

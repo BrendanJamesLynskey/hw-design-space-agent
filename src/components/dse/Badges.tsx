@@ -1,6 +1,6 @@
 /**
  * Small labels used everywhere a number or a level appears:
- * - <Prov kind="exact|estimate|measured" />: the repo's provenance label for a number;
+ * - <Prov kind="exact|estimate|measured|simulated" />: the repo's provenance label for a number;
  * - <LevelBadge status="live|in progress|planned" />: a ladder level's milestone state.
  * Colour is never the only signal: each badge carries its word.
  */
@@ -21,6 +21,11 @@ const PROV: Record<ProvKind, { cls: string; title: string }> = {
     cls: "border-sky-700 text-sky-800 dark:border-sky-400 dark:text-sky-300",
     title:
       "measured: recorded from real runs (provider-reported usage, timed wall-clock)",
+  },
+  simulated: {
+    cls: "border-violet-700 text-violet-800 dark:border-violet-400 dark:text-violet-300",
+    title:
+      "simulated: the L2 SimPy system model (clocked at the design's estimated Fmax) or the golden-model DDS",
   },
 };
 

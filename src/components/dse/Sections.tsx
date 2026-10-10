@@ -6,9 +6,11 @@ import type { ReactNode } from "react";
 
 import { ev, site, why } from "@/lib/dse/data";
 import { ladder } from "@/lib/dse/ladder";
+import { m3 } from "@/lib/dse/m3";
 
 import {
   Calculator,
+  CycleRtl,
   DescentWidget,
   HighPrecisionStory,
   M1M2Shift,
@@ -19,6 +21,7 @@ import {
   HvRace,
   ParetoChart,
   ParetoReplay,
+  SystemReplay,
   TraceReplay,
 } from "./lazy";
 
@@ -106,4 +109,14 @@ export function ResultsShift(): JSX.Element {
     ev("m2").costs.models.map((m) => [m.model, m.label]),
   );
   return <M1M2Shift glance={site.glance} labels={labels} />;
+}
+
+/** L2 in its system (How it works): multiaxis_control simulated for the three views' winners. */
+export function HowSystem(): JSX.Element {
+  return <SystemReplay rep={m3.system_replay} />;
+}
+
+/** The cycle model against the generated RTL (How it works). */
+export function HowCycle(): JSX.Element {
+  return <CycleRtl cycle={m3.cycle} />;
 }

@@ -1,0 +1,68 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "infeasible_dds_400msps",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 14,
+ "tool_calls": 11,
+ "ladder": [
+  "run_dse",
+  "explore_family",
+  "explore_family",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 300,
+   "status": "infeasible",
+   "decisions": [
+    "refine",
+    "refine",
+    "infeasible"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-174616-ba08/dse/infeasible_dds_400msps/20261009-174621-3d7f",
+   "notes": "Spec may be infeasible (400 MSPS single-lane with 2^-12 error). Explore widely: pipelined and pipelined_m families for throughput, unrolled_k for area/throughput tradeoffs; keep the front well-spread on luts vs accuracy_bits.",
+   "llm_declared_infeasible": true
+  }
+ ],
+ "l2": null,
+ "l3": null,
+ "l4": null,
+ "back_annotation": {
+  "status": "skipped",
+  "winner_changed": null,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 18.0,
+ "llm_failures": 0.0,
+ "input_tokens": 88921.0,
+ "output_tokens": 28180.0,
+ "cost_usd": 0.026915811999999997,
+ "wall_s": 230.1,
+ "run_dir": "runs/campaign_m3/20261009-174616-ba08",
+ "run_id": "20261009-174616-ba08",
+ "final_text": "The single spec in the queue, `infeasible_dds_400msps` (\u2265400 MSPS single-lane sin/cos with max_abs_err \u2264 2^-12, minimize LUTs), was taken down the full ladder and finalized as infeasible. L1: `run_dse` spent 300 of the 400 evaluations and the inner architect returned status *infeasible* after a refine\u2192refine\u2192infeasible sequence with no feasible design; I then spent the remaining 100 evaluations confirming this on the highest-throughput families \u2014 `explore_family pipelined_m` (50 evals, m clamped from the requested 4..16 to the registry range 2..8) and `explore_family pipelined` (50 evals) \u2014 both returning 0 feasible designs, so the full 400-eval budget was used with nothing left unspent. L2 `simulate_system` reported \"nothing feasible to simulate yet\", and L3/L4/L5 (`verify_rtl`, `synthesize`, `back_annotate`) were all no-ops because there was no selection; `back_annotate` flagged no winner change, so no `reexplore` was warranted. `finalize` closed the spec with no design selected (400 L1 evaluations recorded), and the lesson note was attempted but memory is switched off for this campaign, so nothing was stored. No numbers here are my own \u2014 every figure is the recorded output of the tools (LUTs/FFs/Fmax/throughput as estimates, errors exact, sys_* analytic bounds).",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 0.0,
+ "hv_frac": null,
+ "evals_to_95": null,
+ "selected_meets_spec": false,
+ "selected_key": null,
+ "select_regret": null,
+ "declared_infeasible": true,
+ "infeasibility_correct": true
+}

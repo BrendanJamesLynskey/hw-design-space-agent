@@ -146,8 +146,9 @@ export default function LadderHero({
           A real recorded M2 run: {hero.label} ({hero.model}) on the {hero.spec}{" "}
           spec (seed {hero.seed}). Each cell is one evaluated design; filled
           cells met the spec. The design it selected then goes down the live
-          levels (the repository&apos;s worked example of that design, and the
-          run&apos;s own back-annotation). Planned levels stay ghosted.
+          levels it needs (the repository&apos;s worked example of that design,
+          and the run&apos;s own back-annotation). This spec has no system, so
+          the system and cycle levels are not used.
         </>
       }
       stepper={stepper}
@@ -185,6 +186,14 @@ export default function LadderHero({
                         aria-label="checked"
                       >
                         ✓
+                      </span>
+                    )}
+                    {f.skipped.includes(l.id) && (
+                      <span
+                        className="ml-1 text-neutral-600 dark:text-neutral-400"
+                        data-skipped="true"
+                      >
+                        (not used by this run)
                       </span>
                     )}
                   </span>

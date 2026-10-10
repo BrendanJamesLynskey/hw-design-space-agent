@@ -32,13 +32,13 @@ export default function HomePage(): JSX.Element {
         Give it one high-level spec. A LangGraph agent chooses which
         architectures to explore, a classic optimiser searches them on tested
         models, and the agent reads the results, decides what to try next, and
-        picks the design. That one spec then goes down the fidelity ladder: RTL
-        generated and simulated in two simulators, synthesis and place and
-        route, gate-level simulation of the netlist, and back-annotation of the
-        measurements into the cost model, each level offering its own power,
-        performance and area view, with regression tests against the golden
-        model at every level. System-level (SimPy) and cycle-level simulation
-        come next; they are badged with the milestone that builds them.
+        picks the design. That one spec then goes down the fidelity ladder: the
+        design inside a SimPy model of its system and a cycle-accurate model of
+        its interface, RTL generated and simulated in two simulators, synthesis
+        and place and route, gate-level simulation of the netlist, and
+        back-annotation of the measurements into the cost model, each level
+        offering its own power, performance and area view, with regression tests
+        against the golden model at every level.
       </p>
 
       <LadderHero
@@ -77,8 +77,9 @@ export default function HomePage(): JSX.Element {
             <strong>The LLM never produces a number.</strong> It chooses
             families, ranges and next steps; deterministic code computes every
             figure, labelled <Prov kind="exact" /> (bit-accurate golden model),{" "}
-            <Prov kind="estimate" /> (calibrated cost model) or{" "}
-            <Prov kind="measured" />.
+            <Prov kind="estimate" /> (calibrated cost model),{" "}
+            <Prov kind="measured" /> or <Prov kind="simulated" /> (the system
+            model).
           </li>
           <li>
             <strong>Software and hardware, one engineer.</strong> Built with
@@ -94,7 +95,7 @@ export default function HomePage(): JSX.Element {
 
       <section aria-labelledby="results" className="mt-12">
         <h2 id="results" className="text-2xl font-semibold tracking-tight">
-          What the eval found, M1 → M2
+          What the eval found
         </h2>
         <p className="mt-4 max-w-3xl text-neutral-700 dark:text-neutral-300">
           The CORDIC sin/cos case study has {<V of="designs" fmt="int" />}{" "}
@@ -118,9 +119,26 @@ export default function HomePage(): JSX.Element {
           DeepSeek&apos;s selection slipped, and the agent now always spends the
           full budget.{" "}
           <Link href="/results" className={LINK}>
-            The full results
+            The M2 results
           </Link>{" "}
-          open with those.
+          lead with those.
+        </p>
+        <p className="mt-4 max-w-3xl text-neutral-700 dark:text-neutral-300">
+          <strong>Milestone 3</strong> put the design inside its system. On a
+          motor-control spec whose 32 requests per tick must all be back within
+          0.44 µs, only the simulation finds the right design: the
+          throughput-only view, the L1 bound and even peak-rate sizing all pick
+          a smaller one that misses the deadline by{" "}
+          <V of="m3.multi.miss" fmt="pct" />. It also measured a free-form
+          campaign agent (LangChain Deep Agents) over the structured graph, and
+          reports plainly that it gained nothing at{" "}
+          <V of="m3.ab.cost_ratio_min" fmt="f2" />–
+          <V of="m3.ab.cost_ratio_max" fmt="f2" />× the cost, so it stays
+          experimental.{" "}
+          <Link href="/results" className={LINK}>
+            Milestone 3&apos;s results
+          </Link>{" "}
+          come first on the results page.
         </p>
         <HeadlineTable />
         <p className="mt-4 max-w-3xl text-neutral-700 dark:text-neutral-300">
@@ -217,15 +235,14 @@ export default function HomePage(): JSX.Element {
           {site.milestones
             .filter((m) => m.status === "done")
             .map((m) => m.id)
-            .join(" and ")}{" "}
+            .join(", ")}{" "}
           are done and{" "}
           {site.milestones
             .filter((m) => m.status !== "done")
             .map((m) => m.id)
-            .join(" and ")}{" "}
-          are planned. The README&apos;s L2 is &ldquo;cycle-level / system
-          simulation&rdquo;; SimPy as its system-level engine is the
-          project&apos;s plan.
+            .join(", ")}{" "}
+          is planned. The README&apos;s L2 covers both the cycle-accurate model
+          and the SimPy system models, shown here as two rungs.
         </p>
       </section>
 

@@ -1,0 +1,87 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": true,
+ "spec": "low_area_control",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 14,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "refine",
+    "refine",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3_memory/20261009-180432-41b1/dse/low_area_control/20261009-180439-ea19",
+   "notes": "Spec low_area_control: area is everything (min luts_plus_ffs), throughput >= 1 MSPS, max_abs_err <= 2^-10. Favor compact iterative designs with small data width; pipelined variants likely too area-hungry.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "facts_only",
+  "shortlist": [],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "iterative",
+    "latency": 15,
+    "ii": 15
+   },
+   "dds_sfdr_dbc": 79.84644792638547,
+   "dds_snr_db": 69.4849573537645,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "reason": "the spec has no system scenario: nothing to re-select",
+  "pool_size": 400
+ },
+ "l3": "exact, recorded: Verilator 5.020 2024-01-01: 32768/32768 angles (exhaustive (32768 angles)), 0 mismatches, latency 15; Icarus Verilog 12.0: 32768/32768 angles (exhaustive (32768 angles)), 0 mismatches, latency 15",
+ "l4": "measured (yosys+nextpnr-xilinx yosys 0.68 (git 38e001a6f) + nextpnr-xilinx 0.8.2-81-g1743d0f4), recorded (l4_synthesis.csv): 216 LUTs, 107 FFs, Fmax 150.7 MHz",
+ "back_annotation": {
+  "status": "compared",
+  "winner_changed": false,
+  "why": "yosys+nextpnr-xilinx: the selected design is still the best measured front design (it is the only front design with measurements)"
+ },
+ "l5": null,
+ "llm_calls": 18.0,
+ "llm_failures": 0.0,
+ "input_tokens": 76300.0,
+ "output_tokens": 6819.0,
+ "cost_usd": 0.011216055999999999,
+ "wall_s": 225.5,
+ "run_dir": "runs/campaign_m3_memory/20261009-180432-41b1",
+ "run_id": "20261009-180432-41b1",
+ "final_text": "Campaign complete. The single spec `low_area_control` was taken down the full fidelity ladder: L1 spent all 400 evaluations in the structured DSE graph (refine \u2192 refine \u2192 stop), producing a 38-design feasible Pareto front dominated by compact iterative CORDIC designs; the selection rule (min luts_plus_ffs) picked `iterative:data_width=15, n_iter=12, angle_guard=1, rounding=round` (est. 251 LUT+FF, 10.1 accuracy bits, 13.2 MSPS, max error 2^-10.09). L2 confirmed the DDS system context (SFDR 79.8 dBc, SNR 69.5 dB, 15-cycle latency) with no selection change. L3 RTL verification passed exhaustively (32768/32768 angles, 0 mismatches) on both Verilator and Icarus; L4 recorded synthesis measured 216 LUTs / 107 FFs at 150.7 MHz; L5 back-annotation showed the cost model under-predicts area (~19% LUTs, ~11% FFs) but flagged no winner change, so no reexplore was needed. The spec was finalized with the iterative design, and a calibration lesson was stored for future campaigns.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 15569.733491121127,
+ "hv_frac": 0.9342641979401521,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=12,angle_guard=1,frac_guard=0,rounding=round",
+ "select_regret": 0.0,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "memory_lessons_before": "not recorded in the M3 eval (always None, review N6; recorded for runs after the fix); the store after each spec is in campaign_m3_memory_store.json"
+}

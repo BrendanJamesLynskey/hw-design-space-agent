@@ -1,0 +1,19 @@
+# A sin/cos offload engine for a sensor front end: low average load, but
+# requests come in bursts of 8 (one per channel), and a downstream
+# tracking filter needs 99% of answers within 0.4 us.
+name: bursty_offload
+description: >
+  Sin/cos offload for an 8-channel sensor front end: bursts of 8 requests
+  arrive as a Poisson process, 2 requests/us on average; p99 request latency
+  must be <= 0.4 us. Max error <= 2^-10. Minimise LUTs + FFs.
+constraints:
+  - {metric: throughput_msps, op: ">=", value: 2}
+  - {metric: max_abs_err, op: "<=", value: "2^-10"}
+  - {metric: sys_p99_latency_us, op: "<=", value: 0.4}
+objectives:
+  - {metric: luts_plus_ffs, direction: min, ref: 3000}
+  - {metric: accuracy_bits, direction: max, ref: 10}
+select_by: luts_plus_ffs
+select_direction: min
+budget: {total_evals: 400, evals_per_round: 100, max_rounds: 4, hv_epsilon: 0.01}
+system: {kind: bursty, mean_rate_msps: 2.0, burst_size: 8, burst_spacing_ns: 0, n_bursts: 1500, seed: 0}

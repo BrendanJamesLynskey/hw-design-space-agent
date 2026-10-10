@@ -1,0 +1,110 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "dds_250msps",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 14,
+ "tool_calls": 11,
+ "ladder": [
+  "run_dse",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "reexplore",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-173833-5105/dse/dds_250msps/20261009-173837-4475",
+   "notes": "NCO/DDS sin-cos, 1 sample/clk at >=250 MSPS, max_abs_err <= 2^-13. Minimise LUTs, maximise accuracy_bits. Select: min luts. No system scenario mentioned; focus on feasible Pareto front over luts vs accuracy_bits.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": null,
+ "l3": "exact, recorded: Verilator 5.020 2024-01-01: 109112/109112 angles (dense (109112 angles: 65536 strided + 65536 random, seed 20260401+W)), 0 mismatches, latency 17; Icarus Verilog 12.0: 109112/109112 angles (dense (109112 angles: 65536 strided + 65536 random, seed 20260401+W)), 0 mismatches, latency 17",
+ "l4": "measured (yosys+nextpnr-xilinx yosys 0.68 (git 38e001a6f) + nextpnr-xilinx 0.8.2-81-g1743d0f4), recorded (l4_synthesis.csv): 924 LUTs, 909 FFs, Fmax 165.3 MHz",
+ "back_annotation": {
+  "status": "compared",
+  "winner_changed": true,
+  "why": "yosys+nextpnr-xilinx: the selected design violates the spec with measured numbers: throughput_msps >= 250 by 4.4%"
+ },
+ "l5": {
+  "status": "reexplored",
+  "trigger": "yosys+nextpnr-xilinx: the selected design violates the spec with measured numbers: throughput_msps >= 250 by 4.4%",
+  "calibration": "artix7-xc7a35t-refit-vivado-2025.2",
+  "calibration_path": "src/hw_dse/models/calibration_artix7_refit_vivado-2025.2.yaml",
+  "anchors": [
+   "pipelined:data_width=18,n_iter=15,angle_guard=1,frac_guard=0,rounding=round"
+  ],
+  "boxes": {
+   "pipelined": {
+    "data_width": [
+     16,
+     20
+    ],
+    "n_iter": [
+     13,
+     17
+    ],
+    "angle_guard": [
+     -1,
+     3
+    ],
+    "frac_guard": [
+     0,
+     2
+    ],
+    "rounding": [
+     "trunc",
+     "round"
+    ]
+   }
+  },
+  "n_evals": 60,
+  "selected_before": "pipelined:data_width=18,n_iter=15,angle_guard=1,frac_guard=0,rounding=round",
+  "selected_key": "pipelined:data_width=18,n_iter=15,angle_guard=1,frac_guard=0,rounding=round",
+  "changed": false,
+  "l2": null
+ },
+ "llm_calls": 19.0,
+ "llm_failures": 0.0,
+ "input_tokens": 75194.0,
+ "output_tokens": 21229.0,
+ "cost_usd": 0.020792546999999998,
+ "wall_s": 80.7,
+ "run_dir": "runs/campaign_m3/20261009-173833-5105",
+ "run_id": "20261009-173833-5105",
+ "final_text": "The single spec in the queue, `dds_250msps`, is finalized. L1 `run_dse` spent the full 400-eval budget and produced a 29-design feasible, non-dominated Pareto front over luts vs accuracy_bits; the min-luts selection rule picked `pipelined:data_width=18,n_iter=15,angle_guard=1,frac_guard=0,rounding=round` (estimate luts=905, accuracy_bits=13, ffs=938, throughput=264 MSPS, max_abs_err=0.000119 = 2^-13.04). The spec has no system scenario, so L2 simulation was not required. L3 `verify_rtl` was exact (0/109112 mismatches across Verilator and Icarus, latency 17); L4 recorded synthesis measured 924 LUTs, 909 FFs, Fmax 165.3 MHz; L5 `back_annotate` flagged a winner change because the measured throughput falls 4.4% short of 250 MSPS under yosys+nextpnr-xilinx, so `reexplore` ran the L5 loop (60 evals, refit calibration) and confirmed the same selection (refit estimate luts=850, throughput=285). The loop was stable, and `finalize` recorded the selection.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 17417.2956251329,
+ "hv_frac": 0.8821572030828523,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=18,n_iter=15,angle_guard=1,frac_guard=0,rounding=round",
+ "select_regret": 0.0,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

@@ -5,8 +5,10 @@
  * worked example, which takes the design that run selected through RTL simulation, synthesis
  * and gate-level simulation (src/data/ladder.json).
  *
- * Levels that are not built yet are never visited: the spec card goes from L1 straight to L3,
- * and the final frame only shows the planned levels, ghosted, with their milestone.
+ * Levels that are not built yet are never visited, and neither are levels the run did not use:
+ * the hero is an M2 run on a spec with no system scenario, so the spec card goes from L1
+ * straight to L3, and the system and cycle levels (live since M3) are marked as not used by
+ * this run. The final frame shows any planned levels, ghosted, with their milestone.
  */
 import type { Hero, Level } from "./data";
 
@@ -45,8 +47,13 @@ export type HeroFrame = {
   selected: boolean;
   /** Live levels whose check has been shown. */
   checked: string[];
+  /** Live levels this run did not use (no system scenario; the M2 graph had no L2 node). */
+  skipped: string[];
   showPlanned: boolean;
 };
+
+/** The levels a spec without a system scenario does not visit. */
+export const SYSTEM_LEVELS = ["SYS", "L2"];
 
 /** The levels the selected design goes down after L1, in order, and the phase of each. */
 export const DESCENT: { level: string; phase: HeroPhase }[] = [
@@ -76,6 +83,7 @@ export function heroFrames(hero: Hero, ladder: Level[]): HeroFrame[] {
     costUsd: 0,
     selected: false,
     checked: [],
+    skipped: [],
     showPlanned: false,
   };
   const push = (patch: Partial<HeroFrame>) => {
@@ -114,7 +122,12 @@ export function heroFrames(hero: Hero, ladder: Level[]): HeroFrame[] {
     );
     if (i >= 0) push({ phase: "analyse", ...takeCall(i) });
   }
-  push({ phase: "select", selected: true, checked: ["L0", "L1"] });
+  push({
+    phase: "select",
+    selected: true,
+    checked: ["L0", "L1"],
+    skipped: SYSTEM_LEVELS.filter((l) => live.has(l)),
+  });
   for (const d of DESCENT) {
     if (!live.has(d.level)) break; // never animate a level that is not built
     push({ phase: d.phase, level: d.level, checked: [...f.checked, d.level] });

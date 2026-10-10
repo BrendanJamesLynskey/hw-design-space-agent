@@ -1,0 +1,142 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "multiaxis_control",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 13,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "synthesize",
+  "verify_rtl",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "widen",
+    "refine",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-175141-0f02/dse/multiaxis_control/20261009-175148-9cf7",
+   "notes": "System spec: 1 MHz tick, 32 simultaneous requests, all 32 back within 0.44 us p99, so throughput>=32 Msps is hard. Prefer high-throughput families (pipelined / pipelined_m / heavily unrolled) with enough parallel lanes or a fast clock; analytic sys_p99 bound must be <=0.44us. Accuracy constraint max_abs_err<=2^-12. Objective: minimise luts_plus_ffs (HV ref 4000), maximise accuracy_bits (HV ref 12). Selection rule: min luts_plus_ffs. Cover the whole family range; keep the front wide and feasible, no budget left unspent.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=18,n_iter=14,angle_guard=1,frac_guard=3,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=16,angle_guard=0,frac_guard=1,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=19,n_iter=15,angle_guard=3,frac_guard=0,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=15,angle_guard=1,frac_guard=3,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=19,n_iter=15,angle_guard=1,frac_guard=2,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=19,n_iter=16,angle_guard=4,frac_guard=1,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.4126487800000177,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.40161114
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 6,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 98.22903485451361,
+   "dds_snr_db": 82.81944488231524,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 6,
+  "why": "the L1 selection passes the simulated system constraints",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=18) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 17.0,
+ "llm_failures": 0.0,
+ "input_tokens": 84209.0,
+ "output_tokens": 25051.0,
+ "cost_usd": 0.0322882908,
+ "wall_s": 153.8,
+ "run_dir": "runs/campaign_m3/20261009-175141-0f02",
+ "run_id": "20261009-175141-0f02",
+ "final_text": "The single spec `multiaxis_control` is finalized. L1 (`run_dse`, all 400 evaluations spent, 0 left) produced a well-mapped front of 24 feasible non-dominated designs, entirely dominated by the `pipelined_m` family running m=4 lanes at ~93.6 Msps \u2014 comfortably above the 32 Msps constraint, with `max_abs_err` (exact, golden model) between 1.57e-4 and 5.68e-5, i.e. 12.6\u201314.1 accuracy bits against the 2^-12 requirement. L2 (`simulate_system`, top 6) replaced the optimistic analytic sys bound of 0.3848 us with SimPy-simulated p99 values of 0.3953 us (0.4126 us for the largest design), all passing the 0.44 us deadline, so the shortlist was not pruned and the L1 winner was unchanged. The ladder sub-agent then ran L3/L4/L5: `verify_rtl` has no recorded row (a fresh exhaustive W=18 run is too heavy for a live campaign), `synthesize` likewise has no recorded synthesis to report, and `back_annotate` returned `no_measured_data` with **no winner change**, so no `reexplore` loop was required. Finalized selection by the spec's min-`luts_plus_ffs` rule is `pipelined_m:data_width=18,n_iter=14,angle_guard=1,frac_guard=3,rounding=trunc,m=4` with luts_plus_ffs=1228 (LUTs 923 + FFs 305, estimate), accuracy_bits=12.6, max_abs_err=1.57e-4 (exact), throughput 93.6 Msps (estimate), and sys_p99_batch_us=0.395 (simulated) \u2014 all constraints satisfied; note that memory storage is switched off this campaign, so no lesson note was persisted.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 18629.578954552613,
+ "hv_frac": 0.8266273084950909,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=18,n_iter=14,angle_guard=1,frac_guard=3,rounding=trunc,m=4",
+ "select_regret": 0.14509741775859739,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}
