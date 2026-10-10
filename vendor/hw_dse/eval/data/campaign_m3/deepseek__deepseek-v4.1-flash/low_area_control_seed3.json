@@ -1,0 +1,87 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "low_area_control",
+ "seed": 3,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 14,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "refine",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-183403-dbc5/dse/low_area_control/20261009-183417-df07",
+   "notes": "Area-dominated spec: minimise LUTs+FFs subject to throughput>=1 MSPS and max_abs_err<=2^-10. Favour small iterative/unrolled families with modest data width; accuracy_bits>=10 is a hard-ish target so keep enough iterations. Selection rule is min luts_plus_ffs, so the front must be well populated near the low-area corner.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "facts_only",
+  "shortlist": [],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "iterative",
+    "latency": 19,
+    "ii": 19
+   },
+   "dds_sfdr_dbc": 85.34936848535693,
+   "dds_snr_db": 74.01276600242505,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "reason": "the spec has no system scenario: nothing to re-select",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=15) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 19.0,
+ "llm_failures": 0.0,
+ "input_tokens": 84473.0,
+ "output_tokens": 14930.0,
+ "cost_usd": 0.021199759999999998,
+ "wall_s": 81.2,
+ "run_dir": "runs/campaign_m3/20261009-183403-dbc5",
+ "run_id": "20261009-183403-dbc5",
+ "final_text": "The queue held a single spec, `low_area_control` (FOC rotor-angle sin/cos, \u22651 MSPS, max_abs_err \u2264 2^-10, minimise LUTs+FFs, select min luts_plus_ffs), and it is now finalized. L1: `run_dse` spent the full 400/400 budget (inner architect: map_front \u2192 refine \u2192 map_front \u2192 stop) and returned a 36-design feasible, non-dominated front whose low-area corner is entirely small `iterative` designs; the best by the spec's rule was `iterative:data_width=15,n_iter=16,angle_guard=1,frac_guard=1,rounding=trunc` at luts_plus_ffs=264 (170 LUTs + 94 FFs), accuracy_bits=10.7, max_abs_err=0.000594 (2^-10.72), throughput 10.4 MSPS \u2014 ~10\u00d7 headroom on throughput, so accuracy is the binding constraint. L2: the spec has no system scenario, so `simulate_system` only supplied DDS facts (contract latency 19 cycles, SFDR 85.3 dBc, SNR 74.0 dB simulated) and left the selection unchanged. L3/L4/L5 (run via the `ladder` subagent): `verify_rtl` had no recorded L3 row (a fresh W=15 exhaustive run is too heavy live; the RTL generator itself is verified on 47 configurations), `synthesize` had no recorded synthesis, and `back_annotate` returned `no_measured_data` \u2014 so no WINNER CHANGE was flagged, `reexplore` was correctly skipped, and the selection is unchanged. Provenance: all area/timing numbers are estimates (cost model, M1 calibration), max_abs_err is exact (golden model), the DDS figures are simulated; no measured numbers exist for this design. `finalize` recorded the selection above; the `remember` call was rejected because memory is switched off for this campaign.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 15843.06523255402,
+ "hv_frac": 0.9506655101608791,
+ "evals_to_95": 386,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=16,angle_guard=1,frac_guard=1,rounding=trunc",
+ "select_regret": 0.052561276715541075,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

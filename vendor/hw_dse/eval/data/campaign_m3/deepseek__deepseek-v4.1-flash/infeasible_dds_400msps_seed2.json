@@ -1,0 +1,67 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "infeasible_dds_400msps",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 13,
+ "tool_calls": 10,
+ "ladder": [
+  "run_dse",
+  "explore_family",
+  "explore_family",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 200,
+   "status": "infeasible",
+   "decisions": [
+    "refine",
+    "infeasible"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-182002-b306/dse/infeasible_dds_400msps/20261009-182017-c180",
+   "notes": "Spec may be tight/infeasible: need >=400 MSPS single-lane with max_abs_err <= 2^-12. Prioritise pipelined / pipelined_m families (high throughput) and unrolled_k with high k; keep data_width high enough for 12-bit accuracy. Report best feasible and closest-to-feasible designs.",
+   "llm_declared_infeasible": true
+  }
+ ],
+ "l2": null,
+ "l3": null,
+ "l4": null,
+ "back_annotation": {
+  "status": "skipped",
+  "winner_changed": null,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 16.0,
+ "llm_failures": 0.0,
+ "input_tokens": 64199.0,
+ "output_tokens": 15456.0,
+ "cost_usd": 0.015379897999999998,
+ "wall_s": 81.8,
+ "run_dir": "runs/campaign_m3/20261009-182002-b306",
+ "run_id": "20261009-182002-b306",
+ "final_text": "The single spec in the queue, `infeasible_dds_400msps` (wideband DDS needing \u2265400 MSPS single-lane sin/cos with max_abs_err \u2264 2^-12, minimising LUTs), was taken down the full ladder and finalized as infeasible. L1 spent the entire 400/400 budget: `run_dse` used 200 evaluations and its inner architect declared the spec infeasible, then I spent the remaining 200 on two targeted NSGA-II family studies \u2014 `pipelined_m` (100 evals, m clamped to the registry range 2..8) and `unrolled_k` (100 evals, k clamped to 2..8) \u2014 both returning 0 feasible designs. With no feasible front, L2 `simulate_system` reported \"nothing feasible to simulate yet\"; the ladder sub-agent then ran L3/L4/L5, which returned \"no selected design to verify\", \"no selected design\", and a skipped `back_annotate` respectively, with no WINNER CHANGE flagged so `reexplore` was not needed. `finalize` closed the spec with no design selected (400 L1 evaluations). All numbers reported are tool outputs (estimates from the cost model, exact errors from the golden model); no feasible design exists within the explored space for this spec.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 0.0,
+ "hv_frac": null,
+ "evals_to_95": null,
+ "selected_meets_spec": false,
+ "selected_key": null,
+ "select_regret": null,
+ "declared_infeasible": true,
+ "infeasibility_correct": true
+}

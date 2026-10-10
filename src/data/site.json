@@ -1,8 +1,8 @@
 {
  "vendored": {
   "repository": "https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent",
-  "commit": "bbbf71eb74077821c390ccd1ebbe52684a3ce4de",
-  "committed": "2026-10-09T15:42:35+01:00"
+  "commit": "a92fe650163d769da96f38727023855e2265871d",
+  "committed": "2026-10-10T09:36:38+01:00"
  },
  "milestones": [
   {
@@ -17,12 +17,13 @@
   },
   {
    "id": "M3",
-   "levels": "L2 cycle-level simulation for shortlisted candidates",
-   "status": "planned"
+   "levels": "L2 cycle-accurate interface model per family (validated against the RTL cycle for cycle) + SimPy system models (DDS + mixer, control loop, bursty stream) · system-level constraints in specs, L1 bounds, L2 shortlist and re-selection · L5 loop: re-explore under the refit when a measured winner changes · `map_front` blind-spot fix (gated lever) · M2 replay proof · campaign agent on Deep Agents with cross-run memory · A/B and memory on/off eval",
+   "status": "done",
+   "note": "see the A/B for what the campaign agent did and did not achieve"
   },
   {
    "id": "M4",
-   "levels": "more functions and targets (e.g. an ASIC gate-equivalent `CostModel`), richer family registry",
+   "levels": "more functions and targets (an ASIC gate-equivalent `CostModel`), a fleet of agents, richer family registry, the write-up",
    "status": "planned"
   }
  ],
@@ -44,17 +45,23 @@
   },
   {
    "id": "",
-   "levels": "re-explore automatically when back-annotation flags a winner change (today it reports) · measured power",
+   "levels": "measured power · `high_precision` m=8 synthesised at a 20 ns constraint · per-family-class path factor (deferred, not rejected)",
    "status": "planned"
   },
   {
    "id": "M3",
-   "levels": "L2 cycle-level simulation for shortlisted candidates",
+   "levels": "L2 cycle-accurate interface model per family (validated against the RTL cycle for cycle) + SimPy system models (DDS + mixer, control loop, bursty stream) · system-level constraints in specs, L1 bounds, L2 shortlist and re-selection · L5 loop: re-explore under the refit when a measured winner changes · `map_front` blind-spot fix (gated lever) · M2 replay proof · campaign agent on Deep Agents with cross-run memory · A/B and memory on/off eval",
+   "status": "done",
+   "note": "see the A/B for what the campaign agent did and did not achieve"
+  },
+  {
+   "id": "",
+   "levels": "live L4 inside campaigns · any campaign-agent rework (only if the M4 fleet design needs it)",
    "status": "planned"
   },
   {
    "id": "M4",
-   "levels": "more functions and targets (e.g. an ASIC gate-equivalent `CostModel`), richer family registry",
+   "levels": "more functions and targets (an ASIC gate-equivalent `CostModel`), a fleet of agents, richer family registry, the write-up",
    "status": "planned"
   }
  ],
@@ -86,10 +93,10 @@
    "name": "System-level simulation (SimPy)",
    "milestone": "M3",
    "repo_level": "L2",
-   "what": "the candidate inside a system model: traffic, queues, back-pressure",
-   "ppa": "throughput and latency under load",
-   "check": "regression against the golden model",
-   "status": "planned",
+   "what": "the candidate inside a SimPy model of its system (a DDS feeding a mixer, a control loop, a bursty request stream), clocked at its estimated Fmax; every L1-feasible design of a run is simulated",
+   "ppa": "sustained throughput under back-pressure, p50/p99 and batch latency, queue depth (simulated)",
+   "check": "exhaustive ground truth for 3 system specs (1,092 distinct timing tuples cover all 635,040 designs); the winner changes on 2 of them; the device is checked request by request against the cycle model",
+   "status": "live",
    "plan_only": false
   },
   {
@@ -97,10 +104,10 @@
    "name": "Cycle-level simulation",
    "milestone": "M3",
    "repo_level": "L2",
-   "what": "cycle-accurate models of the shortlisted candidates",
-   "ppa": "cycles and stalls, cycle-exact",
-   "check": "regression against the golden model",
-   "status": "planned",
+   "what": "a cycle-accurate model of each family's interface (ready, valid, latency, initiation interval), edge by edge",
+   "ppa": "accepts, stalls and results per clock edge (exact); output codes from the golden model",
+   "check": "against the generated RTL, cycle for cycle: 48/48 bursty traces identical in Icarus Verilog 12.0 and Verilator 5.020 (28,424 clock edges)",
+   "status": "live",
    "plan_only": false
   },
   {
@@ -141,7 +148,7 @@
    "name": "Back-annotation",
    "milestone": "M2",
    "repo_level": "L5",
-   "what": "compare measured with L1, refit the cost model per tool, flag a winner change (re-exploring automatically is planned)",
+   "what": "compare measured with L1, refit the cost model per tool, flag a winner change and (M3) re-explore under the refit",
    "ppa": "the cost model's error, measured",
    "check": "the ground truth is recomputed under each refit: no spec's winner changes",
    "status": "live",

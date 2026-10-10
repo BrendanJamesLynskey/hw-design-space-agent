@@ -11,7 +11,7 @@ import { AGENT_REPO, GITHUB_URL, agentFile } from "@/lib/site";
 export const metadata = {
   title: "Roadmap",
   description:
-    "Milestones M1 to M4: what each adds to the fidelity ladder (RTL, synthesis, gate-level simulation and back-annotation in M2, done; cycle-level and SimPy system-level simulation and a campaign layer in M3, planned), their status and their pull requests.",
+    "Milestones M1 to M4: what each adds to the fidelity ladder (RTL, synthesis, gate-level simulation and back-annotation in M2; cycle-level and SimPy system-level simulation and an experimental campaign layer in M3, both done; an ASIC cost model and a fleet in M4, planned), their status and their pull requests.",
 };
 
 const A =
@@ -21,14 +21,13 @@ const A =
 const ADDS: Record<string, string> = {
   M1: "The agent itself: spec intake with a human in the loop, LLM-steered exploration over tested fast models, the exhaustive ground truth and the eval against NSGA-II and random search with real models.",
   M2: "From estimates to measurements, and the whole trade-off curve: one generator of SystemVerilog for every family, verified against the golden model in Verilator and Icarus and with SymbiYosys proofs; open-source synthesis and place-and-route (Yosys + nextpnr-xilinx) and gate-level simulation of the netlist; back-annotation that refits the cost model per tool and flags a winner change; front-mapping levers for the agent, and a five-seed eval. Then a follow-up pull request: Vivado 2025.2 on 14 generated designs and the vivado-2025.2 refit (no spec's winner changed; the default cost model stays M1's).",
-  M3: "Behaviour in context: cycle-level simulation of the shortlisted candidates and SimPy system-level simulation of a candidate inside a system model (traffic, queues, back-pressure), each regression-tested against the golden model. And a campaign layer: a Deep Agents harness over the existing graph for long-horizon campaigns with memory across runs, measured in an A/B against the structured graph alone. All planned; no results yet.",
-  M4: "Breadth: more functions and targets (for example an ASIC gate-equivalent cost model), a richer family registry, a fleet of agents and the write-up. Planned.",
+  M3: "The design in its system: a cycle-accurate model of every family's interface, checked against the generated RTL cycle for cycle, and SimPy models of three systems (a DDS feeding a mixer, a control loop, a bursty request stream); system-level specs, screened at L1 by optimistic bounds and re-selected at L2 on simulated numbers; an L5 loop that re-explores under the refit when a measurement changes the winner; a gated fix for M2's front-mapping blind spot; and a campaign agent on LangChain Deep Agents with cross-run memory, measured in an A/B against the structured graph. The A/B found no gain at a higher cost, so the campaign agent stays experimental, off by default.",
+  M4: "Breadth and feedback: an ASIC cost model on an open PDK, a fleet of agents, L2 results fed back into L1, more measured data (high_precision's m=8 synthesised at its own 20 ns clock), a richer family registry and the write-up. Planned; no results yet.",
 };
 
 /** What a milestone's site text says is the project's plan rather than the README's. */
 const PLAN_NOTE: Record<string, string> = {
-  M3: "The README lists L2 (cycle-level simulation) for M3. SimPy as the system-level engine and the Deep Agents campaign layer with its A/B are the project's plan (owner decision, 2026-10-09).",
-  M4: "The README lists more functions and targets and a richer registry for M4; the fleet and the write-up are the project's plan.",
+  M4: "The README lists more functions and targets (an ASIC gate-equivalent cost model), a fleet of agents, a richer registry and the write-up for M4; the open PDK, L2 → L1 feedback and the extra measurements are the project's plan.",
 };
 
 /** Pull requests per milestone, in the agent's repository and this site's. */
@@ -49,6 +48,16 @@ const PRS: Record<string, { href: string; label: string }[]> = {
     {
       href: `${AGENT_REPO}/pull/4`,
       label: "HW_Design_Space_Agent #4: L5 with Vivado 2025.2 (merged)",
+    },
+    {
+      href: `${GITHUB_URL}/pulls?q=is%3Apr`,
+      label: "this site's pull requests",
+    },
+  ],
+  M3: [
+    {
+      href: `${AGENT_REPO}/pull/5`,
+      label: "HW_Design_Space_Agent #5: M3 (merged)",
     },
     {
       href: `${GITHUB_URL}/pulls?q=is%3Apr`,
@@ -111,7 +120,8 @@ export default function RoadmapPage(): JSX.Element {
                 </ul>
               )}
               <p className="mt-3 text-xs text-neutral-600 dark:text-neutral-400">
-                README: &ldquo;{m.levels.replace(/`/g, "")}&rdquo; ({m.status})
+                README: &ldquo;{m.levels.replace(/`/g, "")}&rdquo; ({m.status}
+                {m.note ? `: ${m.note}` : ""})
               </p>
               {site.roadmap
                 .filter((r, i, all) => {
@@ -129,7 +139,8 @@ export default function RoadmapPage(): JSX.Element {
                     className="mt-1 text-xs text-neutral-600 dark:text-neutral-400"
                   >
                     README{r.id ? `, ${r.id}` : ""}: &ldquo;
-                    {r.levels.replace(/`/g, "")}&rdquo; ({r.status})
+                    {r.levels.replace(/`/g, "")}&rdquo; ({r.status}
+                    {r.note ? `: ${r.note}` : ""})
                   </p>
                 ))}
               {PLAN_NOTE[m.id] && (

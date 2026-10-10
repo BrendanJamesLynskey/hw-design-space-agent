@@ -10,6 +10,7 @@ import { runDate, runsOf, site, why, type MsKey } from "./data";
 import { arch } from "./families";
 import { fleetSpan, maxConcurrent } from "./fleet";
 import { ladder, vivadoDesigns } from "./ladder";
+import { m3, sysSpec } from "./m3";
 
 export type Fmt =
   | "num"
@@ -180,6 +181,143 @@ function median(xs: number[]): number {
 const ds = (s: string) =>
   glanceAgent(s, "deepseek/deepseek-v4.1-flash").select_regret;
 
+/** Milestone 3's values, under "m3." (src/data/m3.json, checked against results.md and the README). */
+function m3Values(): Record<string, number | string> {
+  const multi = sysSpec("multiaxis_control");
+  const bursty = sysSpec("bursty_offload");
+  const dds = sysSpec("dds_sfdr");
+  const ab = m3.ab;
+  const st = m3.structured;
+  const SPECS = ["multiaxis_control", "bursty_offload"];
+  const agents = SPECS.flatMap((x) => st[x]!.filter((r) => r.agent));
+  const base = (method: string) =>
+    SPECS.map((x) => st[x]!.find((r) => r.method === method)!);
+  const KEY: Record<string, string> = {
+    "anthropic/claude-sonnet-5.5": "sonnet",
+    "deepseek/deepseek-v4.1-flash": "deepseek",
+    "qwen/qwen3.8-27b, reasoning off": "qwen",
+  };
+  const cost = (m: string) => ab.costs.find((c) => c.model === m)!;
+  const outlier = ab.runs
+    .filter((r) => r.spec === "low_area_control" && r.seed === 0)
+    .reduce((a, b) => ((a.hv_frac ?? 1) < (b.hv_frac ?? 1) ? a : b));
+  const loops = ab.runs.filter((r) => r.failed);
+  const mem = m3.memory.rows;
+  const hpFix = m3.levers.fix.find(
+    (r) => r.driver.startsWith("LLM") && r.spec === "high_precision",
+  )!;
+  const out: Record<string, number | string> = {
+    "l2.traces": m3.cycle.traces,
+    "l2.passed": m3.cycle.passed,
+    "l2.edges": m3.cycle.edges,
+    "l2.designs": m3.cycle.designs.length,
+    "gt.tuples": m3.ground_truth.n_tuples,
+    "multi.feasible": multi.n_feasible,
+    "multi.feasible_bound": multi.n_feasible_l1_bound,
+    "multi.feasible_msps": multi.n_feasible_msps_only,
+    "multi.true_lf": multi.true.luts_plus_ffs,
+    "multi.bound_lf": multi.bound.luts_plus_ffs,
+    "multi.msps_lf": multi.msps_only.luts_plus_ffs,
+    "multi.true_p99": multi.true.simulated.sys_p99_batch_us!,
+    "multi.bound_p99": multi.bound.simulated.sys_p99_batch_us!,
+    "multi.bound_bound": multi.bound.bound.sys_p99_batch_us!,
+    "multi.miss": multi.bound.simulated.sys_p99_batch_us! / 0.44 - 1,
+    "multi.peak_floor": multi.peak_rate!.floor_msps,
+    "multi.peak_feasible": multi.peak_rate!.n_feasible,
+    "bursty.feasible": bursty.n_feasible,
+    "bursty.feasible_msps": bursty.n_feasible_msps_only,
+    "bursty.true_lf": bursty.true.luts_plus_ffs,
+    "bursty.msps_lf": bursty.msps_only.luts_plus_ffs,
+    "bursty.true_p99": bursty.true.simulated.sys_p99_latency_us!,
+    "bursty.msps_p99": bursty.msps_only.simulated.sys_p99_latency_us!,
+    "bursty.msps_bound": bursty.msps_only.bound.sys_p99_latency_us!,
+    "bursty.msps_ratio":
+      bursty.msps_only.simulated.sys_p99_latency_us! /
+      bursty.msps_only.bound.sys_p99_latency_us!,
+    "bursty.area_ratio":
+      bursty.true.luts_plus_ffs / bursty.msps_only.luts_plus_ffs,
+    "bursty.peak_floor": bursty.peak_rate!.floor_msps,
+    "dds.feasible": dds.n_feasible,
+    "dds.sfdr": dds.true.simulated.sys_sfdr_dbc!,
+    "struct.runs": agents.reduce((a, r) => a + r.runs, 0),
+    "struct.l2_changed": agents.reduce((a, r) => a + (r.l2_changed ?? 0), 0),
+    "struct.hv_min": Math.min(...agents.map((r) => r.hv.mean)),
+    "struct.hv_max": Math.max(...agents.map((r) => r.hv.mean)),
+    "struct.regret_min": Math.min(...agents.map((r) => r.regret.mean)),
+    "struct.regret_max": Math.max(...agents.map((r) => r.regret.mean)),
+    "struct.nsga2_hv_min": Math.min(...base("nsga2").map((r) => r.hv.mean)),
+    "struct.nsga2_hv_max": Math.max(...base("nsga2").map((r) => r.hv.mean)),
+    "struct.nsga2_regret_multi": base("nsga2")[0]!.regret.mean,
+    "struct.nsga2_regret_bursty": base("nsga2")[1]!.regret.mean,
+    "struct.random_regret_min": Math.min(
+      ...base("random").map((r) => r.regret.mean),
+    ),
+    "struct.random_regret_max": Math.max(
+      ...base("random").map((r) => r.regret.mean),
+    ),
+    "ab.campaigns": ab.campaigns,
+    "ab.single": ab.single_run_dse,
+    "ab.explore": ab.tools.explore_family!,
+    "ab.simulate": ab.tools.simulate_system!,
+    "ab.verify": ab.tools.verify_rtl!,
+    "ab.annotate": ab.tools.back_annotate!,
+    "ab.reexplore": ab.tools.reexplore!,
+    "ab.verify_recorded": ab.ladder.verify_recorded!,
+    "ab.verify_called": ab.ladder.verify_called!,
+    "ab.synth_recorded": ab.ladder.synth_recorded!,
+    "ab.synth_called": ab.ladder.synth_called!,
+    "ab.annotate_compared": ab.ladder.annotate_compared!,
+    "ab.annotate_called": ab.ladder.annotate_called!,
+    "ab.l2_campaign": ab.l2_reselect.campaign[0],
+    "ab.loops": loops.length,
+    "ab.loop_cap": 40,
+    "ab.outlier_hv": outlier.hv_frac!,
+    "ab.outlier_regret": outlier.regret!,
+    "ab.outlier_model": ab.labels[outlier.model]!,
+    "ab.input_ratio_min": Math.min(...ab.costs.map((c) => c.input_ratio)),
+    "ab.input_ratio_max": Math.max(...ab.costs.map((c) => c.input_ratio)),
+    "ab.cost_ratio_min": Math.min(...ab.costs.map((c) => c.cost_ratio)),
+    "ab.cost_ratio_max": Math.max(...ab.costs.map((c) => c.cost_ratio)),
+    memory_label: m3.memory.label,
+    "bursty.msps_ii": bursty.msps_only.latency_cycles,
+    "mem.seeds": mem[0]!.seeds.length,
+    "mem.first_hv_off": mem[0]!.hv_frac[0].mean,
+    "mem.first_hv_on": mem[0]!.hv_frac[1].mean,
+    "levers.hp_regret_m2": hpFix.regret[0],
+    "levers.hp_regret_fix": hpFix.regret[1],
+    "levers.replay_identical": m3.levers.replay.identical,
+    "levers.replay_runs": m3.levers.replay.runs,
+    "spend.key": m3.spend.key_usd,
+    "spend.cap": m3.spend.cap_usd,
+    "spend.ledger": m3.spend.ledger_total_usd,
+    "spend.entries": m3.spend.ledger_entries,
+    "spend.structured": m3.spend.structured_usd,
+    "spend.campaign": m3.spend.campaign_usd,
+    "spend.trace": m3.spend.trace_usd,
+  };
+  for (const m of ab.models) {
+    const k = KEY[m]!;
+    const p = ab.pooled[m]!;
+    out[`ab.${k}.hv_s`] = p.hv[0];
+    out[`ab.${k}.hv_c`] = p.hv[1];
+    out[`ab.${k}.regret_s`] = p.regret[0];
+    out[`ab.${k}.regret_c`] = p.regret[1];
+    out[`ab.${k}.cost_ratio`] = cost(m).cost_ratio;
+    out[`ab.${k}.cost_s`] = cost(m).cost_usd[0].mean;
+    out[`ab.${k}.cost_c`] = cost(m).cost_usd[1].mean;
+    out[`ab.${k}.runs`] = cost(m).runs[1];
+    out[`ab.${k}.failed`] = cost(m).failures[1];
+    for (const x of SPECS) {
+      const r = st[x]!.find((y) => y.method === m)!;
+      out[`struct.${x}.${k}_regret`] = r.regret.mean;
+      out[`struct.${x}.${k}_hv`] = r.hv.mean;
+    }
+  }
+  return Object.fromEntries(
+    Object.entries(out).map(([k, v]) => [`m3.${k}`, v]),
+  );
+}
+
 export const VALUES: Record<string, number | string> = {
   commit: site.vendored.commit.slice(0, 7),
   designs: gt.dds_250msps!.n_designs,
@@ -194,6 +332,7 @@ export const VALUES: Record<string, number | string> = {
   ),
   ...msValues("m1"),
   ...msValues("m2"),
+  ...m3Values(),
   // M1 → M2 (results.md's "at a glance", checked against it at export)
   "glance.hv_ratio_min": glance.hv_ratio_m2[0],
   "glance.hv_ratio_max": glance.hv_ratio_m2[1],

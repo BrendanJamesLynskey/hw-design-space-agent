@@ -87,7 +87,7 @@ export function LadderTable({
 
 export function ProvenanceKey(): JSX.Element {
   return (
-    <dl className="my-4 grid gap-3 sm:grid-cols-3" data-testid="provenance-key">
+    <dl className="my-4 grid gap-3 sm:grid-cols-2" data-testid="provenance-key">
       <div className="rounded border border-neutral-200 p-3 dark:border-neutral-800">
         <dt>
           <Prov kind="exact" />
@@ -104,8 +104,9 @@ export function ProvenanceKey(): JSX.Element {
         </dt>
         <dd className="mt-1 text-sm">
           From the analytical Artix-7 cost model calibrated to two Vivado
-          results (LUTs, flip-flops, Fmax, throughput, power index). Milestone 2
-          replaces them with synthesis.
+          results (LUTs, flip-flops, Fmax, throughput, power index), or a refit
+          of it that names its calibration. The eval scores every milestone on
+          the same model, so milestones stay comparable.
         </dd>
       </div>
       <div className="rounded border border-neutral-200 p-3 dark:border-neutral-800">
@@ -113,9 +114,21 @@ export function ProvenanceKey(): JSX.Element {
           <Prov kind="measured" />
         </dt>
         <dd className="mt-1 text-sm">
-          Recorded from real runs: the provider-reported tokens and cost of each
-          LLM call, and the wall-clock the eval harness timed. In M1, no PPA
-          number is measured.
+          Recorded from real runs and real tools: the provider-reported tokens
+          and cost of each LLM call, the wall-clock the eval harness timed, and
+          (since M2) LUTs, flip-flops and Fmax from Yosys + nextpnr and Vivado,
+          named with the tool and its version.
+        </dd>
+      </div>
+      <div className="rounded border border-neutral-200 p-3 dark:border-neutral-800">
+        <dt>
+          <Prov kind="simulated" />
+        </dt>
+        <dd className="mt-1 text-sm">
+          From the L2 SimPy model of the design&apos;s system (M3): throughput
+          under back-pressure, p50/p99 and batch latency, queue depth, clocked
+          at the design&apos;s estimated Fmax. During exploration the same
+          metrics are screened by an optimistic analytic bound, an estimate.
         </dd>
       </div>
     </dl>
@@ -129,8 +142,8 @@ export function DivisionOfLabour(): JSX.Element {
         {`Division of labour (strict):\n${site.division_of_labour}`}
       </blockquote>
       <figcaption className="mt-1 text-xs text-neutral-600 dark:text-neutral-400">
-        From the system prompt every one of the {site.trace_calls} recorded LLM
-        calls was sent (
+        From the system prompt every one of the {site.trace_calls} recorded M1
+        and M2 LLM calls was sent (
         <a
           href={agentFile("src/hw_dse/agent/prompts.py", site.vendored.commit)}
           className={A}

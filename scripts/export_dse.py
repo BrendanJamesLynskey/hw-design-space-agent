@@ -18,7 +18,11 @@ Inputs, all under vendor/hw_dse/ (copied byte for byte at a pinned commit by
                        usage before and after the M2 runs;
 - docs/worked_example_m2.md  one design up the ladder (parsed, and re-checked against the
                        tables and the reference);
-- specs/*.yaml         the four example specs.
+- specs/*.yaml         the four example specs (and specs/system/, M3's system specs);
+- M3's data (scripts/export_m3.py -> src/data/m3.json): the system specs' ground truth, the
+                       L2 cycle-model-vs-RTL validation, the structured, campaign and memory-on
+                       run summaries, the M3 baselines, the offline map_front fix, the M2
+                       replay proof, the ledger, the key usage and the M3 traces.
 
 The Python reference (`hw_dse`, installed from git at the same commit, pinned in
 reference/requirements.txt) computes everything else: the hill-climb on the real grid
@@ -58,6 +62,7 @@ from hw_dse.pareto import hv_progress, pareto_mask
 from hw_dse.spec import Spec, load_spec
 
 import export_ladder
+import export_m3
 
 ROOT = Path(__file__).resolve().parent.parent
 V = ROOT / "vendor/hw_dse"
@@ -110,8 +115,11 @@ def roadmap_rows() -> list[dict[str, str]]:
         cells = [c.strip() for c in line.strip().strip("|").split("|")]
         if len(cells) != 3 or cells[0] in ("milestone", "---") or set(cells[0]) <= {"-"} and cells[0]:
             continue
+        # "done (see the A/B for what ...)": the status, and the README's note on it
+        st = re.fullmatch(r"(done|in progress|planned)(?: \((.*)\))?", cells[2].replace("**", ""))
+        assert st, cells[2]
         out.append({"id": cells[0].replace("**", ""), "levels": cells[1].replace("**", ""),
-                    "status": cells[2].replace("**", "")})
+                    "status": st.group(1), **({"note": st.group(2)} if st.group(2) else {})})
     return out
 
 
@@ -126,8 +134,10 @@ def milestones() -> list[dict[str, str]]:
 # level is part of its L4 row; system-level simulation is part of its L2 row, "cycle-level /
 # system simulation"); `plan_only` marks what is only the project's plan, and the site says
 # so. Live levels state what was run, with counts computed from the vendored tables.
-def ladder_levels(lad: dict[str, Any]) -> list[dict[str, Any]]:
+def ladder_levels(lad: dict[str, Any], m3: dict[str, Any]) -> list[dict[str, Any]]:
     l3, fm, l4, viv = lad["l3"], lad["formal"], lad["l4"], lad["vivado"]
+    cyc, gt3 = m3["cycle"], m3["ground_truth"]
+    changed = [r["name"] for r in gt3["specs"] if r["winner_changes"]]
     sims = " and ".join(s.split(" 20")[0] for s in l3["simulators"])
     n_viv = len({r["key"] for r in viv["rows"] if r["batch"] > 0})
     return [
@@ -140,13 +150,17 @@ def ladder_levels(lad: dict[str, Any]) -> list[dict[str, Any]]:
          "ppa": "accuracy exact (bit-accurate model); LUTs, FFs, Fmax, power index estimate (calibrated cost model)",
          "check": "the golden model is bit-exact against the reference RTL on all 65,536 input angles (Icarus, in CI)"},
         {"id": "SYS", "name": "System-level simulation (SimPy)", "milestone": "M3", "repo_level": "L2",
-         "what": "the candidate inside a system model: traffic, queues, back-pressure",
-         "ppa": "throughput and latency under load",
-         "check": "regression against the golden model"},
+         "what": ("the candidate inside a SimPy model of its system (a DDS feeding a mixer, a control loop, a bursty "
+                  "request stream), clocked at its estimated Fmax; every L1-feasible design of a run is simulated"),
+         "ppa": "sustained throughput under back-pressure, p50/p99 and batch latency, queue depth (simulated)",
+         "check": (f"exhaustive ground truth for {len(gt3['specs'])} system specs ({gt3['n_tuples']:,} distinct timing tuples "
+                   f"cover all 635,040 designs); the winner changes on {len(changed)} of them; the device is checked request "
+                   "by request against the cycle model")},
         {"id": "L2", "name": "Cycle-level simulation", "milestone": "M3", "repo_level": "L2",
-         "what": "cycle-accurate models of the shortlisted candidates",
-         "ppa": "cycles and stalls, cycle-exact",
-         "check": "regression against the golden model"},
+         "what": "a cycle-accurate model of each family's interface (ready, valid, latency, initiation interval), edge by edge",
+         "ppa": "accepts, stalls and results per clock edge (exact); output codes from the golden model",
+         "check": (f"against the generated RTL, cycle for cycle: {cyc['passed']}/{cyc['traces']} bursty traces identical "
+                   f"in {' and '.join(s.split(' 20')[0] for s in cyc['simulators'])} ({cyc['edges']:,} clock edges)")},
         {"id": "L3", "name": "RTL simulation", "milestone": "M2", "repo_level": "L3",
          "what": "one generator turns any explored design into parametrised SystemVerilog, simulated in " + sims,
          "ppa": "function, bit for bit (exact)",
@@ -163,16 +177,16 @@ def ladder_levels(lad: dict[str, Any]) -> list[dict[str, Any]]:
          "ppa": "function after synthesis (exact)",
          "check": f"every output code against the golden model: {l3['gate_runs']} runs, 0 mismatches"},
         {"id": "L5", "name": "Back-annotation", "milestone": "M2", "repo_level": "L5",
-         "what": "compare measured with L1, refit the cost model per tool, flag a winner change (re-exploring automatically is planned)",
+         "what": "compare measured with L1, refit the cost model per tool, flag a winner change and (M3) re-explore under the refit",
          "ppa": "the cost model's error, measured",
          "check": "the ground truth is recomputed under each refit: no spec's winner changes"},
     ]
 
 
-def ladder(ms: list[dict[str, str]], lad: dict[str, Any]) -> list[dict[str, Any]]:
+def ladder(ms: list[dict[str, str]], lad: dict[str, Any], m3: dict[str, Any]) -> list[dict[str, Any]]:
     status = {m["id"]: m["status"] for m in ms}
     out = []
-    for lv in ladder_levels(lad):
+    for lv in ladder_levels(lad, m3):
         s = status[lv["milestone"]]
         badge = "live" if s == "done" else ("in progress" if s == "in progress" else "planned")
         out.append({**lv, "status": badge, "plan_only": lv["repo_level"] is None})
@@ -1247,6 +1261,7 @@ def build() -> dict[Path, str]:
     tr = {k: traces(k) for k in ("m1", "m2", "pilot")}
     ms = milestones()
     lad = export_ladder.build(readme, specs)
+    m3 = export_m3.build(readme)
     runs = all_runs(specs, gts_raw, tr)
     check_cost_table()
     evals = {}
@@ -1266,7 +1281,7 @@ def build() -> dict[Path, str]:
         "vendored": {"repository": vend["repository"], "commit": vend["commit"], "committed": vend["committed"]},
         "milestones": ms,
         "roadmap": roadmap_rows(),
-        "ladder": ladder(ms, lad),
+        "ladder": ladder(ms, lad, m3),
         "specs": {n: spec_json(s) for n, s in specs.items()},
         "ground_truth": gt,
         "evals": evals,
@@ -1283,6 +1298,7 @@ def build() -> dict[Path, str]:
     return {
         DATA / "site.json": dump(site),
         DATA / "ladder.json": compact(lad),
+        DATA / "m3.json": compact(m3),
         DATA / "why.json": dump(why),
         DATA / "calibration.json": dump(calibration()),
         DATA / "race.json": compact({m: race(m, specs, gts_raw, runs) for m in MS}),

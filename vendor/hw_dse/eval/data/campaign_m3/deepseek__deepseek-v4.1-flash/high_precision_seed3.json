@@ -1,0 +1,87 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "high_precision",
+ "seed": 3,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 15,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-183025-e910/dse/high_precision/20261009-183033-9dc1",
+   "notes": "Tight accuracy spec: max_abs_err <= 2^-20 (~9.54e-07) AND throughput >= 50 MSPS simultaneously. Search the whole data-width range aggressively (high width needed to meet 2^-20; check where err saturates) and prefer families/structures that reach 50 MSPS without massive unroll cost: pipelined with modest stages and unrolled_k may both qualify. Keep the front well spread on luts_plus_ffs vs power_index; do not let the front collapse to only ultra-wide designs. Selection rule is min luts_plus_ffs, so keep many feasible low-area points, but cover the power end too.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "facts_only",
+  "shortlist": [],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 6,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 141.5350560271283,
+   "dds_snr_db": 130.63924749024574,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "reason": "the spec has no system scenario: nothing to re-select",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=26) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 20.0,
+ "llm_failures": 0.0,
+ "input_tokens": 88064.0,
+ "output_tokens": 17731.0,
+ "cost_usd": 0.017512186399999997,
+ "wall_s": 108.6,
+ "run_dir": "runs/campaign_m3/20261009-183025-e910",
+ "run_id": "20261009-183025-e910",
+ "final_text": "The campaign queue held a single spec, `high_precision` (coherent demodulator: max_abs_err \u2264 2^-20 \u2248 9.53674e-07 at throughput \u2265 50 MSPS, minimising luts_plus_ffs and power_index, selected by min luts_plus_ffs). I spent the full L1 budget (400/400) on the structured DSE graph \u2014 the inner architect mapped the front three times then stopped, returning exactly one non-dominated feasible design, `pipelined_m:data_width=26,n_iter=22,angle_guard=2,frac_guard=0,rounding=round,m=7` (estimates: luts_plus_ffs=2312, luts=1908, ffs=404, power_index=4.35, throughput 52 MSPS, max_abs_err 6.89e-07 = 2^-20.47, both constraints met with the accuracy margin coming from the 26-bit width and the throughput from a modest m=7 stage count). L2 `simulate_system` found no system scenario, so it supplied contract facts (6-cycle latency, one sample/cycle) and simulated DDS quality (SFDR 141.5 dBc, SNR 130.6 dB) without changing the selection; L3 `verify_rtl` and L4 `synthesize` had no recorded rows for this configuration and L5 `back_annotate` returned `no_measured_data`, so no WINNER CHANGE was flagged and `reexplore` was correctly skipped. The spec is finalized on that design, which is feasible on L1/L2 estimates but carries the explicit caveat that it is unverified at RTL and unsynthesized (only the generator, not this configuration, has RTL verification coverage). Finally, `remember` had no effect: memory is switched off for this campaign, so no lesson was stored; `recall` at the start likewise returned nothing, meaning this run had no prior-campaign calibration to lean on.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 89028.99992250219,
+ "hv_frac": 0.9846923974103118,
+ "evals_to_95": 218,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=26,n_iter=22,angle_guard=2,frac_guard=0,rounding=round,m=7",
+ "select_regret": 0.023158658403817593,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

@@ -4,6 +4,7 @@
  *
  *   pnpm build && pnpm start   # in another shell
  *   pnpm animations            # writes docs/media/*.gif and *.webm
+ *   pnpm animations hv-race    # only the clips named
  *
  * Every frame is a model state set by the animation's scrub bar (reduced
  * motion, so nothing plays by itself), screenshotted, then joined by
@@ -73,6 +74,18 @@ const CLIPS: Clip[] = [
     fps: 0.75,
   },
   { name: "m1-to-m2", path: "/results", widget: "shift-widget", fps: 0.75 },
+  {
+    name: "system-in-context",
+    path: "/how-it-works",
+    widget: "system-widget",
+    fps: 1.5,
+  },
+  {
+    name: "cycle-vs-rtl",
+    path: "/how-it-works",
+    widget: "cycle-widget",
+    fps: 1,
+  },
 ];
 
 async function main(): Promise<void> {
@@ -84,7 +97,8 @@ async function main(): Promise<void> {
     reducedMotion: "reduce",
   });
   const page = await context.newPage();
-  for (const c of CLIPS) {
+  const only = process.argv.slice(2);
+  for (const c of CLIPS.filter((x) => !only.length || only.includes(x.name))) {
     const dir = mkdtempSync(path.join(tmpdir(), `hdsa-${c.name}-`));
     await page.goto(BASE + c.path, { waitUntil: "networkidle" });
     const fig = page.getByTestId(c.widget);

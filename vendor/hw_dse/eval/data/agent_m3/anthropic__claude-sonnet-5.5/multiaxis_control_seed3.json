@@ -1,0 +1,52 @@
+{
+ "milestone": "m3",
+ "arm": "structured",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null,
+  "map_unfeasible_families": "reachable"
+ },
+ "spec": "multiaxis_control",
+ "seed": 3,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "stopped",
+ "rounds": 4,
+ "coverage_rounds": 1,
+ "llm_calls": 4.0,
+ "llm_failures": 0.0,
+ "input_tokens": 23254.0,
+ "output_tokens": 5033.0,
+ "cost_usd": 0.096838,
+ "wall_s": 42.2,
+ "run_dir": "runs/eval_m3/multiaxis_control/20261009-174054-9364",
+ "decisions": [
+  "refine",
+  "refine",
+  "stop"
+ ],
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 160 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ],
+ "l1_selected_key": "pipelined_m:data_width=17,n_iter=14,angle_guard=1,frac_guard=0,rounding=round,m=4",
+ "l2_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 19756.735735102026,
+ "hv_frac": 0.8766412448288403,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=17,n_iter=14,angle_guard=1,frac_guard=0,rounding=round,m=4",
+ "select_regret": 0.0,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

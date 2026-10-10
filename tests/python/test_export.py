@@ -14,6 +14,7 @@ V = ROOT / "vendor/hw_dse"
 VENDORED = json.loads((V / "VENDORED.json").read_text())
 SITE = json.loads((ROOT / "src/data/site.json").read_text())
 LADDER = json.loads((ROOT / "src/data/ladder.json").read_text())
+M3 = json.loads((ROOT / "src/data/m3.json").read_text())
 
 
 def test_every_vendored_file_matches_its_hash():
@@ -66,14 +67,19 @@ def test_trace_costs_sum_to_the_results_totals():
 
 
 def test_only_done_milestones_are_live():
+    """M3 is done (the README notes what the campaign agent did not achieve); M4 is planned.
+    Every ladder level is live, SimPy and L2 (cycle level) since M3; ASIC and the fleet are M4's
+    and stay on the roadmap."""
     status = {m["id"]: m["status"] for m in SITE["milestones"]}
-    assert status == {"M1": "done", "M2": "done", "M3": "planned", "M4": "planned"}
+    assert status == {"M1": "done", "M2": "done", "M3": "done", "M4": "planned"}
+    m3 = next(m for m in SITE["milestones"] if m["id"] == "M3")
+    assert m3["note"].startswith("see the A/B")
     for lv in SITE["ladder"]:
         assert (lv["status"] == "live") == (status[lv["milestone"]] == "done"), lv["id"]
     live = [lv["id"] for lv in SITE["ladder"] if lv["status"] == "live"]
-    assert live == ["L0", "L1", "L3", "L4", "GL", "L5"]
-    planned = {lv["id"]: lv["milestone"] for lv in SITE["ladder"] if lv["status"] == "planned"}
-    assert planned == {"SYS": "M3", "L2": "M3"}
+    assert live == ["L0", "L1", "SYS", "L2", "L3", "L4", "GL", "L5"]
+    m4 = next(m for m in SITE["milestones"] if m["id"] == "M4")
+    assert "ASIC" in m4["levels"] and "fleet" in m4["levels"]
 
 
 def test_hero_run_is_a_recorded_m2_run_down_the_ladder():
@@ -157,3 +163,67 @@ def test_ladder_data():
     m6, m8 = hp["candidates"]
     assert m6["post_route"]["msps"] >= hp["min_msps"] > m8["post_route"]["msps"]
     assert m8["post_synth"]["msps"] < hp["min_msps"]
+
+
+def test_m3_system_specs():
+    """Feasible counts and winners of the three system specs; the peak-rate view gives
+    bursty_offload's winner and feasible count, and stops at m=5 on multiaxis_control."""
+    gt = {r["name"]: r for r in M3["ground_truth"]["specs"]}
+    b, m, d = gt["bursty_offload"], gt["multiaxis_control"], gt["dds_sfdr"]
+    assert (b["n_feasible"], m["n_feasible"], d["n_feasible"]) == (151528, 51244, 12334)
+    assert m["n_feasible_l1_bound"] == 53667
+    assert b["winner_changes"] and m["winner_changes"] and not d["winner_changes"]
+    assert (m["true"]["params"]["m"], m["bound"]["params"]["m"], m["msps_only"]["params"]["m"]) == (4, 5, 7)
+    assert round(m["true"]["luts_plus_ffs"]) == 1072 and round(b["true"]["luts_plus_ffs"]) == 745
+    assert b["peak_rate"]["winner"] == b["true"]["key"] and b["peak_rate"]["n_feasible"] == b["n_feasible"]
+    assert m["peak_rate"]["winner"] == m["bound"]["key"] and m["peak_rate"]["n_feasible"] == 66383
+    # m=5 passes the L1 bound and misses the simulated deadline by 1.5%
+    assert m["bound"]["bound"]["sys_p99_batch_us"] <= 0.44 < m["bound"]["simulated"]["sys_p99_batch_us"]
+
+
+def test_m3_system_replay_matches_the_ground_truth():
+    rep = M3["system_replay"]
+    gt = {r["name"]: r for r in M3["ground_truth"]["specs"]}["multiaxis_control"]
+    by = {d["view"]: d for d in rep["designs"]}
+    assert [by[v]["meets"] for v in ("msps_only", "bound", "true")] == [False, False, True]
+    assert by["bound"]["bound_meets"] and not by["msps_only"]["bound_meets"]
+    for v in ("bound", "true"):
+        d = by[v]
+        assert math.isclose(d["p99_us"], gt[v]["simulated"]["sys_p99_batch_us"], rel_tol=1e-5)
+        assert len(d["accept_ns"]) == len(d["result_ns"]) == rep["requests"] == 32
+        assert math.isclose(max(d["result_ns"]) / 1000, d["p99_us"], rel_tol=1e-4)
+        assert len(d["batches_ns"]) == rep["n_ticks"]
+
+
+def test_m3_cycle_validation():
+    """48/48 traces identical; the reconstructed stimulus takes exactly the RTL log's edges."""
+    c = M3["cycle"]
+    assert (c["passed"], c["traces"], c["edges"]) == (48, 48, 28424)
+    assert len(c["designs"]) == 8 and {d["family"] for d in c["designs"]} == {"iterative", "unrolled_k", "pipelined", "pipelined_m"}
+    for d in c["designs"]:
+        assert len(d["runs"]) == 6
+        assert all(r["ready_mismatches"] == r["valid_mismatches"] == r["data_mismatches"] == 0 for r in d["runs"])
+    for w in c["waves"]:
+        assert len(w["ready"]) == len(w["valid_out"]) == 96
+
+
+def test_m3_structured_ab_memory_and_spend():
+    s = M3["structured"]
+    for spec in ("multiaxis_control", "bursty_offload"):
+        rows = {r["method"]: r for r in s[spec]}
+        assert all(r["meets_spec"] == 5 for r in rows.values())
+        assert all(r["l2_changed"] == 0 for r in rows.values() if r["agent"])
+        assert all(r["regret"]["mean"] < rows["nsga2"]["regret"]["mean"] for r in rows.values() if r["agent"])
+    ab = M3["ab"]
+    assert ab["single_run_dse"] == 52 and ab["campaigns"] == 65
+    assert ab["l2_reselect"]["structured"] == [0, 30] and ab["l2_reselect"]["campaign"] == [4, 65]
+    costs = {c["model"]: c for c in ab["costs"]}
+    assert costs["anthropic/claude-sonnet-5.5"]["specs"] == ["multiaxis_control"]
+    assert costs["qwen/qwen3.8-27b, reasoning off"]["failures"] == [0, 4]
+    assert all(c["cost_ratio"] > 1 for c in costs.values())
+    pooled = ab["pooled"]
+    assert all(p["hv"][1] < p["hv"][0] and p["regret"][1] > p["regret"][0] for p in pooled.values())
+    assert M3["levers"]["replay"] == {"identical": 60, "runs": 60, "architect_inputs": 60}
+    sp = M3["spend"]
+    assert (sp["ledger_total_usd"], sp["ledger_entries"], sp["trace_usd"]) == (3.4901, 114, 3.4519)
+    assert round(sp["key_usd"], 4) == 3.5775 and sp["key_usd"] <= sp["cap_usd"]

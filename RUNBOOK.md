@@ -93,3 +93,16 @@ Then (part C1's checklist, 2026-10-09):
   `pnpm vitest run tests/unit/record.test.ts`: every number the record states is checked
   against the site's data, and the repository wins where they disagree (fix the copy and
   report the discrepancy). Prettier ignores the file so the planner's formatting stays.
+
+Part C2 (M3, 2026-10-10) added:
+
+- `scripts/export_m3.py` writes `src/data/m3.json` and asserts every M3 row of results.md
+  verbatim. It also runs the reference itself: the `multiaxis_control` system replay (its p99s
+  must equal the committed ground truth), the cycle-model waveforms (each of the 24 L2
+  validation traces must take exactly the RTL log's edges, accepts and results) and the
+  peak-rate view over the exhaustive grid (about 20 s for the grid). A fresh venv is needed
+  after a re-pin: an editable install reports its commit as "?" and the export refuses it.
+- a milestone's README status may carry a note ("done (see the A/B …)"): the export splits it
+  into `status` and `note`, and only `status` drives the badges.
+- the record may have lettered sections ("7b"); the parser accepts `## 7b. Title`.
+- `pnpm animations <name> …` records only the clips named (the full set takes a while).

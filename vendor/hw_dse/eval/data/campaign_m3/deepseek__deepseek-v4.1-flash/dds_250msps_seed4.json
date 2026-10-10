@@ -1,0 +1,87 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "dds_250msps",
+ "seed": 4,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 14,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "refine",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-183914-249c/dse/dds_250msps/20261009-183916-212d",
+   "notes": "NCO/DDS sin-cos, 1 sample/clock at >=250 MSPS, max_abs_err <= 2^-13, minimise LUTs, maximise accuracy_bits. Full 400-eval budget: cover all families (iterative, unrolled_k, pipelined, pipelined_m) and the data_width / n_iter / k_or_m ranges, since LUT cost and accuracy trade off strongly across families. Keep the front well spread on the luts vs accuracy_bits trade-off.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "facts_only",
+  "shortlist": [],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined",
+    "latency": 17,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 98.2290610385028,
+   "dds_snr_db": 88.10141833016391,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "reason": "the spec has no system scenario: nothing to re-select",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=17) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 19.0,
+ "llm_failures": 0.0,
+ "input_tokens": 81393.0,
+ "output_tokens": 18255.0,
+ "cost_usd": 0.018119966,
+ "wall_s": 116.6,
+ "run_dir": "runs/campaign_m3/20261009-183914-249c",
+ "run_id": "20261009-183914-249c",
+ "final_text": "The single queued spec, **dds_250msps** (NCO/DDS sin-cos for a digital up-converter, \u2265250 MSPS, max_abs_err \u2264 2^-13, minimise LUTs, maximise accuracy_bits), is finalized. Memory was switched off, so `recall` returned nothing and `remember` stored nothing. L1 `run_dse` spent the entire 400-eval budget (inner graph: map_front \u2192 refine \u2192 map_front \u2192 stop) and yielded a 35-design feasible, non-dominated front, all from the pipelined family; the min-luts selection is `pipelined:data_width=17,n_iter=15,angle_guard=3,frac_guard=2,rounding=round` with luts=985 (estimate, M1-calibrated cost model), ffs=978 (estimate), throughput_msps=264 (estimate, meets the \u2265250 constraint), accuracy_bits=13.4, and max_abs_err=9.31e-05 = 2^-13.39 (exact, golden model \u2014 meets the \u22642^-13 constraint). L2 `simulate_system` found no system scenario, so the selection was unchanged, but it did supply simulated DDS facts for the selection (SFDR 98.2 dBc, SNR 88.1 dB, 32-bit phase accumulator, coherent 16384-point FFT at tone bin 1297). The L3/L4/L5 ladder (run via the `ladder` sub-agent) added no new evidence: `verify_rtl` had no recorded row for this selection (a fresh exhaustive W=17 run is too heavy for a live campaign), `synthesize` had no recorded synthesis row (L4 is never run live), and `back_annotate` returned `no_measured_data` with no winner change \u2014 so `reexplore` was correctly not triggered, and the spec was closed on the L1/L2 selection.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 19062.0883080156,
+ "hv_frac": 0.9654632308389192,
+ "evals_to_95": 398,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=17,n_iter=15,angle_guard=3,frac_guard=2,rounding=round",
+ "select_regret": 0.08847497089639125,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

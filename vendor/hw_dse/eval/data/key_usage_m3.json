@@ -1,0 +1,100 @@
+{
+ "note": "OpenRouter GET /api/v1/key (free), read with the key from the environment; the key itself is never recorded.",
+ "m3_spend_cap_usd": 5.0,
+ "snapshots": {
+  "session_start": {
+   "ts": "2026-10-09T16:28:55Z",
+   "usage_usd": 4.188860782,
+   "limit_usd": 10,
+   "limit_remaining_usd": 5.811139218
+  },
+  "before_pilots": {
+   "ts": "2026-10-09T17:20:44Z",
+   "usage_usd": 4.188860782,
+   "limit_usd": 10,
+   "limit_remaining_usd": 5.811139218
+  },
+  "after_structured_pilot": {
+   "ts": "2026-10-09T17:22:40Z",
+   "usage_usd": 4.196268082,
+   "limit_usd": 10,
+   "limit_remaining_usd": 5.803731918
+  },
+  "check_no_run (campaign pilot skipped: file existed)": {
+   "ts": "2026-10-09T17:22:47Z",
+   "usage_usd": 4.201228902,
+   "limit_usd": 10,
+   "limit_remaining_usd": 5.798771098
+  },
+  "after_campaign_pilot1": {
+   "ts": "2026-10-09T17:34:07Z",
+   "usage_usd": 4.259798367,
+   "limit_usd": 10,
+   "limit_remaining_usd": 5.740201633
+  },
+  "after_campaign_pilot2": {
+   "ts": "2026-10-09T17:38:03Z",
+   "usage_usd": 4.278784106,
+   "limit_usd": 10,
+   "limit_remaining_usd": 5.721215894
+  },
+  "before_eval": {
+   "ts": "2026-10-09T17:38:31Z",
+   "usage_usd": 4.280526004,
+   "limit_usd": 10,
+   "limit_remaining_usd": 5.719473996
+  },
+  "after_qwen_deepseek_arms": {
+   "ts": "2026-10-09T19:27:54Z",
+   "usage_usd": 6.694363901,
+   "limit_usd": 10,
+   "limit_remaining_usd": 3.305636099
+  },
+  "after_sonnet_campaign_1": {
+   "ts": "2026-10-09T19:29:11Z",
+   "usage_usd": 6.771989971,
+   "limit_usd": 10,
+   "limit_remaining_usd": 3.228010029
+  },
+  "after_sonnet_campaigns": {
+   "ts": "2026-10-09T19:33:50Z",
+   "usage_usd": 7.766393971,
+   "limit_usd": 10,
+   "limit_remaining_usd": 2.2336060289999997
+  },
+  "after_eval": {
+   "ts": "2026-10-09T19:34:30Z",
+   "usage_usd": 7.766393971,
+   "limit_usd": 10,
+   "limit_remaining_usd": 2.2336060289999997
+  }
+ },
+ "models_checked": {
+  "ts": "2026-10-09T16:29:03Z",
+  "source": "GET https://openrouter.ai/api/v1/models (free)",
+  "models": {
+   "qwen/qwen3.8-27b": {
+    "listed": true,
+    "tools": true,
+    "structured_outputs": true,
+    "pricing_prompt_usd_per_token": "0.000000425",
+    "pricing_completion_usd_per_token": "0.00000255"
+   },
+   "anthropic/claude-sonnet-5.5": {
+    "listed": true,
+    "tools": true,
+    "structured_outputs": true,
+    "pricing_prompt_usd_per_token": "0.000002",
+    "pricing_completion_usd_per_token": "0.00001"
+   },
+   "deepseek/deepseek-v4.1-flash": {
+    "listed": true,
+    "tools": true,
+    "structured_outputs": true,
+    "pricing_prompt_usd_per_token": "0.0000003",
+    "pricing_completion_usd_per_token": "0.0000012"
+   }
+  },
+  "substitutions": "none needed"
+ }
+}

@@ -7,6 +7,7 @@
 import Link from "next/link";
 
 import { COMMIT, ev, site } from "@/lib/dse/data";
+import { m3 } from "@/lib/dse/m3";
 import { fmtInt } from "@/lib/format";
 import {
   AGENT_REPO,
@@ -261,17 +262,22 @@ export default function AboutPage(): JSX.Element {
             HW_Design_Space_Agent
           </a>{" "}
           at commit {COMMIT} (
-          {ev("m1").trace_runs + ev("m2").trace_runs + site.spend.m2.pilot_runs}{" "}
+          {ev("m1").trace_runs +
+            ev("m2").trace_runs +
+            site.spend.m2.pilot_runs +
+            m3.spend.trace_runs}{" "}
           recorded run traces: M1&apos;s {ev("m1").costs.runs} scored runs and
           one that crashed before scoring, M2&apos;s {ev("m2").costs.runs} runs
-          and its {site.spend.m2.pilot_runs}-run pilot;{" "}
-          {fmtInt(site.trace_calls)} LLM calls), vendored byte for byte with its
-          hashes, or from the TypeScript ports of its golden model and cost
-          model, which match the Python reference exactly. A Python script
-          regenerates the site&apos;s data from the vendored files and checks
-          every results row against the repository&apos;s own results table; the
-          site&apos;s CI fails if anything drifts. Nothing calls a language
-          model at runtime. The design and the animation framework come from the{" "}
+          and its {site.spend.m2.pilot_runs}-run pilot, M3&apos;s{" "}
+          {m3.spend.trace_runs} structured, campaign, memory and pilot runs;{" "}
+          {fmtInt(site.trace_calls + m3.spend.trace_calls)} LLM calls), vendored
+          byte for byte with its hashes, or from the TypeScript ports of its
+          golden model and cost model, which match the Python reference exactly.
+          A Python script regenerates the site&apos;s data from the vendored
+          files and checks every results row against the repository&apos;s own
+          results table; the site&apos;s CI fails if anything drifts. Nothing
+          calls a language model at runtime. The design and the animation
+          framework come from the{" "}
           <a href={HARNESSES_URL} className={A}>
             agent sites
           </a>

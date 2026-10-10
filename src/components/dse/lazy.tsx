@@ -75,3 +75,11 @@ export const M1M2Shift = dynamic(() => import("./M1M2Shift"), {
   ssr: false,
   loading: loading("animation"),
 });
+export const SystemReplay = dynamic(() => import("./SystemReplay"), {
+  ssr: false,
+  loading: loading("animation"),
+});
+export const CycleRtl = dynamic(() => import("./CycleRtl"), {
+  ssr: false,
+  loading: loading("animation"),
+});

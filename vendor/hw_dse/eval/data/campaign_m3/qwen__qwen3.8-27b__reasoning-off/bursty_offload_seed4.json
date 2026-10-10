@@ -1,0 +1,163 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "bursty_offload",
+ "seed": 4,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "error": "RuntimeError: campaign model call limit (40) exceeded",
+ "failed": true,
+ "left_open": true,
+ "campaign_model_calls": 41,
+ "tool_calls": 37,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "refine",
+    "add_family",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-191854-6346/dse/bursty_offload/20261009-191925-5f28",
+   "notes": "Bursty Poisson arrivals, bursts of 8, p99 latency <= 0.4us. Favor designs with high sustained throughput (pipelined families) so bursts drain fast; accuracy needs >= 10 bits (max_abs_err <= 2^-10). Selection rule: min luts_plus_ffs among feasible.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=16,n_iter=12,angle_guard=2,frac_guard=0,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_latency_us": 0.13505042546475307,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.11241851500000001
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=12,angle_guard=1,frac_guard=2,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_latency_us": 0.13505042546475307,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.11241851500000001
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=12,angle_guard=2,frac_guard=1,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_latency_us": 0.13505042546475307,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.11241851500000001
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=12,angle_guard=2,frac_guard=2,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_latency_us": 0.13505042546475307,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.11241851500000001
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=15,n_iter=14,angle_guard=2,frac_guard=1,rounding=round,m=5",
+    "feasible": true,
+    "sys_p99_latency_us": 0.1720217960011214,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.136455418
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 5,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 79.29729892739614,
+   "dds_snr_db": 70.62828890548312,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 5,
+  "why": "the L1 selection passes the simulated system constraints",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=16) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 45.0,
+ "llm_failures": 1.0,
+ "input_tokens": 157601.0,
+ "output_tokens": 4906.0,
+ "cost_usd": 0.0128476197,
+ "wall_s": 521.6,
+ "run_dir": "runs/campaign_m3/20261009-191854-6346",
+ "run_id": "20261009-191854-6346",
+ "final_text": "",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 13860.267260085957,
+ "hv_frac": 0.7860533985623028,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=16,n_iter=12,angle_guard=2,frac_guard=0,rounding=round,m=4",
+ "select_regret": 0.1529239705093324,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

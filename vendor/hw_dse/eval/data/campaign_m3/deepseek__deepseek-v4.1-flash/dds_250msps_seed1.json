@@ -1,0 +1,87 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "dds_250msps",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 15,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "refine",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-175634-602f/dse/dds_250msps/20261009-175638-00e5",
+   "notes": "NCO/DDS sin-cos for a digital up-converter: need >= 250 MSPS (one sample/clock), max_abs_err <= 2^-13 (13 accuracy bits), minimise LUTs (HV ref 4000). Prioritise pipelined and unrolled/pipelined_k families with high throughput (II=1); the accuracy constraint is tight so keep enough data width/iterations (accuracy_bits ~ 14+ before rounding to satisfy 2^-13 error). Exploit symmetry/quadrant compression in ROM-free or small-ROM CORDIC; keep pipelines deep enough that timing closes at 250 MHz on Artix-7. Selection rule is min luts, so the feasible point with lowest LUT count matters most.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "facts_only",
+  "shortlist": [],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined",
+    "latency": 17,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 96.69592448849639,
+   "dds_snr_db": 87.44038645030649,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "reason": "the spec has no system scenario: nothing to re-select",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=18) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 20.0,
+ "llm_failures": 0.0,
+ "input_tokens": 90154.0,
+ "output_tokens": 23498.0,
+ "cost_usd": 0.022944603000000008,
+ "wall_s": 115.8,
+ "run_dir": "runs/campaign_m3/20261009-175634-602f",
+ "run_id": "20261009-175634-602f",
+ "final_text": "The single spec in the queue, **dds_250msps** (NCO/DDS sin-cos for a digital up-converter: \u2265250 MSPS one sample/clock, max_abs_err \u2264 2\u207b\u00b9\u00b3, minimise LUTs, select by min LUTs), is finalized. I spent the full 400-evaluation L1 budget on the structured DSE graph, which explored the design space through map_front \u2192 refine \u2192 map_front and returned a 25-design feasible non-dominated Pareto front dominated by the pipelined family; the winner by the spec's min-LUTs rule is `pipelined:data_width=18,n_iter=15,angle_guard=3,frac_guard=0,rounding=round` with luts=935, ffs=969, throughput=264 MSPS, max_abs_err=1.19e-4 (2\u207b\u00b9\u00b3\u00b7\u2070\u2074, i.e. just inside the constraint) and accuracy_bits=13, so it is feasible with 14 MSPS of throughput headroom and the cheapest silicon in the front (alternatives with extra data_width buy accuracy past the constraint at +14 to +129 LUTs). L2 `simulate_system` ran on the top 6 and found no system scenario for this spec (only the DDS contract facts: latency 17 cycles, one input per cycle, simulated SFDR 96.7 dBc and SNR 87.4 dB from a golden-model 16384-point FFT at tone bin 1297) and left the selection unchanged. The L3\u2013L5 ladder (`verify_rtl`, `synthesize`, `back_annotate`) via the ladder sub-agent returned no recorded L3 verification row, no recorded synthesis, and `no_measured_data` at L5, so no WINNER CHANGE was flagged and `reexplore` was correctly not triggered; consequently the LUT/FF/throughput figures remain cost-model estimates (M1 calibration) while the error figures are exact from the golden model. The spec is finalized with that selection, provenance recorded, and nothing is left in the queue.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 17122.931004609134,
+ "hv_frac": 0.8672481221372959,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=18,n_iter=15,angle_guard=3,frac_guard=0,rounding=round",
+ "select_regret": 0.03259604190919677,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

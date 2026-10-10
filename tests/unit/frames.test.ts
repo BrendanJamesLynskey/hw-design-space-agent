@@ -75,6 +75,10 @@ describe("hero: one spec, every level", () => {
     expect(frames.some((f) => f.level === "SYS" || f.level === "L2")).toBe(
       false,
     );
+    // the system and cycle levels are live, but this M2 run on a spec without a system
+    // scenario did not use them: marked, never animated
+    const sel = frames.find((f) => f.phase === "select")!;
+    expect(sel.skipped).toEqual(["SYS", "L2"]);
     // a ladder whose lower levels are planned stops the descent there
     const m1ladder = site.ladder.map((l) =>
       l.milestone === "M2" ? { ...l, status: "planned" as const } : l,
@@ -101,7 +105,27 @@ describe("hero: one spec, every level", () => {
       );
     expect(
       heroCaption(frames[frames.length - 1]!, hero, spec, site.ladder, w),
-    ).toMatch(/2 levels are planned \(M3\)/);
+    ).toMatch(/Every level of the ladder is live at this commit; milestone 4/);
+    expect(cap("select")).toContain(
+      "(SYS, L2, live since M3) have nothing to do here",
+    );
+    // with M3's levels planned (as at the previous commit), the old captions
+    const m2ladder = site.ladder.map((l) =>
+      l.milestone === "M3" ? { ...l, status: "planned" as const } : l,
+    );
+    const old = heroFrames(hero, m2ladder);
+    expect(heroCaption(old[old.length - 1]!, hero, spec, m2ladder, w)).toMatch(
+      /2 levels are planned \(M3\)/,
+    );
+    expect(
+      heroCaption(
+        old.find((f) => f.phase === "select")!,
+        hero,
+        spec,
+        m2ladder,
+        w,
+      ),
+    ).toContain("SimPy and cycle-level are not built yet");
     expect(heroCaption(frames[0]!, hero, spec, site.ladder, w)).toMatch(
       /max error ≤ 2\^-10/,
     );

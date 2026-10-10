@@ -1,0 +1,52 @@
+{
+ "milestone": "m3",
+ "arm": "structured",
+ "pilot": false,
+ "levers": {
+  "coverage_reserve": 0.4,
+  "coverage_box": "front_anchored",
+  "warm_start": false,
+  "hv_epsilon": null,
+  "map_unfeasible_families": "reachable"
+ },
+ "spec": "bursty_offload",
+ "seed": 4,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "structured_method": "json_schema",
+ "status": "stopped",
+ "rounds": 4,
+ "coverage_rounds": 1,
+ "llm_calls": 5.0,
+ "llm_failures": 1.0,
+ "input_tokens": 13105.0,
+ "output_tokens": 14130.0,
+ "cost_usd": 0.009949673,
+ "wall_s": 143.6,
+ "run_dir": "runs/eval_m3/bursty_offload/20261009-175601-9802",
+ "decisions": [
+  "refine",
+  "refine",
+  "stop"
+ ],
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 160 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ],
+ "l1_selected_key": "pipelined_m:data_width=16,n_iter=13,angle_guard=2,frac_guard=2,rounding=trunc,m=8",
+ "l2_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 15218.658886724266,
+ "hv_frac": 0.8630914768807866,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=16,n_iter=13,angle_guard=2,frac_guard=2,rounding=trunc,m=8",
+ "select_regret": 0.22822543704246498,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

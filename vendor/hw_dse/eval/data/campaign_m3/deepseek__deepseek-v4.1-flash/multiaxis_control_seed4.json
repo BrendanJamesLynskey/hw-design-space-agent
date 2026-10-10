@@ -1,0 +1,145 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "multiaxis_control",
+ "seed": 4,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 15,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "add_family",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-184459-e74e/dse/multiaxis_control/20261009-184502-86e3",
+   "notes": "System spec: 32 requests/us burst, p99 batch latency <= 0.44us, err <= 2^-12, throughput >= 32 Msps. Minimise LUTs+FFs, maximise accuracy_bits. Need designs with enough parallelism (pipelined/unrolled) to meet the 0.44us batch bound; keep area low. Screen with the analytic sys bound at L1, then L2-simulate the shortlist.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=1,frac_guard=1,rounding=trunc,m=5",
+    "feasible": false,
+    "sys_p99_batch_us": 0.44647163000001455,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.43417633000000005
+    },
+    "violations": {
+     "sys_p99_batch_us <= 0.44": 0.014708250000033068
+    }
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=0,frac_guard=2,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=15,angle_guard=-1,frac_guard=2,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=19,n_iter=14,angle_guard=0,frac_guard=4,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.4126487800000177,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.40161114
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=20,n_iter=14,angle_guard=1,frac_guard=2,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=19,n_iter=15,angle_guard=1,frac_guard=1,rounding=trunc,m=3",
+    "feasible": true,
+    "sys_p99_batch_us": 0.31859125600004334,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.31027060400000006
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": true,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 5,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 98.4691007086642,
+   "dds_snr_db": 84.29603858206661,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 6,
+  "why": "the L1 selection pipelined_m:data_width=17,n_iter=15,angle_guard=1,frac_guard=1,rounding=trunc,m=5 fails the simulated system constraints (sys_p99_batch_us <= 0.44 by 1.5%); the best shortlisted design that passes is pipelined_m:data_width=17,n_iter=15,angle_guard=0,frac_guard=2,rounding=trunc,m=4",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=17) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 20.0,
+ "llm_failures": 0.0,
+ "input_tokens": 99803.0,
+ "output_tokens": 18772.0,
+ "cost_usd": 0.018055768,
+ "wall_s": 77.5,
+ "run_dir": "runs/campaign_m3/20261009-184459-e74e",
+ "run_id": "20261009-184459-e74e",
+ "final_text": "The single spec in the queue, **multiaxis_control** (shared CORDIC sin/cos for a 16-axis motor-control loop; 32 requests per 1 \u00b5s tick, constraints throughput \u2265 32 Msps, max_abs_err \u2264 2^-12, sys_p99_batch \u2264 0.44 \u00b5s; objectives min LUTs+FFs and max accuracy_bits; select min LUTs+FFs), is finalized. I spent the full L1 budget with `run_dse` (400/400 evals), which produced a 24-design feasible non-dominated front; the L1 area-min pick was `pipelined_m:data_width=17,n_iter=15,angle_guard=1,frac_guard=1,rounding=trunc,m=5` (1107 LUTs+FFs) but its analytic sys bound of 0.434 \u00b5s was optimistic \u2014 L2 `simulate_system` on the top 6 showed it actually fails at 0.4465 \u00b5s (> 0.44), so the selection moved to the best shortlisted design that passes: **`pipelined_m:data_width=17,n_iter=15,angle_guard=0,frac_guard=2,rounding=trunc,m=4`** with luts_plus_ffs=1186 (luts=905, ffs=280), accuracy_bits=12.2, throughput 93.6 Msps, max_abs_err 2.17e-4 (2^-12.17, exact golden model), and simulated sys_p99_batch_us=0.395. The ladder sub-agent then ran L3 `verify_rtl` (no recorded row for this configuration; only generator-level verification of 47 configs), L4 `synthesize` (no recorded result), and L5 `back_annotate` (returned `no_measured_data`, no winner change), so no `reexplore` was triggered and the spec was finalized on the L2-checked selection. Residual risk: the accuracy margin (2.17e-4 vs 2.44e-4) is thin and unconfirmed by measurement, since no L3/L4/L5 data exists for this point; all reported figures are estimates (cost model) or L2-simulated, with errors exact.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 17939.299999664214,
+ "hv_frac": 0.7959984125880925,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=17,n_iter=15,angle_guard=0,frac_guard=2,rounding=trunc,m=4",
+ "select_regret": 0.10580645834729177,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

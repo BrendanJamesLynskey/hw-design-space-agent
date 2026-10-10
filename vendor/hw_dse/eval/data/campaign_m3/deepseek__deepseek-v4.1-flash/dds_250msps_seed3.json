@@ -1,0 +1,69 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "dds_250msps",
+ "seed": 3,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 13,
+ "tool_calls": 8,
+ "ladder": [
+  "run_dse",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "refine",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-182904-4ffc/dse/dds_250msps/20261009-182910-2c21",
+   "notes": "NCO/DDS sin-cos for DUC: need 1 sample/clock at >=250 MSPS, max_abs_err <= 2^-13. Minimise LUTs (HV ref 4000), maximise accuracy_bits (HV ref 13); select min luts. Memory is off, so no prior lessons: explore broadly across iterative / unrolled_k / pipelined / pipelined_m families, and make sure the front is well spread on the LUT-vs-accuracy trade-off. Prefer designs that keep throughput >= 250 MSPS with margin (pipelined/unrolled with enough parallelism) and error comfortably under 2^-13.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": null,
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=18) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 18.0,
+ "llm_failures": 0.0,
+ "input_tokens": 78116.0,
+ "output_tokens": 15123.0,
+ "cost_usd": 0.0159878,
+ "wall_s": 80.4,
+ "run_dir": "runs/campaign_m3/20261009-182904-4ffc",
+ "run_id": "20261009-182904-4ffc",
+ "final_text": "Campaign complete \u2014 the queue held a single spec, `dds_250msps` (NCO/DDS sin-cos for a digital up-converter: throughput \u2265 250 MSPS, max_abs_err \u2264 2^-13, objectives min LUTs / max accuracy_bits, select min LUTs). Memory was switched off, so `recall` returned nothing and `remember` stored nothing. I spent the spec's entire L1 budget in one `run_dse` call (400/400 evaluations, 0 left; inner graph ran map_front \u2192 refine \u2192 map_front \u2192 stop), which yielded a 30-design feasible, non-dominated front \u2014 all pipelined-family designs, with the LUT/accuracy trade-off driven by `n_iter` (~65 LUTs per extra iteration at W=18) and by `data_width=19 + frac_guard=1 + trunc` as the cheaper route past 14 accuracy bits. The spec has no system scenario, so there were no `sys_*` bounds to simulate and `simulate_system` was unnecessary; the graph's internal L2 shortlist covered that rung. The `ladder` sub-agent then ran L3/L4/L5: `verify_rtl` produced no row (a live exhaustive W=18 run was declined as too heavy; only generator-level verification over 47 configs exists), `synthesize` had no recorded synthesis for this design, and `back_annotate` returned `no_measured_data` \u2014 which is not a WINNER CHANGE, so `reexplore` was correctly not invoked. I finalized the min-LUTs selection: `pipelined:data_width=18,n_iter=15,angle_guard=2,frac_guard=0,rounding=round` with luts=920 (estimate), accuracy_bits=13.2, ffs=953, throughput_msps=264 (estimate), max_abs_err=0.000109 = 2^-13.17 (exact, golden model) \u2014 feasible on both constraints, though with thin margins (~11% under the error limit, ~5.6% over the throughput requirement); the recorded fallback if measurements later contradict it is `n_iter=16` (luts=985, err=8.35e-05). All numbers above carry their provenance: LUTs/FFs/throughput are cost-model estimates, the error is exact, and nothing is measured.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 16001.39843272298,
+ "hv_frac": 0.8104443531667695,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=18,n_iter=15,angle_guard=2,frac_guard=0,rounding=round",
+ "select_regret": 0.016298020954598386,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

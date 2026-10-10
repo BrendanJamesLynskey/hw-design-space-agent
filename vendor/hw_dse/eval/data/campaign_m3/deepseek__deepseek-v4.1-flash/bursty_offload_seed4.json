@@ -1,0 +1,134 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "bursty_offload",
+ "seed": 4,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 14,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-184617-895a/dse/bursty_offload/20261009-184622-77fb",
+   "notes": "System spec: bursts of 8 requests 0 ns apart, Poisson arrivals at 2 req/us; p99 latency <= 0.4 us is a hard constraint screened at L1 by an analytic bound but only truly checked at L2. Prioritise designs with low latency (pipelined / pipelined_m families, high throughput) while minimising luts_plus_ffs; accuracy_bits >= 10 required (max_abs_err <= 2^-10). Selection rule is min luts_plus_ffs, so keep the front well-mapped across the accuracy/area trade-off and make sure the area-optimal feasible designs are not lost to the analytic latency screen.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=18,n_iter=13,angle_guard=-1,frac_guard=0,rounding=round,m=7",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2327727265311405,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.16775384000000002
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=13,angle_guard=1,frac_guard=1,rounding=trunc,m=5",
+    "feasible": true,
+    "sys_p99_latency_us": 0.18304453762900083,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.14289041800000002
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=14,angle_guard=2,frac_guard=1,rounding=round,m=5",
+    "feasible": true,
+    "sys_p99_latency_us": 0.18304453762900083,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.14289041800000002
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=14,angle_guard=3,frac_guard=1,rounding=round,m=5",
+    "feasible": true,
+    "sys_p99_latency_us": 0.18304453762900083,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.14289041800000002
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=19,n_iter=15,angle_guard=3,frac_guard=0,rounding=trunc,m=6",
+    "feasible": true,
+    "sys_p99_latency_us": 0.2229351750584319,
+    "l1_bound": {
+     "sys_p99_latency_us": 0.16821432100000003
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 4,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 86.18426414612517,
+   "dds_snr_db": 76.67202055488625,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 5,
+  "why": "the L1 selection passes the simulated system constraints",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=18) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 19.0,
+ "llm_failures": 0.0,
+ "input_tokens": 90416.0,
+ "output_tokens": 16840.0,
+ "cost_usd": 0.022234833999999995,
+ "wall_s": 113.5,
+ "run_dir": "runs/campaign_m3/20261009-184617-895a",
+ "run_id": "20261009-184617-895a",
+ "final_text": "The single spec in the queue, **bursty_offload**, is finalized. L1 `run_dse` spent the full 400-eval budget and returned a 35-design feasible, non-dominated front (all `pipelined_m` at the area-optimal end), with the L1 analytic latency screen showing comfortable margin against the 0.4 \u00b5s p99 constraint. L2 `simulate_system` on the front's top 5 confirmed every candidate passes the simulated system constraints, with the winner unchanged; notably the analytic p99 bound understated the bursty simulated p99 by roughly 40% (0.168 \u2192 0.233 \u00b5s for the winner), so the margin mattered. L3 `verify_rtl` and L4 `synthesize` returned no recorded rows for this selection (the RTL generator itself is verified on 47 configurations), and L5 `back_annotate` reported `no_measured_data` with no winner change, so `reexplore` was correctly not triggered. By the spec's rule (min luts_plus_ffs) the finalized selection is `pipelined_m:data_width=18, n_iter=13, angle_guard=-1, frac_guard=0, rounding=round, m=7` with luts_plus_ffs=909 (LUTs 751, FFs 157), accuracy_bits=11.5 (max_abs_err=0.000357, 2^-11.45), throughput 59.6 Msps, and simulated sys_p99_latency_us=0.233 \u2014 feasible on all three constraints (throughput \u2265 2 Msps, error \u2264 2^-10, p99 \u2264 0.4 \u00b5s). All numbers carry provenance: LUTs/FFs/throughput are cost-model estimates (M1 calibration), errors are exact from the golden model, and the latency figure is simulated.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 15341.647832739516,
+ "hv_frac": 0.8700665140273851,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=18,n_iter=13,angle_guard=-1,frac_guard=0,rounding=round,m=7",
+ "select_regret": 0.21938059253671272,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

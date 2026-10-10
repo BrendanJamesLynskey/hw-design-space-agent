@@ -1,0 +1,142 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "multiaxis_control",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 10,
+ "tool_calls": 8,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "refine",
+    "refine",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-192757-fcc0/dse/multiaxis_control/20261009-192805-3254",
+   "notes": "System needs 32 results within 0.44us: high throughput (pipelined/unrolled) likely required; error <=2^-12 needs ~13+ bits. Minimise LUT+FF among feasible.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=17,n_iter=14,angle_guard=2,frac_guard=1,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=14,angle_guard=0,frac_guard=1,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=2,frac_guard=1,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=2,frac_guard=1,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=19,n_iter=15,angle_guard=-1,frac_guard=1,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=15,angle_guard=1,frac_guard=1,rounding=round,m=3",
+    "feasible": true,
+    "sys_p99_batch_us": 0.31859125600004334,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.31027060400000006
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 6,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 98.37820360052146,
+   "dds_snr_db": 81.57306114525943,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 6,
+  "why": "the L1 selection passes the simulated system constraints",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=17) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 14.0,
+ "llm_failures": 0.0,
+ "input_tokens": 80049.0,
+ "output_tokens": 6348.0,
+ "cost_usd": 0.22357800000000005,
+ "wall_s": 64.7,
+ "run_dir": "runs/campaign_m3/20261009-192757-fcc0",
+ "run_id": "20261009-192757-fcc0",
+ "final_text": "I finalized `multiaxis_control` with the 4-stage pipelined CORDIC `pipelined_m:data_width=17,n_iter=14,angle_guard=2,frac_guard=1,rounding=trunc,m=4`. L3\u2013L5 produced no recorded data for this design, so its area and speed figures are still estimates.\n\n- **L1:** `run_dse` used all 400 evaluations and found 26 feasible non-dominated designs.\n- **Selected design:** 1123 LUTs+FFs (841 LUTs, 282 FFs) and 12.1 accuracy bits (max error 0.000235, against the 0.000244 limit). Throughput is an estimated 93.6 MSPS against the 32 MSPS requirement.\n- **L2:** The simulated p99 batch time is 0.395 \u00b5s against the 0.44 \u00b5s limit. All six shortlisted designs passed, and the winner did not change.\n- **L3\u2013L5:** The `ladder` sub-agent reported no recorded RTL verification or synthesis for this configuration, and `back_annotate` returned `no_measured_data`. It flagged no winner change, so I did not run `reexplore`.\n\nThe accuracy margin is thin: 0.000235 against 0.000244. The next design in the front, at 1143 LUTs+FFs, has more error margin (0.000205).",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 19518.38715941632,
+ "hv_frac": 0.8660652977243265,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=17,n_iter=14,angle_guard=2,frac_guard=1,rounding=trunc,m=4",
+ "select_regret": 0.047738483731892274,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

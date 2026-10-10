@@ -1,0 +1,756 @@
+{
+ "seed0": {
+  "hw_dse/memory/family": {
+   "iterative": {
+    "author": "code",
+    "lesson": "`iterative`: explored in 3 spec(s) (353 evaluations), on the front in 1; on the front in low_area_control",
+    "run_ids": [
+     "20261009-173845-039a",
+     "20261009-174055-b15d",
+     "20261009-174947-a817"
+    ],
+    "updated": "2026-10-09T17:52:36"
+   },
+   "pipelined": {
+    "author": "code",
+    "lesson": "`pipelined`: explored in 4 spec(s) (411 evaluations), on the front in 1; on the front in dds_250msps",
+    "run_ids": [
+     "20261009-173845-039a",
+     "20261009-174055-b15d",
+     "20261009-174635-621b",
+     "20261009-174947-a817"
+    ],
+    "updated": "2026-10-09T17:52:36"
+   },
+   "pipelined_m": {
+    "author": "code",
+    "lesson": "`pipelined_m`: explored in 4 spec(s) (773 evaluations), on the front in 2; on the front in bursty_offload, multiaxis_control",
+    "run_ids": [
+     "20261009-173845-039a",
+     "20261009-174055-b15d",
+     "20261009-174635-621b",
+     "20261009-174947-a817"
+    ],
+    "updated": "2026-10-09T17:52:36"
+   },
+   "unrolled_k": {
+    "author": "code",
+    "lesson": "`unrolled_k`: explored in 3 spec(s) (63 evaluations), on the front in 0; never reached a front on this device so far",
+    "run_ids": [
+     "20261009-173845-039a",
+     "20261009-174055-b15d",
+     "20261009-174635-621b"
+    ],
+    "updated": "2026-10-09T17:52:36"
+   }
+  },
+  "hw_dse/memory/note": {
+   "low_area_control": {
+    "author": "llm",
+    "lesson": "For area-min CORDIC specs, iterative family with data_width=16, n_iter=12, truncation wins (267 LUTs+FFs, 10.5 acc bits, 13.2 MSPS). L3/L4 have no recorded rows for this design class, so back_annotate returns no_measured_data and reexplore is refused; finalize directly after L2.",
+    "run_ids": [
+     "20261009-173845-039a"
+    ],
+    "updated": "2026-10-09T17:40:35"
+   },
+   "note/bursty_offload": {
+    "author": "llm",
+    "lesson": "For bursty specs (bursts of 8, Poisson 2 req/us, p99 <= 0.4 us), pipelined_m wins: dw=15, n_iter=14, m=7 (855 LUTs+FFs est, 10.6 acc bits, 59.6 MSPS, simulated p99 0.233 us). L1 analytic p99 bound was optimistic (~0.17 vs simulated 0.233) but still passed. pipelined_m reached the front here, unlike prior campaigns. No L3/L4 measured rows; back_annotate no_measured_data, finalize directly.",
+    "run_ids": [
+     "20261009-174055-b15d"
+    ],
+    "updated": "2026-10-09T17:43:09"
+   },
+   "note/dds_250msps": {
+    "author": "llm",
+    "lesson": "For the 250 MSPS DDS spec (min LUTs, err <= 2^-13), plain pipelined family won: dw=19, n_iter=15, no guards, round (935 LUTs est, 13.2 acc bits, 264 MSPS, 2^-13.18). Notable: pipelined reached the front here, unlike prior campaigns where it never did; pipelined_m and unrolled_k did not beat it on LUTs at this throughput. L2 DDS sim: SFDR 100.5 dBc, SNR 88.3 dB. No L3/L4 measured rows; back_annotate no_measured_data, finalize directly.",
+    "run_ids": [
+     "20261009-174635-621b"
+    ],
+    "updated": "2026-10-09T17:49:32"
+   },
+   "note/multiaxis_control": {
+    "author": "llm",
+    "lesson": "For the 16-axis control spec (32 req/tick, p99 <= 0.44us, err <= 2^-12, min LUTs+FFs), pipelined_m dw=18, n_iter=16, no guards, round, m=4 won: 1236 LUTs+FFs est, 13 acc bits, 97.8 MSPS, simulated p99 0.378us. Key lesson: the m=5/dw=15 designs (1070-1145 LUTs) looked cheaper at L1 (analytic p99 0.434) but SimPy gave 0.4465 -> failed the 0.44us bound by 1.5%; L2 flipped the winner to the m=4/dw=18 design. The L1 analytic p99 bound is optimistic for bursty 32-request ticks; keep >= ~5% margin on t",
+    "run_ids": [
+     "20261009-174947-a817"
+    ],
+    "updated": "2026-10-09T17:52:22"
+   }
+  },
+  "hw_dse/memory/spec_class": {
+   "high-rate (>= 100 MSPS), no system scenario": {
+    "author": "code",
+    "lesson": "spec class 'high-rate (>= 100 MSPS), no system scenario': 1 front-mapping round(s) in 1 spec run(s), mean HV gain +143.6% (min +143.6%, max +143.6%)",
+    "run_ids": [
+     "20261009-174635-621b"
+    ],
+    "updated": "2026-10-09T17:52:36"
+   },
+   "low-rate (< 10 MSPS), no system scenario": {
+    "author": "code",
+    "lesson": "spec class 'low-rate (< 10 MSPS), no system scenario': 1 front-mapping round(s) in 1 spec run(s), mean HV gain +443.7% (min +443.7%, max +443.7%)",
+    "run_ids": [
+     "20261009-173845-039a"
+    ],
+    "updated": "2026-10-09T17:52:36"
+   },
+   "low-rate (< 10 MSPS), system: bursty": {
+    "author": "code",
+    "lesson": "spec class 'low-rate (< 10 MSPS), system: bursty': 3 front-mapping round(s) in 1 spec run(s), mean HV gain +23.5% (min +0.3%, max +55.0%)",
+    "run_ids": [
+     "20261009-174055-b15d"
+    ],
+    "updated": "2026-10-09T17:52:36"
+   },
+   "mid-rate (10-100 MSPS), system: control_loop": {
+    "author": "code",
+    "lesson": "spec class 'mid-rate (10-100 MSPS), system: control_loop': 1 front-mapping round(s) in 1 spec run(s), mean HV gain +419.4% (min +419.4%, max +419.4%)",
+    "run_ids": [
+     "20261009-174947-a817"
+    ],
+    "updated": "2026-10-09T17:52:36"
+   }
+  },
+  "hw_dse/observations/family": {
+   "20261009-173845-039a|low_area_control|iterative": {
+    "evals": 294,
+    "family": "iterative",
+    "on_front": true,
+    "run_id": "20261009-173845-039a",
+    "spec": "low_area_control"
+   },
+   "20261009-173845-039a|low_area_control|pipelined": {
+    "evals": 33,
+    "family": "pipelined",
+    "on_front": false,
+    "run_id": "20261009-173845-039a",
+    "spec": "low_area_control"
+   },
+   "20261009-173845-039a|low_area_control|pipelined_m": {
+    "evals": 40,
+    "family": "pipelined_m",
+    "on_front": false,
+    "run_id": "20261009-173845-039a",
+    "spec": "low_area_control"
+   },
+   "20261009-173845-039a|low_area_control|unrolled_k": {
+    "evals": 33,
+    "family": "unrolled_k",
+    "on_front": false,
+    "run_id": "20261009-173845-039a",
+    "spec": "low_area_control"
+   },
+   "20261009-174055-b15d|bursty_offload|iterative": {
+    "evals": 50,
+    "family": "iterative",
+    "on_front": false,
+    "run_id": "20261009-174055-b15d",
+    "spec": "bursty_offload"
+   },
+   "20261009-174055-b15d|bursty_offload|pipelined": {
+    "evals": 30,
+    "family": "pipelined",
+    "on_front": false,
+    "run_id": "20261009-174055-b15d",
+    "spec": "bursty_offload"
+   },
+   "20261009-174055-b15d|bursty_offload|pipelined_m": {
+    "evals": 300,
+    "family": "pipelined_m",
+    "on_front": true,
+    "run_id": "20261009-174055-b15d",
+    "spec": "bursty_offload"
+   },
+   "20261009-174055-b15d|bursty_offload|unrolled_k": {
+    "evals": 20,
+    "family": "unrolled_k",
+    "on_front": false,
+    "run_id": "20261009-174055-b15d",
+    "spec": "bursty_offload"
+   },
+   "20261009-174635-621b|dds_250msps|pipelined": {
+    "evals": 330,
+    "family": "pipelined",
+    "on_front": true,
+    "run_id": "20261009-174635-621b",
+    "spec": "dds_250msps"
+   },
+   "20261009-174635-621b|dds_250msps|pipelined_m": {
+    "evals": 60,
+    "family": "pipelined_m",
+    "on_front": false,
+    "run_id": "20261009-174635-621b",
+    "spec": "dds_250msps"
+   },
+   "20261009-174635-621b|dds_250msps|unrolled_k": {
+    "evals": 10,
+    "family": "unrolled_k",
+    "on_front": false,
+    "run_id": "20261009-174635-621b",
+    "spec": "dds_250msps"
+   },
+   "20261009-174947-a817|multiaxis_control|iterative": {
+    "evals": 9,
+    "family": "iterative",
+    "on_front": false,
+    "run_id": "20261009-174947-a817",
+    "spec": "multiaxis_control"
+   },
+   "20261009-174947-a817|multiaxis_control|pipelined": {
+    "evals": 18,
+    "family": "pipelined",
+    "on_front": false,
+    "run_id": "20261009-174947-a817",
+    "spec": "multiaxis_control"
+   },
+   "20261009-174947-a817|multiaxis_control|pipelined_m": {
+    "evals": 373,
+    "family": "pipelined_m",
+    "on_front": true,
+    "run_id": "20261009-174947-a817",
+    "spec": "multiaxis_control"
+   }
+  },
+  "hw_dse/observations/spec_class": {
+   "20261009-173845-039a|low_area_control": {
+    "class": "low-rate (< 10 MSPS), no system scenario",
+    "mapping_gains": [
+     4.437269746077162
+    ],
+    "run_id": "20261009-173845-039a",
+    "spec": "low_area_control"
+   },
+   "20261009-174055-b15d|bursty_offload": {
+    "class": "low-rate (< 10 MSPS), system: bursty",
+    "mapping_gains": [
+     0.550340564459336,
+     0.1528468273043273,
+     0.003108514212099678
+    ],
+    "run_id": "20261009-174055-b15d",
+    "spec": "bursty_offload"
+   },
+   "20261009-174635-621b|dds_250msps": {
+    "class": "high-rate (>= 100 MSPS), no system scenario",
+    "mapping_gains": [
+     1.435595272616165
+    ],
+    "run_id": "20261009-174635-621b",
+    "spec": "dds_250msps"
+   },
+   "20261009-174947-a817|multiaxis_control": {
+    "class": "mid-rate (10-100 MSPS), system: control_loop",
+    "mapping_gains": [
+     4.19395278604305
+    ],
+    "run_id": "20261009-174947-a817",
+    "spec": "multiaxis_control"
+   }
+  }
+ },
+ "seed1": {
+  "hw_dse/memory/calibration": {
+   "low_area_control|iterative:data_width=15,n_iter=12,angle_guard=1,frac_guard=0,rounding=round": {
+    "author": "code",
+    "lesson": "low_area_control: yosys+nextpnr-xilinx: the selected design is still the best measured front design (it is the only front design with measurements)",
+    "run_ids": [
+     "20261009-175238-0eca"
+    ],
+    "updated": "2026-10-09T17:54:34"
+   }
+  },
+  "hw_dse/memory/family": {
+   "iterative": {
+    "author": "code",
+    "lesson": "`iterative`: explored in 2 spec(s) (277 evaluations), on the front in 1; on the front in low_area_control",
+    "run_ids": [
+     "20261009-175238-0eca",
+     "20261009-175434-0255"
+    ],
+    "updated": "2026-10-09T18:04:29"
+   },
+   "pipelined": {
+    "author": "code",
+    "lesson": "`pipelined`: explored in 4 spec(s) (535 evaluations), on the front in 1; on the front in dds_250msps",
+    "run_ids": [
+     "20261009-175238-0eca",
+     "20261009-175434-0255",
+     "20261009-175814-93de",
+     "20261009-180053-1db2"
+    ],
+    "updated": "2026-10-09T18:04:29"
+   },
+   "pipelined_m": {
+    "author": "code",
+    "lesson": "`pipelined_m`: explored in 4 spec(s) (705 evaluations), on the front in 2; on the front in bursty_offload, multiaxis_control",
+    "run_ids": [
+     "20261009-175238-0eca",
+     "20261009-175434-0255",
+     "20261009-175814-93de",
+     "20261009-180053-1db2"
+    ],
+    "updated": "2026-10-09T18:04:29"
+   },
+   "unrolled_k": {
+    "author": "code",
+    "lesson": "`unrolled_k`: explored in 3 spec(s) (83 evaluations), on the front in 0; never reached a front on this device so far",
+    "run_ids": [
+     "20261009-175238-0eca",
+     "20261009-175434-0255",
+     "20261009-180053-1db2"
+    ],
+    "updated": "2026-10-09T18:04:29"
+   }
+  },
+  "hw_dse/memory/note": {
+   "bursty_offload": {
+    "author": "llm",
+    "lesson": "For bursty p99-latency CORDIC specs (bursts of 8, 2 req/us, p99 <= 0.4 us, err <= 2^-10, min LUTs+FFs), pipelined_m with m=4, data_width=15, n_iter=12, angle_guard=2, rounding=round wins (est 813 luts+ffs, 97.8 MSPS, simulated p99 0.135 us). Single-iteration iterative designs are too slow to drain 8-request bursts within p99; pipelined_m m=4 was the area/latency sweet spot. No L3/L4 measurements recorded for this design.",
+    "run_ids": [
+     "20261009-175434-0255"
+    ],
+    "updated": "2026-10-09T17:57:24"
+   },
+   "low_area_control": {
+    "author": "llm",
+    "lesson": "For area-min CORDIC specs (>=1 MSPS, err <= 2^-10), iterative family with data_width=15, n_iter=12, angle_guard=1, rounding=round wins (est 251 luts+ffs, measured 216 LUTs/107 FFs/150.7 MHz). Cost model underestimates LUTs by ~19% and FFs by ~11% vs yosys+nextpnr-xilinx; Fmax underestimated by ~10%. Pipelined variants too area-hungry for this class.",
+    "run_ids": [
+     "20261009-175238-0eca"
+    ],
+    "updated": "2026-10-09T17:54:24"
+   },
+   "multiaxis_control": {
+    "author": "llm",
+    "lesson": "For 32-request-per-tick CORDIC specs (32 req/us, p99 batch <= 0.44us, err <= 2^-12, min LUTs+FFs), pipelined_m m=4, data_width=16, n_iter=14, angle_guard=2, frac_guard=2, rounding=round wins (est 1137 luts+ffs, 97.8 MSPS, simulated p99 0.378us). m=4 suffices even for 32-deep bursts at 1us ticks because throughput 97.8 MSPS >> 32 MSPS; the p99 window is dominated by pipeline drain, not throughput. No L3/L4 measurements recorded; L5 back_annotate returned no_measured_data.",
+    "run_ids": [
+     "20261009-180053-1db2"
+    ],
+    "updated": "2026-10-09T18:04:03"
+   },
+   "note/dds_250msps": {
+    "author": "llm",
+    "lesson": "For high-rate (>=250 MSPS, 1 sample/clock) CORDIC specs with err <= 2^-13, min LUTs: pipelined (m=1) family with data_width=18, n_iter=15, angle_guard=2, frac_guard=0, rounding=round wins (est 920 LUTs, 953 FFs, 264 MSPS, err 2^-13.17). The sweet spot is data_width 18, n_iter 15; angle_guard 2 with rounding=round is cheapest. No L3/L4 measurements recorded for this design; L5 back_annotate returned no_measured_data.",
+    "run_ids": [
+     "20261009-175814-93de"
+    ],
+    "updated": "2026-10-09T18:00:38"
+   }
+  },
+  "hw_dse/memory/spec_class": {
+   "high-rate (>= 100 MSPS), no system scenario": {
+    "author": "code",
+    "lesson": "spec class 'high-rate (>= 100 MSPS), no system scenario': no front-mapping round ran in 1 spec run(s)",
+    "run_ids": [
+     "20261009-175814-93de"
+    ],
+    "updated": "2026-10-09T18:04:29"
+   },
+   "low-rate (< 10 MSPS), no system scenario": {
+    "author": "code",
+    "lesson": "spec class 'low-rate (< 10 MSPS), no system scenario': 1 front-mapping round(s) in 1 spec run(s), mean HV gain +652.5% (min +652.5%, max +652.5%)",
+    "run_ids": [
+     "20261009-175238-0eca"
+    ],
+    "updated": "2026-10-09T18:04:29"
+   },
+   "low-rate (< 10 MSPS), system: bursty": {
+    "author": "code",
+    "lesson": "spec class 'low-rate (< 10 MSPS), system: bursty': 1 front-mapping round(s) in 1 spec run(s), mean HV gain +156.6% (min +156.6%, max +156.6%)",
+    "run_ids": [
+     "20261009-175434-0255"
+    ],
+    "updated": "2026-10-09T18:04:29"
+   },
+   "mid-rate (10-100 MSPS), system: control_loop": {
+    "author": "code",
+    "lesson": "spec class 'mid-rate (10-100 MSPS), system: control_loop': 1 front-mapping round(s) in 1 spec run(s), mean HV gain +124.5% (min +124.5%, max +124.5%)",
+    "run_ids": [
+     "20261009-180053-1db2"
+    ],
+    "updated": "2026-10-09T18:04:29"
+   }
+  },
+  "hw_dse/observations/family": {
+   "20261009-175238-0eca|low_area_control|iterative": {
+    "evals": 267,
+    "family": "iterative",
+    "on_front": true,
+    "run_id": "20261009-175238-0eca",
+    "spec": "low_area_control"
+   },
+   "20261009-175238-0eca|low_area_control|pipelined": {
+    "evals": 50,
+    "family": "pipelined",
+    "on_front": false,
+    "run_id": "20261009-175238-0eca",
+    "spec": "low_area_control"
+   },
+   "20261009-175238-0eca|low_area_control|pipelined_m": {
+    "evals": 50,
+    "family": "pipelined_m",
+    "on_front": false,
+    "run_id": "20261009-175238-0eca",
+    "spec": "low_area_control"
+   },
+   "20261009-175238-0eca|low_area_control|unrolled_k": {
+    "evals": 33,
+    "family": "unrolled_k",
+    "on_front": false,
+    "run_id": "20261009-175238-0eca",
+    "spec": "low_area_control"
+   },
+   "20261009-175434-0255|bursty_offload|iterative": {
+    "evals": 10,
+    "family": "iterative",
+    "on_front": false,
+    "run_id": "20261009-175434-0255",
+    "spec": "bursty_offload"
+   },
+   "20261009-175434-0255|bursty_offload|pipelined": {
+    "evals": 75,
+    "family": "pipelined",
+    "on_front": false,
+    "run_id": "20261009-175434-0255",
+    "spec": "bursty_offload"
+   },
+   "20261009-175434-0255|bursty_offload|pipelined_m": {
+    "evals": 285,
+    "family": "pipelined_m",
+    "on_front": true,
+    "run_id": "20261009-175434-0255",
+    "spec": "bursty_offload"
+   },
+   "20261009-175434-0255|bursty_offload|unrolled_k": {
+    "evals": 30,
+    "family": "unrolled_k",
+    "on_front": false,
+    "run_id": "20261009-175434-0255",
+    "spec": "bursty_offload"
+   },
+   "20261009-175814-93de|dds_250msps|pipelined": {
+    "evals": 320,
+    "family": "pipelined",
+    "on_front": true,
+    "run_id": "20261009-175814-93de",
+    "spec": "dds_250msps"
+   },
+   "20261009-175814-93de|dds_250msps|pipelined_m": {
+    "evals": 80,
+    "family": "pipelined_m",
+    "on_front": false,
+    "run_id": "20261009-175814-93de",
+    "spec": "dds_250msps"
+   },
+   "20261009-180053-1db2|multiaxis_control|pipelined": {
+    "evals": 90,
+    "family": "pipelined",
+    "on_front": false,
+    "run_id": "20261009-180053-1db2",
+    "spec": "multiaxis_control"
+   },
+   "20261009-180053-1db2|multiaxis_control|pipelined_m": {
+    "evals": 290,
+    "family": "pipelined_m",
+    "on_front": true,
+    "run_id": "20261009-180053-1db2",
+    "spec": "multiaxis_control"
+   },
+   "20261009-180053-1db2|multiaxis_control|unrolled_k": {
+    "evals": 20,
+    "family": "unrolled_k",
+    "on_front": false,
+    "run_id": "20261009-180053-1db2",
+    "spec": "multiaxis_control"
+   }
+  },
+  "hw_dse/observations/spec_class": {
+   "20261009-175238-0eca|low_area_control": {
+    "class": "low-rate (< 10 MSPS), no system scenario",
+    "mapping_gains": [
+     6.524668395500645
+    ],
+    "run_id": "20261009-175238-0eca",
+    "spec": "low_area_control"
+   },
+   "20261009-175434-0255|bursty_offload": {
+    "class": "low-rate (< 10 MSPS), system: bursty",
+    "mapping_gains": [
+     1.5660079912149887
+    ],
+    "run_id": "20261009-175434-0255",
+    "spec": "bursty_offload"
+   },
+   "20261009-175814-93de|dds_250msps": {
+    "class": "high-rate (>= 100 MSPS), no system scenario",
+    "mapping_gains": [],
+    "run_id": "20261009-175814-93de",
+    "spec": "dds_250msps"
+   },
+   "20261009-180053-1db2|multiaxis_control": {
+    "class": "mid-rate (10-100 MSPS), system: control_loop",
+    "mapping_gains": [
+     1.244780411923693
+    ],
+    "run_id": "20261009-180053-1db2",
+    "spec": "multiaxis_control"
+   }
+  }
+ },
+ "seed2": {
+  "hw_dse/memory/calibration": {
+   "low_area_control|iterative:data_width=15,n_iter=12,angle_guard=1,frac_guard=0,rounding=round": {
+    "author": "code",
+    "lesson": "low_area_control: yosys+nextpnr-xilinx: the selected design is still the best measured front design (it is the only front design with measurements)",
+    "run_ids": [
+     "20261009-180432-41b1"
+    ],
+    "updated": "2026-10-09T18:08:18"
+   }
+  },
+  "hw_dse/memory/family": {
+   "iterative": {
+    "author": "code",
+    "lesson": "`iterative`: explored in 2 spec(s) (333 evaluations), on the front in 1; on the front in low_area_control",
+    "run_ids": [
+     "20261009-180432-41b1",
+     "20261009-180818-45e2"
+    ],
+    "updated": "2026-10-09T18:18:13"
+   },
+   "pipelined": {
+    "author": "code",
+    "lesson": "`pipelined`: explored in 4 spec(s) (517 evaluations), on the front in 2; on the front in dds_250msps, multiaxis_control",
+    "run_ids": [
+     "20261009-180432-41b1",
+     "20261009-180818-45e2",
+     "20261009-181137-7737",
+     "20261009-181428-7daf"
+    ],
+    "updated": "2026-10-09T18:18:13"
+   },
+   "pipelined_m": {
+    "author": "code",
+    "lesson": "`pipelined_m`: explored in 4 spec(s) (602 evaluations), on the front in 2; on the front in bursty_offload, multiaxis_control",
+    "run_ids": [
+     "20261009-180432-41b1",
+     "20261009-180818-45e2",
+     "20261009-181137-7737",
+     "20261009-181428-7daf"
+    ],
+    "updated": "2026-10-09T18:18:13"
+   },
+   "unrolled_k": {
+    "author": "code",
+    "lesson": "`unrolled_k`: explored in 4 spec(s) (148 evaluations), on the front in 0; never reached a front on this device so far",
+    "run_ids": [
+     "20261009-180432-41b1",
+     "20261009-180818-45e2",
+     "20261009-181137-7737",
+     "20261009-181428-7daf"
+    ],
+    "updated": "2026-10-09T18:18:13"
+   }
+  },
+  "hw_dse/memory/note": {
+   "bursty_offload": {
+    "author": "llm",
+    "lesson": "For bursty Poisson 8-req bursts (2 req/us, p99<=0.4us) with min LUTs+FFs: pipelined_m dominated the front (m=4..7, dw=15..20, n_iter=12..13); winner pipelined_m dw=15/n_iter=12/m=7 (est 816 LUTs+FFs, 10.1 bits, sim p99 0.233us). L1 analytic p99 bounds under-predicted simulated p99 by ~1.4-1.5x (0.168->0.233) but all top-5 still passed. No recorded L3/L4 rows for pipelined_m designs, so no measured confirmation.",
+    "run_ids": [
+     "20261009-180818-45e2"
+    ],
+    "updated": "2026-10-09T18:11:24"
+   },
+   "low_area_control": {
+    "author": "llm",
+    "lesson": "For area-min CORDIC specs, iterative dw=15/n_iter=12 wins; M1 cost model under-predicts LUTs ~19% and FFs ~11% vs yosys+nextpnr measured (216 LUT/107 FF vs est 159/92). No winner change at L5.",
+    "run_ids": [
+     "20261009-180432-41b1"
+    ],
+    "updated": "2026-10-09T18:08:09"
+   },
+   "note/dds_250msps": {
+    "author": "llm",
+    "lesson": "For 1-sample/clock DDS specs (>=250 MSPS, min LUTs): only plain pipelined reached the front (dw 15..18, n_iter 14..16); pipelined_m (m=2..4, dw 14..17, n_iter 12..13) had 0 feasible in that box, and iterative can't hit 1/cycle. Winner pipelined dw=18/n_iter=15/angle_guard=2/frac_guard=1/trunc (est 949 LUTs, 13.1 bits, 264 MSPS). L2 DDS sim: SFDR 98.2 dBc, SNR 87.5 dB. No recorded L3/L4 rows for pipelined designs, so no measured confirmation.",
+    "run_ids": [
+     "20261009-181137-7737"
+    ],
+    "updated": "2026-10-09T18:14:15"
+   },
+   "note/multiaxis_control": {
+    "author": "llm",
+    "lesson": "For 32-req-per-tick batch specs (p99<=0.44us, min LUTs+FFs): pipelined_m m=2 dominated the front (dw 19..20, n_iter 14..16); winner pipelined_m dw=19/n_iter=14/m=2/trunc (est 1417 LUTs+FFs, 12.4 bits, 164 MSPS, sim p99 0.243us). L1 analytic p99 under-predicted sim by ~2.5% (0.237->0.243), much less than the ~1.4-1.5x on the bursty spec. No recorded L3/L4 rows for pipelined_m, so no measured confirmation.",
+    "run_ids": [
+     "20261009-181428-7daf"
+    ],
+    "updated": "2026-10-09T18:18:00"
+   }
+  },
+  "hw_dse/memory/spec_class": {
+   "high-rate (>= 100 MSPS), no system scenario": {
+    "author": "code",
+    "lesson": "spec class 'high-rate (>= 100 MSPS), no system scenario': no front-mapping round ran in 1 spec run(s)",
+    "run_ids": [
+     "20261009-181137-7737"
+    ],
+    "updated": "2026-10-09T18:18:13"
+   },
+   "low-rate (< 10 MSPS), no system scenario": {
+    "author": "code",
+    "lesson": "spec class 'low-rate (< 10 MSPS), no system scenario': 1 front-mapping round(s) in 1 spec run(s), mean HV gain +545.6% (min +545.6%, max +545.6%)",
+    "run_ids": [
+     "20261009-180432-41b1"
+    ],
+    "updated": "2026-10-09T18:18:13"
+   },
+   "low-rate (< 10 MSPS), system: bursty": {
+    "author": "code",
+    "lesson": "spec class 'low-rate (< 10 MSPS), system: bursty': 1 front-mapping round(s) in 1 spec run(s), mean HV gain +147.9% (min +147.9%, max +147.9%)",
+    "run_ids": [
+     "20261009-180818-45e2"
+    ],
+    "updated": "2026-10-09T18:18:13"
+   },
+   "mid-rate (10-100 MSPS), system: control_loop": {
+    "author": "code",
+    "lesson": "spec class 'mid-rate (10-100 MSPS), system: control_loop': 1 front-mapping round(s) in 1 spec run(s), mean HV gain +79.6% (min +79.6%, max +79.6%)",
+    "run_ids": [
+     "20261009-181428-7daf"
+    ],
+    "updated": "2026-10-09T18:18:13"
+   }
+  },
+  "hw_dse/observations/family": {
+   "20261009-180432-41b1|low_area_control|iterative": {
+    "evals": 293,
+    "family": "iterative",
+    "on_front": true,
+    "run_id": "20261009-180432-41b1",
+    "spec": "low_area_control"
+   },
+   "20261009-180432-41b1|low_area_control|pipelined": {
+    "evals": 32,
+    "family": "pipelined",
+    "on_front": false,
+    "run_id": "20261009-180432-41b1",
+    "spec": "low_area_control"
+   },
+   "20261009-180432-41b1|low_area_control|pipelined_m": {
+    "evals": 10,
+    "family": "pipelined_m",
+    "on_front": false,
+    "run_id": "20261009-180432-41b1",
+    "spec": "low_area_control"
+   },
+   "20261009-180432-41b1|low_area_control|unrolled_k": {
+    "evals": 65,
+    "family": "unrolled_k",
+    "on_front": false,
+    "run_id": "20261009-180432-41b1",
+    "spec": "low_area_control"
+   },
+   "20261009-180818-45e2|bursty_offload|iterative": {
+    "evals": 40,
+    "family": "iterative",
+    "on_front": false,
+    "run_id": "20261009-180818-45e2",
+    "spec": "bursty_offload"
+   },
+   "20261009-180818-45e2|bursty_offload|pipelined": {
+    "evals": 10,
+    "family": "pipelined",
+    "on_front": false,
+    "run_id": "20261009-180818-45e2",
+    "spec": "bursty_offload"
+   },
+   "20261009-180818-45e2|bursty_offload|pipelined_m": {
+    "evals": 320,
+    "family": "pipelined_m",
+    "on_front": true,
+    "run_id": "20261009-180818-45e2",
+    "spec": "bursty_offload"
+   },
+   "20261009-180818-45e2|bursty_offload|unrolled_k": {
+    "evals": 30,
+    "family": "unrolled_k",
+    "on_front": false,
+    "run_id": "20261009-180818-45e2",
+    "spec": "bursty_offload"
+   },
+   "20261009-181137-7737|dds_250msps|pipelined": {
+    "evals": 225,
+    "family": "pipelined",
+    "on_front": true,
+    "run_id": "20261009-181137-7737",
+    "spec": "dds_250msps"
+   },
+   "20261009-181137-7737|dds_250msps|pipelined_m": {
+    "evals": 155,
+    "family": "pipelined_m",
+    "on_front": false,
+    "run_id": "20261009-181137-7737",
+    "spec": "dds_250msps"
+   },
+   "20261009-181137-7737|dds_250msps|unrolled_k": {
+    "evals": 20,
+    "family": "unrolled_k",
+    "on_front": false,
+    "run_id": "20261009-181137-7737",
+    "spec": "dds_250msps"
+   },
+   "20261009-181428-7daf|multiaxis_control|pipelined": {
+    "evals": 250,
+    "family": "pipelined",
+    "on_front": true,
+    "run_id": "20261009-181428-7daf",
+    "spec": "multiaxis_control"
+   },
+   "20261009-181428-7daf|multiaxis_control|pipelined_m": {
+    "evals": 117,
+    "family": "pipelined_m",
+    "on_front": true,
+    "run_id": "20261009-181428-7daf",
+    "spec": "multiaxis_control"
+   },
+   "20261009-181428-7daf|multiaxis_control|unrolled_k": {
+    "evals": 33,
+    "family": "unrolled_k",
+    "on_front": false,
+    "run_id": "20261009-181428-7daf",
+    "spec": "multiaxis_control"
+   }
+  },
+  "hw_dse/observations/spec_class": {
+   "20261009-180432-41b1|low_area_control": {
+    "class": "low-rate (< 10 MSPS), no system scenario",
+    "mapping_gains": [
+     5.4559768994926
+    ],
+    "run_id": "20261009-180432-41b1",
+    "spec": "low_area_control"
+   },
+   "20261009-180818-45e2|bursty_offload": {
+    "class": "low-rate (< 10 MSPS), system: bursty",
+    "mapping_gains": [
+     1.4790703811602253
+    ],
+    "run_id": "20261009-180818-45e2",
+    "spec": "bursty_offload"
+   },
+   "20261009-181137-7737|dds_250msps": {
+    "class": "high-rate (>= 100 MSPS), no system scenario",
+    "mapping_gains": [],
+    "run_id": "20261009-181137-7737",
+    "spec": "dds_250msps"
+   },
+   "20261009-181428-7daf|multiaxis_control": {
+    "class": "mid-rate (10-100 MSPS), system: control_loop",
+    "mapping_gains": [
+     0.7958127608793795
+    ],
+    "run_id": "20261009-181428-7daf",
+    "spec": "multiaxis_control"
+   }
+  }
+ }
+}

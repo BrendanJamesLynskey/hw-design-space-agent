@@ -1,0 +1,135 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "multiaxis_control",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 18,
+ "tool_calls": 11,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "converged",
+   "decisions": [
+    "add_family",
+    "add_family"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-182517-de34/dse/multiaxis_control/20261009-182527-c201",
+   "notes": "Spec: 16-axis motor control, 32 requests per 1us tick, all results back within 0.44us p99. Need throughput >= 32 Msps, max_abs_err <= 2^-12. Minimize LUTs+FFs. Pipelined families likely best for throughput; unrolled_k with k>=32 could meet latency but costs area. Keep accuracy at 12 bits to hit error bound without waste.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=2,frac_guard=1,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.37802317500000937,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.36791514000000003
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=14,angle_guard=2,frac_guard=0,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=15,angle_guard=2,frac_guard=0,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=22,n_iter=15,angle_guard=0,frac_guard=1,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.4126487800000177,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.40161114
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=22,n_iter=15,angle_guard=0,frac_guard=1,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.4126487800000177,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.40161114
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 6,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 93.33821573916981,
+   "dds_snr_db": 81.06406279697057,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 5,
+  "why": "the L1 selection passes the simulated system constraints",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=16) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 21.0,
+ "llm_failures": 0.0,
+ "input_tokens": 92180.0,
+ "output_tokens": 4061.0,
+ "cost_usd": 0.010438672999999999,
+ "wall_s": 94.2,
+ "run_dir": "runs/campaign_m3/20261009-182517-de34",
+ "run_id": "20261009-182517-de34",
+ "final_text": "**Campaign summary \u2014 multiaxis_control (seed 2):**\n\nThe single spec in the queue was taken down the full fidelity ladder and finalized. L1 exploration (400 NSGA-II evaluations via `run_dse`) mapped a 19-design Pareto front dominated by pipelined m=4 configurations. L2 SimPy simulation confirmed the top-5 shortlist all pass the 0.44 \u00b5s p99 batch-latency constraint (simulated values 0.378\u20130.413 \u00b5s), with the winner unchanged. L3/L4/L5 returned no recorded measured data for this design (no fresh RTL verification or synthesis available in this campaign), so back_annotate reported `no_measured_data` and no reexplore was triggered.\n\n**Final selection:** `pipelined_m: data_width=16, n_iter=14, angle_guard=2, frac_guard=1, rounding=round, m=4` \u2014 1104 LUTs+FFs (834 LUTs, 270 FFs, estimated), 97.8 Msps throughput, 12.2-bit accuracy (max error 2\u207b\u00b9\u00b2\u00b7\u00b2\u00b2), simulated p99 batch latency 0.378 \u00b5s. All constraints satisfied with margin.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 18501.582937989107,
+ "hv_frac": 0.8209478992648502,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=16,n_iter=14,angle_guard=2,frac_guard=1,rounding=round,m=4",
+ "select_regret": 0.029567182907673437,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

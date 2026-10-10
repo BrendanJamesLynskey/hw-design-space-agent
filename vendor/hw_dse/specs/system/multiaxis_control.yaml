@@ -1,0 +1,21 @@
+# A time-shared CORDIC serving a multi-axis motor-control loop.
+# Every 1 us control tick, 16 axes each need a Park and an inverse-Park
+# transform: 32 sin/cos requests arrive at once, and the controller needs
+# all 32 results back within half the tick to finish its own maths.
+name: multiaxis_control
+description: >
+  Shared sin/cos unit for a 16-axis motor-control loop: a 1 MHz control tick
+  issues 32 requests at once (Park + inverse Park per axis); all 32 results
+  must be back within 0.44 us of the tick (p99 over ticks). Max error <= 2^-12.
+  Minimise LUTs + FFs.
+constraints:
+  - {metric: throughput_msps, op: ">=", value: 32}
+  - {metric: max_abs_err, op: "<=", value: "2^-12"}
+  - {metric: sys_p99_batch_us, op: "<=", value: 0.44}
+objectives:
+  - {metric: luts_plus_ffs, direction: min, ref: 4000}
+  - {metric: accuracy_bits, direction: max, ref: 12}
+select_by: luts_plus_ffs
+select_direction: min
+budget: {total_evals: 400, evals_per_round: 100, max_rounds: 4, hv_epsilon: 0.01}
+system: {kind: control_loop, loop_rate_mhz: 1.0, requests_per_tick: 32, n_ticks: 400}

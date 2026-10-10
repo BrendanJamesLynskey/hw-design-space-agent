@@ -1,0 +1,134 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": true,
+ "spec": "multiaxis_control",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 16,
+ "tool_calls": 10,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "refine",
+    "refine",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3_memory/20261009-181428-7daf/dse/multiaxis_control/20261009-181441-01e2",
+   "notes": "Spec: 32 requests per 1us tick, all results within 0.44us p99, min LUTs+FFs. From memory: pipelined_m dominated the front on the similar bursty spec (m=4..7, dw=15..20, n_iter=12..13); pipelined (dw 15..18, n_iter 14..16) reached the front on the 1/cycle DDS spec; iterative can't hit 1/cycle; unrolled_k never reached a front. L1 analytic p99 under-predicts simulated p99 ~1.4-1.5x, so keep margin on sys_p99_batch_us <= 0.44us.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=19,n_iter=14,angle_guard=-1,frac_guard=2,rounding=trunc,m=2",
+    "feasible": true,
+    "sys_p99_batch_us": 0.24327392800000963,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.23725724099999998
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=19,n_iter=14,angle_guard=2,frac_guard=2,rounding=round,m=2",
+    "feasible": true,
+    "sys_p99_batch_us": 0.24327392800000963,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.23725724099999998
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=19,n_iter=16,angle_guard=-1,frac_guard=1,rounding=trunc,m=2",
+    "feasible": true,
+    "sys_p99_batch_us": 0.24935744699998758,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.24334076
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=19,n_iter=16,angle_guard=-1,frac_guard=1,rounding=round,m=2",
+    "feasible": true,
+    "sys_p99_batch_us": 0.24935744699998758,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.24334076
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=20,n_iter=15,angle_guard=1,frac_guard=1,rounding=trunc,m=2",
+    "feasible": true,
+    "sys_p99_batch_us": 0.24935744699998758,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.24334076
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 9,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 94.94517993603439,
+   "dds_snr_db": 82.78416541446305,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 5,
+  "why": "the L1 selection passes the simulated system constraints",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=19) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 20.0,
+ "llm_failures": 0.0,
+ "input_tokens": 122562.0,
+ "output_tokens": 6780.0,
+ "cost_usd": 0.014346471800000003,
+ "wall_s": 224.7,
+ "run_dir": "runs/campaign_m3_memory/20261009-181428-7daf",
+ "run_id": "20261009-181428-7daf",
+ "final_text": "Campaign complete \u2014 the single spec **multiaxis_control** is finalized.\n\n**Summary:** L1 (structured DSE, all 400 evals, 30-design front) found pipelined_m m=2 designs dominating the front for the 32-requests-per-tick batch spec; L2 SimPy simulation confirmed all top-5 designs pass the p99 \u2264 0.44 \u00b5s batch-latency constraint (simulated 0.243\u20130.249 \u00b5s, with the L1 analytic bound under-predicting by only ~2.5% \u2014 far less than the ~1.4\u20131.5\u00d7 seen on the bursty spec). L3/L4 had no recorded measurement rows for this design (fresh RTL run too heavy for W=19; L4 not run live), so L5 back_annotate had no measured data to compare and flagged no winner change \u2014 no reexplore needed. **Final selection: `pipelined_m:data_width=19, n_iter=14, angle_guard=-1, frac_guard=2, rounding=trunc, m=2`** \u2014 estimated 1417 LUTs+FFs (909 LUT / 507 FF), 12.4 accuracy bits (max abs err 2\u207b\u00b9\u00b2\u00b7\u2074\u2074), 164 MSPS throughput, simulated p99 batch latency 0.243 \u00b5s. Lesson stored for future campaigns.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 15093.963868495113,
+ "hv_frac": 0.6697458250438436,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=19,n_iter=14,angle_guard=-1,frac_guard=2,rounding=trunc,m=2",
+ "select_regret": 0.3214588403597312,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "memory_lessons_before": "not recorded in the M3 eval (always None, review N6; recorded for runs after the fix); the store after each spec is in campaign_m3_memory_store.json"
+}

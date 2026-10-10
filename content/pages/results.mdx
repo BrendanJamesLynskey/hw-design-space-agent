@@ -2,6 +2,77 @@ The eval asks one question: on the same budget of evaluations, does an LLM steer
 
 Milestone 1 found a split: the agent picked better designs than NSGA-II and random search, but mapped the trade-off curve far worse, because it dived at the spec's corner and stopped early. Milestone 2 set out to close that gap without losing the selection lead: a `map_front` decision, a 40% front-mapping reserve that code spends before a run stops, and five seeds instead of three. It ran three models through OpenRouter, Sonnet 5.5, DeepSeek V4.1 Flash and Qwen3.8-27B with reasoning off: <V of="m2.runs" fmt="int" /> runs, <V of="m2.calls.total" fmt="int" /> LLM calls, <V of="m2.total_usd" fmt="usd" /> of provider-reported usage. Every table below is mean ± population standard deviation over the seeds.
 
+Milestone 3 then put the design inside its system and tried a free-form agent on top of the structured one. Its results come first; milestone 2's and milestone 1's follow, as they were.
+
+## Milestone 3 at a glance
+
+- **A free-form campaign agent gained nothing over the structured graph, at a higher cost.** On the same specs, seeds and budget, its hypervolume and regret, averaged over the specs, were slightly worse for every model, it cost <V of="m3.ab.cost_ratio_min" fmt="f2" />–<V of="m3.ab.cost_ratio_max" fmt="f2" />× as much per run, Qwen looped in <V of="m3.ab.qwen.failed" fmt="int" /> of its <V of="m3.ab.qwen.runs" fmt="int" /> campaigns, and in <V of="m3.ab.single" fmt="int" /> of <V of="m3.ab.campaigns" fmt="int" /> campaigns its plan came down to one call to the structured graph. It stays experimental, off by default.
+- **Cross-run memory showed no benefit** in the one model and three seeds it was tested on.
+- **System-level simulation changes the winner where the system is the hard part.** On `multiaxis_control` only the simulation finds the right design (m=4); on `bursty_offload` a back-of-envelope peak-rate floor finds the same winner, and on `dds_sfdr` nothing changes, a negative result the repository keeps.
+- **The structured graph keeps its M2 pattern on the new specs:** hypervolume at or above NSGA-II's (one exception, by 0.002) and much lower regret.
+
+<div id="ab" />
+
+## The A/B: structured graph against the campaign agent
+
+Same specs, same seeds, same 400 evaluations per spec. The structured arm is the M2 runs on the four M2 specs (replayed through the M3 graph: <V of="m3.levers.replay_identical" fmt="int" /> of <V of="m3.levers.replay_runs" fmt="int" /> identical, so they can be reused) and fresh runs on the two system specs; the campaign arm is one single-spec campaign per spec and seed, memory off, with the same model as campaign agent and inner architect. **The Sonnet campaign arm covers one spec, `multiaxis_control`, by the owner's choice** (the full arm would have cost about 6.9 dollars against the 5-dollar cap); DeepSeek and Qwen cover all six.
+
+<AbTable />
+
+Wall-clock is not controlled: in that session three or four runs (structured, campaign and memory-on) ran at a time, and the structured runs on the M2 specs come from the M2 session. Hypervolume and regret are the mean of the per-spec means over the feasible specs; the infeasible spec was called correctly by every run of both arms, the campaigns after spending their whole budget re-checking it.
+
+**No gain, higher cost.** In <V of="m3.ab.single" fmt="int" /> of the <V of="m3.ab.campaigns" fmt="int" /> campaigns the agent spent its whole budget on one `run_dse(400)`, so its result is the structured graph's plus sampling noise, and then walked the ladder. Where it deviated, it did not help: on `low_area_control` seed 0 its notes to the inner architect narrowed the first box, and the run ended at hypervolume <V of="m3.ab.outlier_hv" fmt="f3" /> and <V of="m3.ab.outlier_regret" fmt="spct" /> regret (<V of="m3.ab.outlier_model" fmt="str" />). Qwen failed <V of="m3.ab.loops" fmt="int" /> campaigns by re-running verify, synthesize and back-annotate until the <V of="m3.ab.loop_cap" fmt="int" />-call cap (each had already used its 400 evaluations, so each is still scored). The campaigns read <V of="m3.ab.input_ratio_min" fmt="x" />–<V of="m3.ab.input_ratio_max" fmt="x" /> as many input tokens per run. And the ladder's tools rarely had anything to say: most selections have W ≥ 15, which has no recorded RTL or synthesis data and is too large for a fresh exhaustive run inside a campaign.
+
+<CampaignToolsTable />
+
+Per spec, the same comparison:
+
+<AbSpecTable metric="hv_frac" />
+
+<AbSpecTable metric="select_regret" />
+
+## Memory on vs off
+
+The campaign agent can carry lessons from one spec to the next: code writes them after every spec (per family, per spec class, calibration history) and the agent can add notes of its own. The test: <V of="m3.memory_label" fmt="str" /> on a fixed sequence of four specs, <V of="m3.mem.seeds" fmt="int" /> seeds, memory on against the campaign arm's memory-off runs.
+
+<MemoryTable />
+
+**No benefit is visible.** The first spec starts with an empty store in both conditions, so its large gap (<V of="m3.mem.first_hv_off" fmt="f3" /> → <V of="m3.mem.first_hv_on" fmt="f3" />) is run-to-run noise, which also shows how wide the noise is at three seeds. Later in the sequence memory-on is worse on hypervolume for `dds_250msps` and `multiaxis_control`. The lessons themselves were sensible ("`unrolled_k`: explored in 3 specs, on the front in 0"). The agent's own notes also copied numbers from tool outputs, once inconsistently; since the review, every number in LLM-written text is masked before it is stored or passed on (the live runs predate that). One model, three seeds: weak evidence either way.
+
+## System specs: what the simulation changes
+
+Three new specs constrain the system, not just the unit: a batch deadline, a p99 latency under bursts, a DDS that must never stall with a spurious-free dynamic range of at least 90 dBc. Each has an exhaustive ground truth, simulated for every one of the <V of="designs" fmt="int" /> designs, and three more views of it: what the L1 bound sees, the spec read in milestone-2 terms (a throughput floor at the system's _average_ rate), and, recomputed for this site, a floor at the _peak_ rate the system needs.
+
+<SystemSpecsTable />
+
+- **`multiaxis_control`: the simulation is needed.** The average-rate view picks m=7, the L1 bound and a peak-rate floor both pick m=5, and m=5 misses the simulated 0.44 µs deadline by <V of="m3.multi.miss" fmt="pct" />, because a tick lands between clock edges and up to a cycle passes before the first accept. Only the simulation gets to m=4 (<V of="m3.multi.feasible" fmt="int" /> designs pass it, <V of="m3.multi.feasible_bound" fmt="int" /> pass the bound). The [replay on How it works](/how-it-works) shows it request by request.
+- **`bursty_offload`: average-rate sizing is wrong, but simulation is not needed.** In milestone-2 terms the winner is the small FSM design that wins `low_area_control` (<V of="m3.bursty.msps_lf" fmt="int" /> LUT+FF), but it takes one request every <V of="m3.bursty.msps_ii" fmt="int" /> cycles, so the eighth request of a burst waits for the other seven: its simulated p99 is <V of="m3.bursty.msps_p99" fmt="f2" /> µs, <V of="m3.bursty.msps_ratio" fmt="x" /> even its bound. The winner is a `pipelined_m` at <V of="m3.bursty.area_ratio" fmt="x" /> the area. But sizing for the burst (8 requests in 0.4 µs, <V of="m3.bursty.peak_floor" fmt="int" /> MSPS) gives the same winner and the same <V of="m3.bursty.feasible" fmt="int" /> designs.
+- **`dds_sfdr`: a negative result.** For this design space the DDS's system constraints reduce to the throughput-only view: the throughput-only winner already has <V of="m3.dds.sfdr" fmt="f1" /> dBc spurious-free dynamic range, and "no stall" is "throughput ≥ the sample rate". The repository keeps it as evidence and does not evaluate agents on it.
+
+## The structured graph on the system specs
+
+Five fresh runs per model on the two evaluated system specs. The baselines get the same L1 screening and the same L2 step at the end, and every run is scored on simulated feasibility against the exhaustive ground truth.
+
+<M3StructuredTable spec="multiaxis_control" />
+
+<M3StructuredTable spec="bursty_offload" />
+
+Every selected design met the spec in simulation. The agents' hypervolume is <V of="m3.struct.hv_min" fmt="f3" />–<V of="m3.struct.hv_max" fmt="f3" /> against NSGA-II's <V of="m3.struct.nsga2_hv_min" fmt="f3" />–<V of="m3.struct.nsga2_hv_max" fmt="f3" /> (the one cell below NSGA-II: Qwen on `bursty_offload`), and their regret is <V of="m3.struct.regret_min" fmt="spct" /> to <V of="m3.struct.regret_max" fmt="spct" /> against NSGA-II's <V of="m3.struct.nsga2_regret_multi" fmt="spct" /> and <V of="m3.struct.nsga2_regret_bursty" fmt="spct" />. L2 changed the L1 selection in <V of="m3.struct.l2_changed" fmt="int" /> of the <V of="m3.struct.runs" fmt="int" /> structured runs: their L1 picks already passed the simulation. It did change it in <V of="m3.ab.l2_campaign" fmt="int" /> campaign runs, all on `multiaxis_control`, where the L1 pick was the m=5 design.
+
+## The map_front fix (offline)
+
+Milestone 2's worst run (Qwen, `high_precision`, one seed) came from a blind spot: front-mapping only revisited families already on the front. Milestone 3 gives a family that was explored without a feasible design a share of the mapping budget, **gated** on its own designs having met the structural constraints. Tested offline on the <V of="m3.levers.replay_runs" fmt="int" /> recorded M2 decisions:
+
+<LeversTable />
+
+The unconditional version spends budget on families that can never reach 250 MSPS. The gated version's `high_precision` gain (<V of="m3.levers.hp_regret_m2" fmt="str" /> → <V of="m3.levers.hp_regret_fix" fmt="str" /> regret) comes from that single run, and it lowers hypervolume on four `low_area_control` replays without changing a selection; the gate was also refined on these same replays. By the owner's decision it is the default only for the system specs, so the M2 results stand as recorded.
+
+## What M3 cost
+
+The key's usage rose by <V of="m3.spend.key" fmt="usd" /> over the M3 session, under the <V of="m3.spend.cap" fmt="usd" /> cap; that reading is the authoritative one, because calls that fail inside the client report no usage. The provider-reported ledger has <V of="m3.spend.entries" fmt="int" /> entries, <V of="m3.spend.ledger" fmt="usd" />: structured <V of="m3.spend.structured" fmt="usd" />, campaign <V of="m3.spend.campaign" fmt="usd" /> including the memory runs and the pilots. The models were checked as listed, with tools and structured outputs and no substitution, at the start of the session.
+
+<M3SpendTable />
+
 ## M1 → M2
 
 <ResultsShift />
@@ -12,7 +83,7 @@ Milestone 1 found a split: the agent picked better designs than NSGA-II and rand
 
 Plainly, first.
 
-- **Qwen on `high_precision`** lost to NSGA-II on selection: <V of="glance.qwen_hp_regret_m2" fmt="spct" /> mean regret (± <V of="glance.qwen_hp_regret_m2_std" fmt="pct" />) against NSGA-II's <V of="m2.high_precision.nsga2_regret" fmt="spct" />, up from <V of="glance.qwen_hp_regret_m1" fmt="spct" /> in M1. One seed accounts for it: its first box for `pipelined_m` was too narrow to reach the accuracy target, the front became a single `pipelined` design, and front-mapping only revisits the families on the front, so the winner's family never came back. That seed selected a design <V of="glance.qwen_hp_worst_seed" fmt="spct" /> from the optimum; the median of its five seeds is <V of="glance.qwen_hp_median" fmt="spct" />. The same seed pulls its `high_precision` hypervolume below NSGA-II's (the one cell under 1.0 above). The repository proposes a fix for milestone 3 and did not apply it after seeing the eval.
+- **Qwen on `high_precision`** lost to NSGA-II on selection: <V of="glance.qwen_hp_regret_m2" fmt="spct" /> mean regret (± <V of="glance.qwen_hp_regret_m2_std" fmt="pct" />) against NSGA-II's <V of="m2.high_precision.nsga2_regret" fmt="spct" />, up from <V of="glance.qwen_hp_regret_m1" fmt="spct" /> in M1. One seed accounts for it: its first box for `pipelined_m` was too narrow to reach the accuracy target, the front became a single `pipelined` design, and front-mapping only revisits the families on the front, so the winner's family never came back. That seed selected a design <V of="glance.qwen_hp_worst_seed" fmt="spct" /> from the optimum; the median of its five seeds is <V of="glance.qwen_hp_median" fmt="spct" />. The same seed pulls its `high_precision` hypervolume below NSGA-II's (the one cell under 1.0 above). Milestone 3 built a fix and tested it offline on these recorded runs (above); by the owner's decision it is the default only for the new system specs, so this result stands as recorded.
 - **DeepSeek's selection got worse:** <V of="glance.ds_dds_regret_m1" fmt="spct" /> → <V of="glance.ds_dds_regret_m2" fmt="spct" /> on `dds_250msps` and <V of="glance.ds_low_regret_m1" fmt="spct" /> → <V of="glance.ds_low_regret_m2" fmt="spct" /> on `low_area_control`. It chose `map_front` in <V of="glance.mf_deepseek" fmt="int" /> of its <V of="glance.mf_runs" fmt="int" /> feasible-spec runs (Qwen <V of="glance.mf_qwen" fmt="int" />, Sonnet <V of="glance.mf_sonnet" fmt="int" />), spending its rounds on coverage rather than on the corner. It still beats NSGA-II on both.
 - **The agent now always uses the whole budget** on feasible specs, 400 evaluations like the baselines, by design: the reserve spends what is left on mapping. M1's "fewer evaluations" came with its narrow fronts.
 - Five seeds is still a small sample: several cells overlap within one standard deviation (DeepSeek on `low_area_control`, for one).

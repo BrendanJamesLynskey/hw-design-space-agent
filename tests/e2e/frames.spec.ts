@@ -32,6 +32,13 @@ import { arch } from "@/lib/dse/families";
 import { heroFrames } from "@/lib/dse/hero";
 import { ladder } from "@/lib/dse/ladder";
 import {
+  cycleCaption,
+  cycleFrames,
+  m3,
+  sysCaption,
+  sysFrames,
+} from "@/lib/dse/m3";
+import {
   descentFrames,
   hpFrames,
   scatterFrames,
@@ -264,5 +271,59 @@ test("M1 → M2: captions from results.md's glance tables", async ({ page }) => 
         i,
         shiftCaption(frames[i]!, site.glance, metric, labels),
       );
+  }
+});
+
+test("multiaxis_control in its system: captions from the SimPy replay", async ({
+  page,
+}) => {
+  await page.goto("/how-it-works");
+  const fig = page.getByTestId("system-widget");
+  await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
+  const rep = m3.system_replay;
+  const frames = sysFrames(rep);
+  for (const i of keySteps(frames.length))
+    await frame(fig, i, sysCaption(frames[i]!, rep));
+  // 400 ns after the tick: m=4 has finished, m=5 and m=7 have not
+  const at400 = frames.findIndex((f) => f.phase === "drain" && f.t === 400);
+  await frame(fig, at400, sysCaption(frames[at400]!, rep));
+  await expect(fig.locator('g[data-m="4"]')).toHaveAttribute(
+    "data-complete",
+    "true",
+  );
+  await expect(fig.locator('g[data-m="5"]')).toHaveAttribute(
+    "data-complete",
+    "false",
+  );
+  // the verdict: only m=4 meets the simulated deadline
+  await frame(fig, frames.length - 1, sysCaption(frames.at(-1)!, rep));
+  for (const [m, ok] of [
+    ["4", "true"],
+    ["5", "false"],
+    ["7", "false"],
+  ])
+    await expect(fig.locator(`g[data-m="${m}"]`)).toHaveAttribute(
+      "data-meets",
+      ok!,
+    );
+});
+
+test("the cycle model against the RTL: captions from the validation trace, both designs", async ({
+  page,
+}) => {
+  await page.goto("/how-it-works");
+  const fig = page.getByTestId("cycle-widget");
+  await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
+  const c = m3.cycle;
+  for (const [k, w] of c.waves.entries()) {
+    if (k > 0) {
+      await fig.getByRole("radio", { name: /pipelined_m/ }).click();
+      await expect(
+        fig.getByRole("radio", { name: /pipelined_m/ }),
+      ).toBeChecked();
+    }
+    const frames = cycleFrames(w);
+    for (const i of keySteps(frames.length))
+      await frame(fig, i, cycleCaption(frames[i]!, w, c));
   }
 });

@@ -1,0 +1,88 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": true,
+ "spec": "dds_250msps",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 16,
+ "tool_calls": 11,
+ "ladder": [
+  "run_dse",
+  "explore_family",
+  "explore_family",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 200,
+   "status": "stopped",
+   "decisions": [
+    "refine",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3_memory/20261009-181137-7737/dse/dds_250msps/20261009-181151-ee88",
+   "notes": "DDS/NCO spec: needs 1 sample/clock at >=250 MSPS, so pipelined families (m>=1) are the natural fit; iterative (1 sample per n_iter cycles) likely fails throughput. Accuracy needs ~13 bits (max_abs_err <= 2^-13), so n_iter ~12-13 with dw ~15-16. Minimize LUTs. Prior campaigns: pipelined_m dominated bursty front (m=4..7, dw=15..20, n_iter=12..13); plain pipelined and unrolled_k never reached a front. Focus budget on pipelined_m with small m (m=1..4) and dw 14..18, n_iter 12..13.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "facts_only",
+  "shortlist": [],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined",
+    "latency": 17,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 98.22078824507388,
+   "dds_snr_db": 87.50065690609269,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "reason": "the spec has no system scenario: nothing to re-select",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=18) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 19.0,
+ "llm_failures": 0.0,
+ "input_tokens": 120812.0,
+ "output_tokens": 5073.0,
+ "cost_usd": 0.011165878,
+ "wall_s": 171.5,
+ "run_dir": "runs/campaign_m3_memory/20261009-181137-7737",
+ "run_id": "20261009-181137-7737",
+ "final_text": "Campaign complete \u2014 all specs finalized.\n\n**dds_250msps** (NCO/DDS sin-cos, 1 sample/clock at \u2265250 MSPS, max error \u2264 2\u207b\u00b9\u00b3, min LUTs): I spent the full 400-eval L1 budget in three rounds \u2014 a 200-eval structured DSE run, a 100-eval pipelined_m box (m=2..4, dw=14..17, n_iter=12..13; 0 feasible, confirming pipelined_m can't meet 1-sample/clock here), and a 100-eval pipelined refinement (dw=15..18, n_iter=14..16; 42 feasible). The front ended with 26 designs, all plain pipelined (iterative can't hit 1/cycle; pipelined_m infeasible). L2 DDS simulation of the winner gave SFDR 98.2 dBc and SNR 87.5 dB (simulated, golden-model DDS with 32-bit phase accumulator). L3/L4 had no recorded rows for this design (fresh W=18 RTL run too heavy for live; L4 recorded-only), so back_annotate returned no_measured_data with no winner change. Finalized selection: **pipelined dw=18, n_iter=15, angle_guard=2, frac_guard=1, trunc \u2014 est. 949 LUTs / 980 FFs, 13.1 accuracy bits, 264 MSPS, max error 2\u207b\u00b9\u00b3\u00b7\u2070\u2075**. Lesson stored for future 1-sample/clock DDS specs.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 9090.416594529554,
+ "hv_frac": 0.46041455863656494,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=18,n_iter=15,angle_guard=2,frac_guard=1,rounding=trunc",
+ "select_regret": 0.048894062863795155,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "memory_lessons_before": "not recorded in the M3 eval (always None, review N6; recorded for runs after the fix); the store after each spec is in campaign_m3_memory_store.json"
+}

@@ -1,0 +1,149 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "multiaxis_control",
+ "seed": 4,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 16,
+ "tool_calls": 12,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "add_family",
+    "add_family",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-185751-16ff/dse/multiaxis_control/20261009-185814-a7f1",
+   "notes": "Spec: 32 requests per 1us tick, all results back within 0.44us of the tick (p99). A pipelined design with enough parallelism (m >= 32) or a wide unrolled datapath is likely needed to meet the batch latency bound; iterative designs will fail the 0.44us batch constraint. Max error <= 2^-12, so accuracy_bits >= 12. Minimise LUTs+FFs.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=18,n_iter=14,angle_guard=0,frac_guard=0,rounding=round,m=5",
+    "feasible": false,
+    "sys_p99_batch_us": 0.44647163000001455,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.43417633000000005
+    },
+    "violations": {
+     "sys_p99_batch_us <= 0.44": 0.014708250000033068
+    }
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=14,angle_guard=1,frac_guard=0,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=15,angle_guard=0,frac_guard=0,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.37802317500000937,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.36791514000000003
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=15,angle_guard=1,frac_guard=0,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=15,angle_guard=2,frac_guard=0,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": true,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 5,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 94.95419316500119,
+   "dds_snr_db": 82.44819013731649,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 5,
+  "why": "the L1 selection pipelined_m:data_width=18,n_iter=14,angle_guard=0,frac_guard=0,rounding=round,m=5 fails the simulated system constraints (sys_p99_batch_us <= 0.44 by 1.5%); the best shortlisted design that passes is pipelined_m:data_width=18,n_iter=14,angle_guard=1,frac_guard=0,rounding=round,m=4",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=18) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 20.0,
+ "llm_failures": 0.0,
+ "input_tokens": 81223.0,
+ "output_tokens": 5735.0,
+ "cost_usd": 0.012636883000000002,
+ "wall_s": 205.9,
+ "run_dir": "runs/campaign_m3/20261009-185751-16ff",
+ "run_id": "20261009-185751-16ff",
+ "final_text": "Campaign complete \u2014 the single spec **multiaxis_control** is finalized.\n\n**Summary:** L1 (400/400 evals via the structured DSE graph) mapped a 25-design feasible Pareto front, dominated by pipelined_m designs at data_width=18; the L1 cheapest winner (m=5, 1048 LUTs+FFs) passed the analytic sys_p99 bound (0.434us) but **failed** SimPy L2 simulation at 0.4465us against the 0.44us p99 batch constraint. The L2-simulated winner is **pipelined_m: data_width=18, n_iter=14, angle_guard=1, rounding=round, m=4** \u2014 1127 LUTs+FFs (841 LUTs, 287 FFs), 12.5 accuracy bits (max error 2^-12.48), 93.6 Msps throughput, simulated sys_p99_batch 0.395us (10% margin). L3\u2013L5 ran via the ladder sub-agent: no recorded RTL verification, synthesis, or measured data exists for this exact configuration, so back_annotate returned no_measured_data and no winner change was flagged; the selection stands on L2 simulated evidence plus the generator-level 47-config RTL verification. Key lesson: for batch-latency specs, the L1 analytic p99 bound underestimates simulated latency \u2014 prefer designs with simulated margin over the cheapest analytic-feasible one.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 17758.11898712407,
+ "hv_frac": 0.7879590911889433,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=18,n_iter=14,angle_guard=0,frac_guard=0,rounding=round,m=4",
+ "select_regret": 0.03496226675946299,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "before_b1": {
+  "selected_key": "pipelined_m:data_width=18,n_iter=14,angle_guard=1,frac_guard=0,rounding=round,m=4",
+  "select_regret": 0.05150241685773422,
+  "hv_frac": 0.7879590911889433,
+  "selected_meets_spec": true,
+  "evals_to_95": null,
+  "l2_winner_changed": null
+ },
+ "l1_selected_key": "pipelined_m:data_width=18,n_iter=14,angle_guard=0,frac_guard=0,rounding=round,m=5",
+ "l2_winner_changed": true,
+ "rescored": "after the L2 fix (review B1): selection over every L1-feasible design; L1 evaluations unchanged (eval/m3_rescore.py)"
+}

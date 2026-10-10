@@ -1,0 +1,143 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "multiaxis_control",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 15,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "refine",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-182334-fcbd/dse/multiaxis_control/20261009-182339-3a03",
+   "notes": "System spec: 32 requests/us burst, sys_p99_batch_us <= 0.44 us is an optimistic analytic bound at L1 and must be L2-simulated. Need throughput_msps >= 32 and max_abs_err <= 2^-12 (12 accuracy bits). Minimise luts_plus_ffs. Prefer architectures with high throughput per unit area; keep enough accuracy bits margin so the L2-simulated selection stays feasible.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=18,n_iter=14,angle_guard=1,frac_guard=0,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=0,frac_guard=2,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=15,angle_guard=1,frac_guard=0,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=1,frac_guard=2,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=3,frac_guard=2,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=16,angle_guard=1,frac_guard=0,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 6,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 98.3801525724521,
+   "dds_snr_db": 81.7292683788844,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 6,
+  "why": "the L1 selection passes the simulated system constraints",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=18) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 20.0,
+ "llm_failures": 0.0,
+ "input_tokens": 101721.0,
+ "output_tokens": 20846.0,
+ "cost_usd": 0.01979225,
+ "wall_s": 154.7,
+ "run_dir": "runs/campaign_m3/20261009-182334-fcbd",
+ "run_id": "20261009-182334-fcbd",
+ "final_text": "The single spec in the queue, `multiaxis_control`, is finalized. L1 `run_dse` spent the entire 400-evaluation budget (inner graph: refine \u2192 map_front \u2192 map_front \u2192 stop) and returned a 36-design feasible, non-dominated front, all of whose top members are `pipelined_m` with m=4 at 93.6 msps \u2014 roughly 3\u00d7 the 32 msps throughput requirement. L2 `simulate_system` on the top 6 showed the analytic sys_p99_batch_us bound of 0.3848 us was slightly optimistic, simulating at 0.3953 us, but still comfortably inside the 0.44 us tick deadline, so the L1 winner was unchanged. The L3\u2013L5 ladder (via the `ladder` sub-agent) found no recorded RTL verification or synthesis row for this design and `back_annotate` returned `no_measured_data`, so no winner change was flagged and `reexplore` was not needed; the estimates therefore remain unconfirmed by measurement. The finalized selection by the spec's rule (min luts_plus_ffs) is `pipelined_m:data_width=18,n_iter=14,angle_guard=1,frac_guard=0,rounding=trunc,m=4` with luts_plus_ffs=1127 (luts=841, ffs=287), accuracy_bits=12, max_abs_err=0.00024 (2^-12.03, just inside the 2^-12 limit), throughput_msps=93.6, and simulated sys_p99_batch_us=0.395 \u2014 feasible on all three constraints, though the accuracy margin is thin. Memory storage was switched off, so the lesson note was not persisted.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 19234.228791957372,
+ "hv_frac": 0.8534566892822367,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=18,n_iter=14,angle_guard=1,frac_guard=0,rounding=trunc,m=4",
+ "select_regret": 0.05150241685773422,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

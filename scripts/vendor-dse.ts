@@ -18,7 +18,13 @@
  *   L4 synthesis table, the Vivado measurements (both batches and the spot-check), the L5
  *   refit reports, the key usage before and after the M2 runs and the spend ledger;
  * - the worked example of one design up the ladder (docs/worked_example_m2.md);
- * - the example specs, the cost model's calibration file and the two refit calibrations.
+ * - M3's data: the system specs' ground truth, the L2 cycle-model-vs-RTL validation, the M2
+ *   replay proof, the offline map_front fix, the M3 baselines, every structured, campaign and
+ *   memory-on run summary (and the pilots), the memory store, the key usage, and the M3
+ *   traces (llm_trace.jsonl and INDEX.md for every run; report.md and evaluations.csv.gz for
+ *   the structured runs, not the campaigns' inner dse/ directories); the M3 worked example;
+ * - the example specs (system specs included), the cost model's calibration file and the two
+ *   refit calibrations.
  *
  * `vendor/hw_dse/VENDORED.json` records the repository, the full commit hash and each file's
  * SHA-256; the commit must already be on the repository's `origin`. tests/unit/vendor.test.ts
@@ -84,8 +90,22 @@ const paths = [
   ...tree("eval/data/agent").filter((p) => p.endsWith(".json")),
   ...tree("eval/data/agent_m2").filter((p) => p.endsWith(".json")),
   ...tree("eval/data/agent_m2_pilot").filter((p) => p.endsWith(".json")),
-  ...tree("eval/data/traces").filter((p) =>
-    /(INDEX\.md|llm_trace\.jsonl|evaluations\.csv\.gz|report\.md)$/.test(p),
+  "docs/worked_example_m3.md",
+  "eval/data/ground_truth_m3.json",
+  "eval/data/baselines_m3.json",
+  "eval/data/l2_cycle_validation.csv",
+  "eval/data/m2_replay.json",
+  "eval/data/m3_mapfront_fix.json",
+  "eval/data/key_usage_m3.json",
+  "eval/data/campaign_m3_memory_store.json",
+  ...tree("eval/data/agent_m3").filter((p) => p.endsWith(".json")),
+  ...tree("eval/data/campaign_m3").filter((p) => p.endsWith(".json")),
+  ...tree("eval/data/campaign_m3_memory").filter((p) => p.endsWith(".json")),
+  ...tree("eval/data/m3_pilot").filter((p) => p.endsWith(".json")),
+  ...tree("eval/data/traces").filter(
+    (p) =>
+      /(INDEX\.md|llm_trace\.jsonl|evaluations\.csv\.gz|report\.md)$/.test(p) &&
+      !/^eval\/data\/traces\/m3\/[^/]+\/[^/]+\/[^/]+\/dse\//.test(p),
   ),
   ...tree("specs").filter((p) => p.endsWith(".yaml")),
 ];

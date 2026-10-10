@@ -97,7 +97,7 @@ export function heroCaption(
     }
     case "select": {
       const s = hero.selected;
-      return `Selected: ${designName(s.family, s.params)}, ${fmtInt(s.luts_plus_ffs)} LUTs+FFs and ${trim(s.throughput_msps)} MSPS (estimates), max error ${pow2(s.max_abs_err)} (exact): the true optimum. Next: down the ladder (SimPy and cycle-level are not built yet, so it skips them).`;
+      return `Selected: ${designName(s.family, s.params)}, ${fmtInt(s.luts_plus_ffs)} LUTs+FFs and ${trim(s.throughput_msps)} MSPS (estimates), max error ${pow2(s.max_abs_err)} (exact): the true optimum. Next: down the ladder.${f.skipped.length ? ` The system and cycle levels (${f.skipped.join(", ")}, live since M3) have nothing to do here: this spec has no system scenario, and this M2 run's graph had no L2 node.` : " (SimPy and cycle-level are not built yet, so it skips them.)"}`;
     }
     case "rtl":
       return `L3: the generator emits ${w.rtl.module} (${w.rtl.lines} lines of SystemVerilog); ${w.l3.map((r) => r.version.split(" 20")[0]).join(" and ")} simulate all ${fmtInt(w.l3[0]!.n_angles)} input angles: ${w.l3.reduce((a, r) => a + r.mismatches, 0)} mismatches against the golden model, latency ${w.l3[0]!.latency} cycles as documented (exact).`;
@@ -108,7 +108,7 @@ export function heroCaption(
     case "annotate":
       return `L5, the run's own back-annotation node: LUTs ${ba.luts![0]} → ${ba.luts![1]}, Fmax ${ba.fmax_mhz![0]} → ${ba.fmax_mhz![1]} MHz (${signedPct(ba.fmax_mhz![2] / 100)}); ${ba.verdict!.replace(/\.$/, "")}. At the measured clock it still delivers ${trim(w.l5.throughput_msps)} MSPS against ≥ ${trim(hero.min_msps)}.`;
     case "planned":
-      return `Not run: ${planned.length} levels are planned (${[...new Set(planned.map((l) => l.milestone))].sort().join(", ")}), shown ghosted. Whole run: ${hero.llm_calls} LLM calls, ${fmtUsd(hero.cost_usd)}, ${trim(hero.wall_s)} s.`;
+      return `${planned.length ? `Not run: ${planned.length} levels are planned (${[...new Set(planned.map((l) => l.milestone))].sort().join(", ")}), shown ghosted.` : "Every level of the ladder is live at this commit; milestone 4 (an ASIC cost model, a fleet of agents) is planned and has no results."} Whole run: ${hero.llm_calls} LLM calls, ${fmtUsd(hero.cost_usd)}, ${trim(hero.wall_s)} s.`;
   }
 }
 

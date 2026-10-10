@@ -6,7 +6,7 @@
  * site's data, which is checked against the vendored repository.
  */
 export type RecordSection = {
-  /** "1" .. "9" */
+  /** "1" .. "9", and "7b" for a section added after 7 */
   n: string;
   title: string;
   /** A URL fragment for the section. */
@@ -72,7 +72,7 @@ export function parseRecord(md: string): ProjectRecord {
     .replace(/\s+/g, " ");
   const updated =
     /^\*\*Last updated:\*\* (.+?)\. \*\*Repos:\*\* ([\s\S]+?)\n\n/m.exec(md)!;
-  const parts = md.split(/^## (\d+)\. (.+)$/m);
+  const parts = md.split(/^## (\d+[a-z]?)\. (.+)$/m);
   const sections: RecordSection[] = [];
   for (let i = 1; i < parts.length; i += 3) {
     const body = (parts[i + 2] ?? "").replace(/\n---\s*$/, "").trim();

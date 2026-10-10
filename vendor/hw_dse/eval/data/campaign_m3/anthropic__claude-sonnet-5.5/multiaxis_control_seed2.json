@@ -1,0 +1,162 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "multiaxis_control",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 10,
+ "tool_calls": 8,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "refine",
+    "refine",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-193035-9234/dse/multiaxis_control/20261009-193040-44dd",
+   "notes": "System needs 32 results within 0.44us => ~73 Msps effective throughput; favor pipelined / unrolled families; accuracy >=12 bits.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=15,n_iter=14,angle_guard=3,frac_guard=3,rounding=round,m=5",
+    "feasible": false,
+    "sys_p99_batch_us": 0.44647163000001455,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.43417633000000005
+    },
+    "violations": {
+     "sys_p99_batch_us <= 0.44": 0.014708250000033068
+    }
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=2,frac_guard=1,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.37802317500000937,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.36791514000000003
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=2,frac_guard=0,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=16,angle_guard=2,frac_guard=0,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=2,frac_guard=2,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=16,angle_guard=3,frac_guard=1,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=16,angle_guard=2,frac_guard=2,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=16,angle_guard=3,frac_guard=2,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": true,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 5,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 94.78684786912261,
+   "dds_snr_db": 80.86856121009644,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 8,
+  "why": "the L1 selection pipelined_m:data_width=15,n_iter=14,angle_guard=3,frac_guard=3,rounding=round,m=5 fails the simulated system constraints (sys_p99_batch_us <= 0.44 by 1.5%); the best shortlisted design that passes is pipelined_m:data_width=16,n_iter=14,angle_guard=2,frac_guard=1,rounding=round,m=4",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=16) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 14.0,
+ "llm_failures": 0.0,
+ "input_tokens": 81887.0,
+ "output_tokens": 6522.0,
+ "cost_usd": 0.22899399999999998,
+ "wall_s": 66.4,
+ "run_dir": "runs/campaign_m3/20261009-193035-9234",
+ "run_id": "20261009-193035-9234",
+ "final_text": "I finalized multiaxis_control with `pipelined_m` (data_width=16, n_iter=14, angle_guard=2, frac_guard=1, round, m=4). It was checked only through L2 simulation, so L3\u2013L5 gave no confirmation.\n\n- **Selection:** 1104 LUTs+FFs (834 LUTs, 270 FFs), 12.2 accuracy bits (max error 0.000209) and 97.8 Msps throughput. The simulated p99 batch time is 0.378 \u00b5s against the 0.44 \u00b5s limit.\n- **L1:** `run_dse` used all 400 evaluations and found 28 feasible front designs. Its smallest design (`pipelined_m`, data_width=15, m=5, 1070 LUTs+FFs) had an analytic p99 bound of 0.434 \u00b5s.\n- **L2:** Simulation put that design at 0.4465 \u00b5s, which fails the limit. The winner changed to the design above, the smallest of the shortlisted designs that passes.\n- **L3\u2013L5:** `verify_rtl` and `synthesize` have no recorded results for this design. `back_annotate` returned no measured data, so it flagged no winner change and I did not run `reexplore`. The area and timing numbers are therefore estimates plus the L2 simulation, not RTL-verified or synthesized results.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 19551.231327892903,
+ "hv_frac": 0.8675226514655887,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=16,n_iter=14,angle_guard=2,frac_guard=1,rounding=round,m=4",
+ "select_regret": 0.029567182907673437,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

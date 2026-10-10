@@ -1,0 +1,87 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "low_area_control",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 12,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "synthesize",
+  "verify_rtl",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "add_family",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-181132-2059/dse/low_area_control/20261009-181137-d9d3",
+   "notes": "Area-dominated spec: minimise luts_plus_ffs, hard constraint throughput_msps>=1 and max_abs_err<=2^-10 (10 bits). Small data widths and lower unroll are likely attractive but must still meet 1 MSPS and 10-bit accuracy; keep the front well spread on the accuracy axis too.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "facts_only",
+  "shortlist": [],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "iterative",
+    "latency": 19,
+    "ii": 19
+   },
+   "dds_sfdr_dbc": 83.90782230576556,
+   "dds_snr_db": 73.49201195029674,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "reason": "the spec has no system scenario: nothing to re-select",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=15) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 17.0,
+ "llm_failures": 0.0,
+ "input_tokens": 73723.0,
+ "output_tokens": 17525.0,
+ "cost_usd": 0.017148807168,
+ "wall_s": 101.6,
+ "run_dir": "runs/campaign_m3/20261009-181132-2059",
+ "run_id": "20261009-181132-2059",
+ "final_text": "Campaign complete \u2014 the queue held a single spec, `low_area_control` (min luts_plus_ffs, throughput >= 1 MSPS, max_abs_err <= 2^-10), and it is finalized. I spent the full 400-eval L1 budget in one structured `run_dse` pass, which produced a 36-design feasible, non-dominated Pareto front (37% of the front's designs are in the area/accuracy trade zone) and whose inner architect stopped after `add_family -> map_front -> map_front -> stop`; the front's best designs were all `iterative`-family. L2 `simulate_system` was a no-op for selection because this spec has no system scenario (it still returned a DDS SFDR/SNR fact and confirmed the selection). The `ladder` sub-agent then ran L3 `verify_rtl`, L4 `synthesize` and L5 `back_annotate`: all three returned \"no recorded/measured data for this selection\" (`no_measured_data`), no WINNER CHANGE was flagged, so `reexplore` was correctly not called and no re-run was needed. Final selection by the spec's rule (min luts_plus_ffs): `iterative:data_width=15,n_iter=16,angle_guard=1,frac_guard=0,rounding=round` \u2014 luts_plus_ffs=260 (estimate, luts=168, ffs=92), accuracy_bits=10.6, max_abs_err=0.000632 exact (2^-10.63, satisfying the <=2^-10 constraint), throughput 10.4 MSPS (estimate, comfortably above the 1 MSPS constraint), recorded via `finalize` with the full provenance chain. Provenance note: LUT/FF/throughput figures are cost-model estimates (M1 calibration), errors are exact from the golden model, and no measured L3/L4/L5 numbers exist for this design \u2014 nothing was estimated or invented by me. Memory storage was refused (memory switched off this campaign), so the lessons are reported here only.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 15052.44328833554,
+ "hv_frac": 0.9032241215841004,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=16,angle_guard=1,frac_guard=0,rounding=round",
+ "select_regret": 0.03610302137359014,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

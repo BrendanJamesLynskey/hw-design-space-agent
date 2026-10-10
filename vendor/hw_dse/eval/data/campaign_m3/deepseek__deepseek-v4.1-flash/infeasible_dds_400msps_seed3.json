@@ -1,0 +1,67 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "infeasible_dds_400msps",
+ "seed": 3,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 10,
+ "tool_calls": 12,
+ "ladder": [
+  "run_dse",
+  "explore_family",
+  "explore_family",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 200,
+   "status": "infeasible",
+   "decisions": [
+    "refine",
+    "infeasible"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-183214-cb91/dse/infeasible_dds_400msps/20261009-183223-619f",
+   "notes": "Spec is suspected hard/infeasible: throughput_msps >= 400 AND max_abs_err <= 2^-12 at the same time. Map the boundary of the feasible region and keep the best-compromise designs (highest throughput at min error, and largest accuracy_bits at >=400 MSPS) so a selection can still be made if the feasible set is empty. Prefer unrolled/pipelined families for throughput.",
+   "llm_declared_infeasible": true
+  }
+ ],
+ "l2": null,
+ "l3": null,
+ "l4": null,
+ "back_annotation": {
+  "status": "skipped",
+  "winner_changed": null,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 13.0,
+ "llm_failures": 0.0,
+ "input_tokens": 63102.0,
+ "output_tokens": 17630.0,
+ "cost_usd": 0.018908193399999995,
+ "wall_s": 109.7,
+ "run_dir": "runs/campaign_m3/20261009-183214-cb91",
+ "run_id": "20261009-183214-cb91",
+ "final_text": "The queue held a single spec, `infeasible_dds_400msps` (single-lane sin/cos at \u2265400 MSPS with max_abs_err \u2264 2^-12 = 0.000244141, objective min LUTs / max accuracy_bits, selection by min LUTs, 400-eval L1 budget). I spent the budget exactly: `run_dse` used 200 evals and its inner architect declared the spec INFEASIBLE (refine \u2192 infeasible) with no feasible front, so I put the remaining 200 into the throughput-oriented families \u2014 100 evals on `unrolled_k` (k clamped to the registry range 4..8; data_width 8..28, n_iter 4..30, angle_guard \u22122..4, frac_guard 0..4) and 100 on `pipelined_m` (m likewise clamped to 4..8) \u2014 both returning 0 feasible designs, and a further `explore_family` attempt was refused because 0 L1 evals remained. With no feasible design there was nothing to select, so `simulate_system` reported \"nothing feasible to simulate yet\", `verify_rtl` and `synthesize` reported \"no selected design\", and `back_annotate` was skipped (no winner change to flag, hence no `reexplore`); `finalize` therefore closed the spec with no design selected, 400/400 L1 evals used. All figures quoted are tool outputs (throughput/Fmax/LUT estimates from the cost model, M1 calibration; error exact from the golden model) \u2014 none were computed or invented by me, and the meaning is that the joint requirement of \u2265400 MSPS single-lane throughput and \u22642^-12 error is not simultaneously achievable anywhere in the explored registry (iterative, unrolled_k, pipelined, pipelined_m), i.e. the accuracy constraint binds against achievable throughput even at maximum unrolling/pipelining. Lessons: k/m are clamped to 2..8 for unrolled_k/pipelined_m (beyond that is wasted exploration), and for suspected-infeasible specs the L1 budget is better spent early on max-throughput boundary points than letting the graph spend half of it re-declaring infeasibility.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 0.0,
+ "hv_frac": null,
+ "evals_to_95": null,
+ "selected_meets_spec": false,
+ "selected_key": null,
+ "select_regret": null,
+ "declared_infeasible": true,
+ "infeasibility_correct": true
+}

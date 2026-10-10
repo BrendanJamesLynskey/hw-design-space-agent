@@ -1,0 +1,135 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": true,
+ "spec": "multiaxis_control",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 16,
+ "tool_calls": 11,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "refine",
+    "refine",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3_memory/20261009-180053-1db2/dse/multiaxis_control/20261009-180111-04a0",
+   "notes": "Spec: 32 requests per 1us tick, all 32 results back within 0.44us (p99), err <= 2^-12, min LUTs+FFs. Memory: pipelined_m m=4 (data_width=15, n_iter=12, angle_guard=2, rounding=round) won a similar bursty p99 spec (8 requests, p99 0.4us, err 2^-10) with est 813 luts+ffs. Here the burst is 4x larger (32) but the window is similar (0.44us), so m>=4 is likely needed; consider m=4..8, data_width 15-18, n_iter 12-15, angle_guard 1-2, rounding=round. Cost model underestimates LUTs ~19%, FFs ~11%, Fmax ~10% vs yosys+nextpnr-xilinx. unrolled_k never reached a front; iterative too slow for burst draining.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "simulated",
+  "shortlist": [
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=2,frac_guard=2,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.37802317500000937,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.36791514000000003
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=14,angle_guard=1,frac_guard=2,rounding=trunc,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=17,n_iter=15,angle_guard=1,frac_guard=1,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.37802317500000937,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.36791514000000003
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=18,n_iter=15,angle_guard=0,frac_guard=1,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.3952818350000016,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.38476314
+    },
+    "violations": {}
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=16,angle_guard=2,frac_guard=2,rounding=round,m=4",
+    "feasible": true,
+    "sys_p99_batch_us": 0.37802317500000937,
+    "l1_bound": {
+     "sys_p99_batch_us": 0.36791514000000003
+    },
+    "violations": {}
+   }
+  ],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 6,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 94.89018718770555,
+   "dds_snr_db": 81.9125023776421,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "k": 5,
+  "why": "the L1 selection passes the simulated system constraints",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=16) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 20.0,
+ "llm_failures": 0.0,
+ "input_tokens": 114043.0,
+ "output_tokens": 6473.0,
+ "cost_usd": 0.014796603999999998,
+ "wall_s": 215.8,
+ "run_dir": "runs/campaign_m3_memory/20261009-180053-1db2",
+ "run_id": "20261009-180053-1db2",
+ "final_text": "Campaign complete \u2014 all specs finalized.\n\n**multiaxis_control** (the only spec in the queue): I ran the full 400-evaluation L1 structured DSE (architect refined twice, then stopped), which produced a 23-design Pareto front dominated by pipelined_m m=4 designs \u2014 consistent with memory from the bursty_offload campaign. L2 SimPy simulation of the top-5 shortlist confirmed all pass the 0.44us p99 batch constraint (simulated 0.378\u20130.395us), with the winner unchanged: **pipelined_m, data_width=16, n_iter=14, angle_guard=2, frac_guard=2, rounding=round, m=4** \u2014 est. 1137 LUTs+FFs (861 LUTs / 276 FFs), 97.8 MSPS throughput, 2^-12.26 max error, simulated p99 0.378us. The ladder subagent ran L3/L4/L5: no recorded RTL verification or synthesis measurements exist for this design (fresh W=16 exhaustive verification too heavy for a live campaign), so back_annotate returned no_measured_data with no winner-change flag, and reexplore was correctly refused. The spec was finalized on the L2 selection, and a lesson note was stored for future campaigns.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 18380.234964814135,
+ "hv_frac": 0.8155634754567938,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=16,n_iter=14,angle_guard=2,frac_guard=2,rounding=round,m=4",
+ "select_regret": 0.06076551654129449,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "memory_lessons_before": "not recorded in the M3 eval (always None, review N6; recorded for runs after the fix); the store after each spec is in campaign_m3_memory_store.json"
+}

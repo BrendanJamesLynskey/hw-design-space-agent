@@ -1,0 +1,69 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "dds_250msps",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 14,
+ "tool_calls": 8,
+ "ladder": [
+  "run_dse",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-181723-7765/dse/dds_250msps/20261009-181726-e74d",
+   "notes": "NCO/DDS sin-cos, 1 sample/clock at >=250 MSPS, max_abs_err <= 2^-13, minimise LUTs. No system scenario. Prefer pipelined/pipelined_m families for throughput; keep accuracy_bits >= 13.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": null,
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=20) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 19.0,
+ "llm_failures": 0.0,
+ "input_tokens": 81151.0,
+ "output_tokens": 14316.0,
+ "cost_usd": 0.018263149000000003,
+ "wall_s": 80.1,
+ "run_dir": "runs/campaign_m3/20261009-181723-7765",
+ "run_id": "20261009-181723-7765",
+ "final_text": "The single spec `dds_250msps` is finalized. I spent its full 400-evaluation L1 budget on `run_dse`, which returned a 26-design feasible, non-dominated Pareto front (all designs meeting throughput \u2265 250 MSPS and max_abs_err \u2264 2^-13); the front was dominated by the pipelined family at n_iter=15, and the spec's min-luts rule selected `pipelined:data_width=20,n_iter=15,angle_guard=0,frac_guard=0,rounding=round` with estimated luts=979, accuracy_bits=13.6, ffs=1014, throughput_msps=264, max_abs_err=8.24e-05 (2^-13.57). The spec has no system scenario, so L2 `simulate_system` was not applicable. The ladder sub-agent ran L3/L4/L5: `verify_rtl` and `synthesize` had no recorded data for this design, and `back_annotate` returned `no_measured_data` \u2014 not a winner change, so no `reexplore` was triggered and the selection was unchanged. I then finalized the spec, recording the min-luts winner above; the `remember` call reported memory is switched off for this campaign, so no lesson was stored.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 18933.45782947482,
+ "hv_frac": 0.9589483099451723,
+ "evals_to_95": 376,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=20,n_iter=15,angle_guard=0,frac_guard=0,rounding=round",
+ "select_regret": 0.08149010477299193,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

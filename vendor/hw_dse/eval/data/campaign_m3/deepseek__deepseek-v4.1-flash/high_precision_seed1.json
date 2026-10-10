@@ -1,0 +1,87 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "high_precision",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 13,
+ "tool_calls": 9,
+ "ladder": [
+  "run_dse",
+  "simulate_system",
+  "verify_rtl",
+  "synthesize",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 400,
+   "status": "stopped",
+   "decisions": [
+    "map_front",
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-175830-f5d6/dse/high_precision/20261009-175834-3d59",
+   "notes": "Precision demodulator: max_abs_err <= 2^-20 (~9.54e-07) at >=50 MSPS. Selection rule is min luts_plus_ffs, so area is the primary driver; power_index is secondary. Error budget is tight, so favour high data_width / high n_iter designs; check whether pipelined or pipelined_m families can reach 50 MSPS with fewer LUTs+FFs than fully unrolled. Keep the front well-spread and feasible.",
+   "llm_declared_infeasible": false
+  }
+ ],
+ "l2": {
+  "status": "facts_only",
+  "shortlist": [],
+  "winner_changed": false,
+  "notes": [],
+  "selected_facts": {
+   "contract": {
+    "family": "pipelined_m",
+    "latency": 6,
+    "ii": 1
+   },
+   "dds_sfdr_dbc": 144.63608317614728,
+   "dds_snr_db": 130.25785175908536,
+   "dds_provenance": "simulated (hw_dse.l2.dds l2-v1: golden-model DDS, 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297)"
+  },
+  "reason": "the spec has no system scenario: nothing to re-select",
+  "pool_size": 400
+ },
+ "l3": "not verified in this campaign: no recorded L3 row; a fresh exhaustive run (W=27) is too heavy for a live campaign",
+ "l4": "no recorded synthesis for this design (L4 is not run live in campaigns)",
+ "back_annotation": {
+  "status": "no_measured_data",
+  "winner_changed": false,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 18.0,
+ "llm_failures": 0.0,
+ "input_tokens": 70038.0,
+ "output_tokens": 19118.0,
+ "cost_usd": 0.023094448,
+ "wall_s": 724.1,
+ "run_dir": "runs/campaign_m3/20261009-175830-f5d6",
+ "run_id": "20261009-175830-f5d6",
+ "final_text": "The `high_precision` spec is finalized. L1: a single `run_dse` call consumed the full 400-evaluation budget (inner architect mapped the front three times, then stopped), returning exactly one feasible non-dominated design \u2014 `pipelined_m:data_width=27,n_iter=22,angle_guard=-1,frac_guard=0,rounding=round,m=6` with luts_plus_ffs=2314 (1908 LUTs + 406 FFs), power_index=4.35, throughput_msps=59.9 and max_abs_err=9.53e-07 (2^-20.00), i.e. the error constraint is met right at its boundary and the throughput constraint has ~20% margin; the front collapses to a single point because the 2^-20 error budget is the binding limit. L2: the spec has no system scenario, so `simulate_system` only recorded simulated DDS facts (SFDR 144.6 dBc, SNR 130.3 dB from a 32-bit phase accumulator, coherent 16384-point FFT, tone bin 1297) and left the selection unchanged. L3/L4 via the `ladder` sub-agent returned no recorded rows for this design (a fresh exhaustive W=27 verification is too heavy for a live campaign, and L4 is never run live), and L5 `back_annotate` returned `no_measured_data` with no winner change, so `reexplore` was correctly not called. `finalize` recorded the min-luts_plus_ffs winner above; all cost/throughput numbers are estimates under the M1 calibration while the error figure is exact from the golden model. Note: `remember` reported that memory is switched off for this campaign, so no lesson was persisted.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 88975.83745500397,
+ "hv_frac": 0.9841044016154737,
+ "evals_to_95": 215,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=27,n_iter=22,angle_guard=-1,frac_guard=0,rounding=round,m=6",
+ "select_regret": 0.024051680275484454,
+ "declared_infeasible": false,
+ "infeasibility_correct": true
+}

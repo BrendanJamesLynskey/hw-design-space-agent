@@ -1,0 +1,67 @@
+{
+ "milestone": "m3",
+ "arm": "campaign",
+ "pilot": false,
+ "memory": false,
+ "spec": "infeasible_dds_400msps",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "error": null,
+ "failed": false,
+ "left_open": false,
+ "campaign_model_calls": 13,
+ "tool_calls": 12,
+ "ladder": [
+  "run_dse",
+  "explore_family",
+  "explore_family",
+  "explore_family",
+  "back_annotate"
+ ],
+ "dse_runs": [
+  {
+   "k": 0,
+   "evals": 100,
+   "status": "infeasible",
+   "decisions": [
+    "infeasible"
+   ],
+   "run_dir": "runs/campaign_m3/20261009-181034-3d0d/dse/infeasible_dds_400msps/20261009-181040-5d55",
+   "notes": "Spec named infeasible: throughput >= 400 MSPS single-lane with max_abs_err <= 2^-12 (12 bits). Likely needs pipelined/pipelined_m families (fully pipelined, one sample/cycle) rather than iterative. Prioritise pipelined and pipelined_m families; check whether the constraint set is actually satisfiable at all and report the best feasible front plus the closest-to-feasible designs if not.",
+   "llm_declared_infeasible": true
+  }
+ ],
+ "l2": null,
+ "l3": null,
+ "l4": null,
+ "back_annotation": {
+  "status": "skipped",
+  "winner_changed": null,
+  "why": null
+ },
+ "l5": null,
+ "llm_calls": 15.0,
+ "llm_failures": 0.0,
+ "input_tokens": 77731.0,
+ "output_tokens": 10753.0,
+ "cost_usd": 0.008364252,
+ "wall_s": 58.1,
+ "run_dir": "runs/campaign_m3/20261009-181034-3d0d",
+ "run_id": "20261009-181034-3d0d",
+ "final_text": "The campaign queue held a single spec, `infeasible_dds_400msps` (wideband DDS: `throughput_msps >= 400` single-lane with `max_abs_err <= 2^-12`, minimise LUTs, select min LUTs). I spent the full 400-evaluation L1 budget: the structured DSE graph's first round (100 evals) returned `status infeasible` with the inner architect declaring the spec infeasible, and I then used the remaining 300 evals on three direct NSGA-II family probes \u2014 `pipelined` (100), `pipelined_m` (100) and `unrolled_k` (100) \u2014 each of which also returned 0 feasible designs. No feasible design ever existed, so the rest of the ladder had nothing to operate on: `simulate_system` reported \"nothing feasible to simulate yet\", `verify_rtl` and `synthesize` reported no selected design, and `back_annotate` was skipped (no winner change to flag, so no `reexplore` was warranted). I finalized the spec with no winner and a note recording the infeasibility and the budget accounting. The conclusion is that the constraint pair (400 MSPS single-lane throughput together with 12-bit accuracy) is not satisfiable anywhere in the design registry \u2014 the spec is correctly named infeasible, and the honest result is an empty front rather than a fabricated selection. All numbers above are tool-reported (LUTs/FFs/Fmax/throughput as cost-model estimates, errors exact from the golden model); no value was estimated or invented by me.",
+ "n_recs_ordered": 400,
+ "n_evals": 400,
+ "hv_final": 0.0,
+ "hv_frac": null,
+ "evals_to_95": null,
+ "selected_meets_spec": false,
+ "selected_key": null,
+ "select_regret": null,
+ "declared_infeasible": true,
+ "infeasibility_correct": true
+}
