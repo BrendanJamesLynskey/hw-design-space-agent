@@ -4,7 +4,7 @@ _A living record of what has been built, how, and why, published here as an engi
 updates it after every verified milestone; this copy is checked against the agent's repository at the commit this site
 vendors, and where they differed the repository won._
 
-**Last updated:** 2026-10-11 (M4 merged). **Repos:** `BrendanJamesLynskey/HW_Design_Space_Agent` (the agent),
+**Last updated:** 2026-10-11 (the local Vivado runs merged; site part C4). **Repos:** `BrendanJamesLynskey/HW_Design_Space_Agent` (the agent),
 `BrendanJamesLynskey/hw-design-space-agent` (the site), `BrendanJamesLynskey/CORDIC` (the reference RTL). All MIT.
 
 ---
@@ -24,11 +24,12 @@ Where it stands on 2026-10-11:
 | milestone | status | headline |
 |---|---|---|
 | M1: spec intake + analytical exploration + eval | merged (0082ccd) | The agent picks the right design better than NSGA-II and random search, but maps the trade-off front worse. |
-| Site, parts A–C3 | A–C2 live (d195189, 2026-10-10); C3 (this version) re-vendored at b119c8a | 9 pages incl. this record at /record and the write-up at /writeup; the ASIC target, the fleet and its A/B animated from real data; every number traced to the vendored repo commit. |
+| Site, parts A–C4 | A–C3 live (82e2a33, 2026-10-11); C4 (this version) re-vendored at 80415c6 | 10 pages incl. this record at /record, the write-up at /writeup and "For a hardware team" at /adoption; the ASIC target, the fleet and its A/B animated from real data; the local Vivado runs' numbers on Results and the case study; every number traced to the vendored repo commit. |
 | M2: RTL, verification, synthesis, gate level, back-annotation, whole-curve agent | merged (9060f8f) | The front-mapping gap is closed (0.96–1.09× NSGA-II hypervolume) and the agent still selects better in 8 of 9 model/spec cells. All 47 RTL configurations match the golden model in 2 simulators. |
 | Vivado calibration anchors + L5 refit | merged (bbbf71e), verified before merge in three review rounds | 14 generated designs measured in Vivado 2025.2; no spec's winning design changes; M1 stays the default cost model, because the refit does no better out of sample. |
 | M3: cycle-level and system-level simulation, campaign agent | merged (a92fe65), verified before merge in two review rounds | L2 (SimPy system + cycle-accurate models, 48/48 traces identical to RTL) finds a different winner on a system-constrained spec; the Deep Agents campaign layer gained nothing over the structured graph at 1.4–2.25× the cost, so it stays experimental. |
 | M4: ASIC cost model, fleet, write-up | merged (b119c8a), verified before merge in two review rounds | A second target (sky130 via Yosys + OpenSTA, 57 measured points + 9 held out) gives the same family ranking with shallower pipelining; a code-orchestrated fleet picks better designs than one graph for Qwen (regret lower in 22/25 pairs) but maps the front no better; `docs/WRITEUP.md` is the final report, every number test-bound to the data. |
+| Vivado M4 runs + refit (PR #7) | merged (80415c6), verified before merge in two review rounds | `high_precision` m=8 measured at its own 20 ns clock misses 50 MSPS (49.88 post-synthesis, 48.31 post-route), so m=6 stays; the per-family-class path factor is **rejected** by a rule fixed before the fit; the first measured FPGA power (Vivado vectorless) ranks designs as the power index does (Spearman 0.98) but is off by 20.6% RMS. |
 
 ## 2. Why this project
 
@@ -102,7 +103,7 @@ The project itself is built with AI coding agents (Claude Code), under a deliber
 | 2026-10-09 | Add a Deep Agents "campaign" layer in M3 over the existing graph, with an A/B against the structured graph, and cross-run memory. | owner, on the planner's recommendation | replace the graph with a free-form agent | The structured graph is what makes results reproducible and comparable; long-horizon campaigns and memory are where a free-form harness may earn its keep. Measuring it is the point. |
 | 2026-10-09 | Vivado work split: the local machine produces measurement data only (one commit, reports with host names redacted); the cloud session does the refit, docs and PR. Post-synthesis numbers drive the refit; post-route numbers are reported alongside. | M2 executor, planner agreed | local session does everything | Keeps code changes in one place, and the data reproducible from committed reports. |
 | 2026-10-09 | L5 refit (PR #4): keep M1 as the default cost model; post-route Vivado rows reported, not fitted; defer a per-family-class timing factor until the `high_precision` candidates are measured; run 6 more Vivado points to settle it. | cloud executor proposed, planner review agreed, owner yes to the extra run | adopt the refit or the class factor now | On the 14 Vivado points the refit's leave-one-out error is no better than the untouched M1 model's (LUT 15.4% vs 15.4%, Fmax 12.5% vs 11.7%), and the `high_precision` winner (m=6 vs m=8) hinged on a margin inside either model's error, so only a measurement could settle it. (Figures at the merged commit bbbf71e; the first review round quoted earlier, larger numbers.) |
-| 2026-10-09 | After the second Vivado batch (PR #4, 51 fitted points): `high_precision` stays m=6; M1 stays the default cost model; the per-family-class timing factor is **deferred**, not rejected. | cloud executor, adjusted by the planner's review | adopt the class factor (better average out-of-sample Fmax error: 7.4% against 12.5% on Vivado points) | m=6 is feasible both after synthesis and after routing. The class factor would flip the refit's winner to m=8 on a point whose measured margin (0.24%) is inside every model's error, and post-route timing says m=8 is infeasible. Revisit it with more points near the boundary, and with m=8 synthesised at the real 20 ns constraint. |
+| 2026-10-09 | After the second Vivado batch (PR #4, 51 fitted points): `high_precision` stays m=6; M1 stays the default cost model; the per-family-class timing factor is **deferred**, not rejected (then; it was rejected on 2026-10-11 by a rule fixed before the fit, below). | cloud executor, adjusted by the planner's review | adopt the class factor (better average out-of-sample Fmax error: 7.4% against 12.5% on Vivado points) | m=6 is feasible both after synthesis and after routing. The class factor would flip the refit's winner to m=8 on a point whose measured margin (0.24%) is inside every model's error, and post-route timing says m=8 is infeasible. Revisit it with more points near the boundary, and with m=8 synthesised at the real 20 ns constraint. |
 | 2026-10-09 | This record is maintained and published on the site. | owner | | |
 | 2026-10-09 | Site part C: replay a real M2 run (Sonnet / low_area_control / seed 2, which picked the worked-example design) as the home animation; never animate planned levels; publish this record at /record as a site copy whose numbers are unit-tested against the vendored data; the repo wins any disagreement. | executor proposed, planner verified | hand-drawn illustrative animation; link to an unpublished record | Every number on the site must trace to a commit; a tested copy turned up six stale figures in this record, now corrected. |
 | 2026-10-09 | M3 system specs: L1 uses optimistic analytic bounds for system constraints, L2 simulates candidates; ground truth comes from the SimPy model itself (635,040 designs share only 1,092 latency/interval/Fmax combinations). | cloud executor | system metrics only at L2 (hides the winner from L1); a vectorised surrogate | Exact simulated ground truth at low cost. |
@@ -115,6 +116,11 @@ The project itself is built with AI coding agents (Claude Code), under a deliber
 | 2026-10-10 | M4 fleet: code coordinates several structured graphs (split by contract class, two phases, phase 2 by merged-front share); no LLM coordinator. | cloud executor | one member per family; an LLM coordinator from the campaign layer | The coordinator's decisions are arithmetic over numbers code already has, and M3 showed what an LLM layer costs. |
 | 2026-10-11 | M4 review: fix the fleet's write-only shared store and unspendable small budgets, then re-run the Qwen fleet (~$0.32) rather than run the full Sonnet arm (~$3.7). | owner, on the planner review's evidence | full Sonnet arm; fix without re-running | A cheap re-run tests whether the cold restart caused the fleet's loss (it did not); Sonnet would only repeat a result two models already show. |
 | 2026-10-11 | OpenROAD only via its own pinned release binaries or digest-pinned image, never Anaconda's commercial channel; kept planned for now. | owner | install from the commercial channel | Its terms have no open-source exemption, which would pass an obligation to anyone following the repo's recipe. |
+| 2026-10-11 | 07V/07R: the owner's local Vivado run first (20 ns `high_precision`, `report_power`), data only to a branch, then a local compare/refit PR (no LLM spend), before any after-M4 item. | owner | after-M4 items first (need a higher key limit) | Settles the two items left open since PR #4 at no API cost. |
+| 2026-10-11 | Per-family-class path factor: adopt into the (non-default) M4 refit only if (a) Vivado Fmax leave-one-out improves **and** (b) it puts m=8 infeasible and m=6 feasible as measured. (a) held (12.5 → 7.4%), (b) failed (m=8 at 52.51 MSPS against 49.88 measured): **rejected**. | planner set the rule before the fit; executor applied it | judge it after seeing the numbers | A rule fixed in advance can't be tuned to the result. |
+| 2026-10-11 | A design re-run under a different clock constraint is counted once in the refit (the 10 ns row kept); the M4 refit then equals `vivado-2025.2`. A per-family power activity calibration is kept non-default. | planner review found the double count; executor fixed | fit both rows | Counting twins twice made leave-one-out look better than it was (12.2% on 16 vs 12.5% counted once). |
+| 2026-10-11 | A public "For a hardware team" page on the site (pros and cons against general-purpose agents, deployment, improvements). | owner | a private note only | |
+| 2026-10-11 | Site C4: the FPGA power check shows the repository's Spearman (0.982, ties ranked by order) with the tie-averaged value (0.988) beside it; two designs tie at 22.0 mW post-synthesis. The repository is not changed. | site executor | report one figure only | The site claims only what the vendored commit says, and says where a convention changes a number. |
 | 2026-10-11 | Keep the ASIC calibration as scored; no refit on the held-out points; state the `asic_multiaxis_control` winner's measured deadline miss plainly. | owner, on review evidence | refit on all 66 points, with an `unrolled_k` term | No winner moves under any refit, none fixes the miss, and refitting would end the validation set. A measure-and-re-explore loop is the real fix. |
 
 ## 6. Results
@@ -184,6 +190,21 @@ The project itself is built with AI coding agents (Claude Code), under a deliber
 - **FPGA path untouched:** all 60 M2 and 30 M3 runs replay identically.
 - **Spend:** $4.15 by the key ($3.83 first pass + $0.32 fleet re-run), under the $5 cap.
 
+### Vivado M4 runs + refit (merged 80415c6, PR #7; local Vivado 2025.2, no LLM spend)
+
+- **`high_precision` at its own 20 ns clock (measured):** m=8 49.88 MSPS post-synthesis (WNS −0.05 ns), 48.31
+  post-route; m=6 65.39 and 53.96. m=8 misses 50 MSPS in both views; the winner stays m=6.
+- **Path factor (rejected by the pre-set rule):** one factor per family class would cut Vivado Fmax leave-one-out
+  from 12.5% to 7.4%, but it predicts m=8 at 52.51 MSPS (+5.3%), i.e. feasible, which the measurement contradicts.
+- **Refit:** counted once per design it is the `vivado-2025.2` fit (51 points; Vivado leave-one-out LUT 15.4%,
+  FF 3.7%, Fmax 12.5%; M1 15.4 / 3.1 / 11.7%). No spec's winner changes; M1 stays the default.
+- **First measured FPGA power (Vivado `report_power`, vectorless, Low confidence):** the power index ranks the 14
+  designs well (Spearman 0.982 post-synthesis, 0.969 post-route) with 20.6% / 36.3% log-RMS error; it reads
+  `unrolled_k` low (0.61–0.97× post-synthesis, 0.48–0.85× post-route). A per-family activity factor gets 10.2% in-sample, 13.9% leave-one-out
+  (non-default).
+- **Routed vs synthesised Fmax:** 0.675× (`pipelined`) to 1.056× (`unrolled_k`); every model throughput is an
+  unrouted figure.
+
 ## 7. What review found (M2)
 
 An independent review (no high-severity bugs; 3 medium, 5 low; [posted on the PR](https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent/pull/3#pullrequestreview-5468926172)) found:
@@ -232,6 +253,18 @@ Round 1: no blocking, 7 should-fix, 15 nits; every data claim reproduced.
 
 Round 2: one doc fix (a ruled-out refit still listed as planned), fixed before merge.
 
+## 7d. What review found (PR #7, Vivado M4 runs + refit)
+
+Two planner rounds, both posted on [PR #7](https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent/pull/7).
+Round 1: no blocking, 1 should-fix, 3 nits; every output regenerated byte-identically.
+- The two 20 ns post-synthesis rows duplicated the 10 ns rows and escaped the duplicate filter by their tool label,
+  so the refit counted two designs twice and its leave-one-out looked better than it was. Now counted once, in code,
+  with a test.
+- A cached calibration made the first decision run score a refit with stale constants and print "adopted"; the cache
+  is cleared after a refit, the test now fails on the bug itself, and the history is recorded.
+
+Round 2: verified, all items fixed. The path factor's rejection held under both counts.
+
 ## 8. Known limitations
 
 - One design space (CORDIC); one FPGA family and one ASIC library (sky130, typical corner, post-synthesis only — no place and route).
@@ -240,7 +273,8 @@ Round 2: one doc fix (a ruled-out refit still listed as planned), fixed before m
   Fmax.
 - Vivado post-synthesis Fmax is the cost model's timing scale; routed Fmax is lower, by up to about a third on the
   short-path pipelined designs.
-- The power figure is a relative index, not watts.
+- The power figure is a relative index, not watts. It is now checked against Vivado's `report_power`, which is
+  itself a vectorless estimate, not a measurement of real switching.
 - Natural-language spec intake has only been tested with a scripted model.
 - 5 seeds is still a small sample; some cells overlap within one standard deviation.
 - The A/Bs are incomplete for the frontier model: Sonnet's campaign arm (M3) and fleet arm (M4) each cover one spec.
@@ -262,8 +296,9 @@ Round 2: one doc fix (a ruled-out refit still listed as planned), fixed before m
 4. ~~Site part C2~~ live 2026-10-10 (d195189): L2 and the A/B on the showcase site; this record synced.
 5. ~~M4~~ done (b119c8a): ASIC cost model on sky130, a code-orchestrated fleet and its A/B, L2→L1 feedback, the
    write-up (`docs/WRITEUP.md`).
-6. Site part C3 (this version, deploy pending): the ASIC target, the fleet A/B and the write-up on the showcase site;
-   this record synced.
-7. Local Vivado run: `high_precision` m=8/m=6 at 20 ns and `report_power` on the 14 measured designs (exports ready).
-8. After M4: an ASIC measure-and-re-explore loop; OpenROAD place and route from pinned binaries; the class path factor
-   once the 20 ns data is in.
+6. ~~Site part C3~~ live 2026-10-11 (82e2a33): the ASIC target, the fleet A/B and the write-up on the showcase site.
+7. ~~Local Vivado run~~ done (80415c6, PR #7): m=8 misses at 20 ns, the class path factor rejected, first measured
+   FPGA power.
+8. Site part C4 (this version): a "For a hardware team" page (/adoption: pros and cons against general-purpose
+   agents, a proposed deployment, improvements) and the PR #7 numbers; this record synced.
+9. After M4: an ASIC measure-and-re-explore loop; OpenROAD place and route from pinned binaries.

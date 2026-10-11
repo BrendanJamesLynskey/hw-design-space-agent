@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { LevelBadge } from "@/components/dse/Badges";
 import { COMMIT, site } from "@/lib/dse/data";
+import { hp20, viv4 } from "@/lib/dse/vivado4";
 import { AGENT_REPO, GITHUB_URL, agentFile } from "@/lib/site";
 
 export const metadata = {
@@ -22,7 +23,7 @@ const ADDS: Record<string, string> = {
   M1: "The agent itself: spec intake with a human in the loop, LLM-steered exploration over tested fast models, the exhaustive ground truth and the eval against NSGA-II and random search with real models.",
   M2: "From estimates to measurements, and the whole trade-off curve: one generator of SystemVerilog for every family, verified against the golden model in Verilator and Icarus and with SymbiYosys proofs; open-source synthesis and place-and-route (Yosys + nextpnr-xilinx) and gate-level simulation of the netlist; back-annotation that refits the cost model per tool and flags a winner change; front-mapping levers for the agent, and a five-seed eval. Then a follow-up pull request: Vivado 2025.2 on 14 generated designs and the vivado-2025.2 refit (no spec's winner changed; the default cost model stays M1's).",
   M3: "The design in its system: a cycle-accurate model of every family's interface, checked against the generated RTL cycle for cycle, and SimPy models of three systems (a DDS feeding a mixer, a control loop, a bursty request stream); system-level specs, screened at L1 by optimistic bounds and re-selected at L2 on simulated numbers; an L5 loop that re-explores under the refit when a measurement changes the winner; a gated fix for M2's front-mapping blind spot; and a campaign agent on LangChain Deep Agents with cross-run memory, measured in an A/B against the structured graph. The A/B found no gain at a higher cost, so the campaign agent stays experimental, off by default.",
-  M4: "A second target and a fleet: the same generated RTL synthesised on the open sky130 PDK (Yosys + OpenSTA, post-synthesis only, no place and route), an ASIC cost model fitted to 57 measured designs and checked on 9 held-out ones, three ASIC specs with exhaustive ground truth and FPGA twins; a fleet of structured graphs orchestrated by code around a shared LangGraph Store, in a paired A/B against the single graph; L2 → L1 feedback that corrects the system bound when the simulation rejects every candidate; the exports for a local Vivado run; and the final write-up. The fleet mapped the front worse and, with Qwen, selected better; the ASIC model's winner misses its deadline when measured. Both are stated plainly on the results page.",
+  M4: "A second target and a fleet: the same generated RTL synthesised on the open sky130 PDK (Yosys + OpenSTA, post-synthesis only, no place and route), an ASIC cost model fitted to 57 measured designs and checked on 9 held-out ones, three ASIC specs with exhaustive ground truth and FPGA twins; a fleet of structured graphs orchestrated by code around a shared LangGraph Store, in a paired A/B against the single graph; L2 → L1 feedback that corrects the system bound when the simulation rejects every candidate; the exports for a local Vivado run (run after M4, below); and the final write-up. The fleet mapped the front worse and, with Qwen, selected better; the ASIC model's winner misses its deadline when measured. Both are stated plainly on the results page.",
 };
 
 /** What a milestone's site text says is the project's plan rather than the README's. */
@@ -30,11 +31,12 @@ const PLAN_NOTE: Record<string, string> = {};
 
 /** After M4: the project record's plan (§9), with no results. */
 const AFTER_M4: string[] = [
-  "The local Vivado run: high_precision's m=8 and m=6 synthesised at their own 20 ns clock, and report_power on the 14 measured designs (the exports are ready in the repository).",
   "An ASIC measure-and-re-explore loop: synthesise the selected designs, re-select under the measured numbers, as the FPGA path's L5 loop does. The nine held-out points stay held out.",
   "OpenROAD place and route on sky130, from OpenROAD's own pinned release binaries (or a digest-pinned image), never from a commercial package channel.",
-  "The per-family-class path factor for the FPGA cost model, once the 20 ns data is in.",
 ];
+
+/** Done after M4: the local Vivado run (PR #7), with its outcome (src/data/vivado_m4.json). */
+const VIV_DONE = `The local Vivado run (2025.2, no LLM call): high_precision's m=8 and m=6 synthesised and routed at their own ${viv4.high_precision_20ns.period_ns} ns clock, and report_power on the ${viv4.power.stages["post-synthesis"].n} measured designs. m=8 misses ${viv4.high_precision_20ns.need_msps} MSPS in both views (${hp20(8, "post-synthesis").msps.toFixed(2)} post-synthesis, ${hp20(8, "post-route").msps.toFixed(2)} post-route), so m=6 stays the winner; the per-family-class path factor was rejected by its pre-set rule; the first measured FPGA power (vectorless) ranks the designs as the power index does (Spearman ${viv4.power.stages["post-synthesis"].spearman.toFixed(3)}) but is off by ${viv4.power.stages["post-synthesis"].rms_pct.toFixed(1)}% RMS.`;
 
 /** Pull requests per milestone, in the agent's repository and this site's. */
 const PRS: Record<string, { href: string; label: string }[]> = {
@@ -74,6 +76,10 @@ const PRS: Record<string, { href: string; label: string }[]> = {
     {
       href: `${AGENT_REPO}/pull/6`,
       label: "HW_Design_Space_Agent #6: M4 (merged)",
+    },
+    {
+      href: `${AGENT_REPO}/pull/7`,
+      label: "HW_Design_Space_Agent #7: the local Vivado runs (merged)",
     },
     {
       href: `${GITHUB_URL}/pulls?q=is%3Apr`,
@@ -182,6 +188,28 @@ export default function RoadmapPage(): JSX.Element {
         })}
       </ol>
       <section
+        data-testid="after-m4-done"
+        className="mt-8 rounded-lg border border-neutral-300 p-5 dark:border-neutral-700"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-xl font-semibold tracking-tight">
+            Done after M4
+          </h2>
+          <LevelBadge status="live" milestone="done, PR #7" />
+        </div>
+        <p className="mt-2 text-sm text-neutral-700 dark:text-neutral-300">
+          {VIV_DONE}{" "}
+          <Link href="/results#vivado" className={A}>
+            The numbers, losses first
+          </Link>
+          ;{" "}
+          <a href={`${AGENT_REPO}/pull/7`} className={A}>
+            HW_Design_Space_Agent #7
+          </a>
+          .
+        </p>
+      </section>
+      <section
         data-testid="after-m4"
         className="mt-8 rounded-lg border border-dashed border-neutral-300 p-5 dark:border-neutral-700"
       >
@@ -190,8 +218,8 @@ export default function RoadmapPage(): JSX.Element {
           <LevelBadge status="planned" milestone="plan" />
         </div>
         <p className="mt-2 text-sm text-neutral-700 dark:text-neutral-300">
-          All four planned milestones are done. What comes next is the
-          project&apos;s plan, from the{" "}
+          All four planned milestones are done, and so is the local Vivado run.
+          What comes next is the project&apos;s plan, from the{" "}
           <Link href="/record#what-s-next" className={A}>
             project record
           </Link>

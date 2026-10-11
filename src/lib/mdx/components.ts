@@ -64,6 +64,14 @@ import {
   PairedTestsTable,
 } from "@/components/dse/M4Tables";
 import { CostTable, HeadlineTable } from "@/components/dse/Tables";
+import {
+  ClassFactorTable,
+  Hp20Table,
+  PowerFitTable,
+  PowerRatioChart,
+  RefitM4Table,
+  RouteRatioChart,
+} from "@/components/dse/VivadoM4";
 import { Eq } from "@/components/mdx/Eq";
 import { RepoFile } from "@/components/mdx/RepoFile";
 import { V } from "@/components/mdx/V";
@@ -78,6 +86,12 @@ export const mdxComponents: NonNullable<MDXRemoteProps["components"]> = {
   V,
   RepoFile,
   Prov,
+  ClassFactorTable,
+  Hp20Table,
+  PowerFitTable,
+  PowerRatioChart,
+  RefitM4Table,
+  RouteRatioChart,
   LevelBadge,
   KnuthQuote,
   WhyClimb,

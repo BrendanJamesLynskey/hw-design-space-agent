@@ -24,6 +24,7 @@ import {
   shiftCaption,
   traceCaption,
 } from "@/lib/dse/captions";
+import { flowFrames, travel } from "@/lib/adoption";
 import { climbFrames } from "@/lib/dse/climb";
 import { rotate, type Numerics } from "@/lib/dse/cordic";
 import { ev, site, why } from "@/lib/dse/data";
@@ -429,4 +430,32 @@ test("the fleet: captions from one fleet run's records, then the paired A/B", as
   await expect(
     fig.locator("svg[data-metric='select_regret'] g[data-row]"),
   ).toHaveCount(4);
+});
+
+test("adoption: one request through the proposed deployment, step by step", async ({
+  page,
+}) => {
+  await page.goto("/adoption");
+  const fig = page.getByTestId("deploy-widget");
+  await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
+  const frames = flowFrames();
+  for (const i of keySteps(frames.length)) {
+    await frame(fig, i, frames[i]!.caption);
+    for (const id of frames[i]!.active)
+      await expect(fig.locator(`[data-node="${id}"]`)).toHaveAttribute(
+        "data-active",
+        "true",
+      );
+    for (const e of frames[i]!.edges)
+      await expect(
+        fig.locator(`[data-edge="${travel(e).key}"]`),
+      ).toHaveAttribute("data-hot", "true");
+  }
+  // proposals are drawn dashed and say so in words
+  await expect(fig.locator('[data-node="farm"]')).toHaveAttribute(
+    "data-status",
+    "proposal",
+  );
+  await expect(fig.locator('[data-node="farm"]')).toContainText("proposal");
+  await expect(fig.locator('[data-node="models"]')).toContainText("exists");
 });

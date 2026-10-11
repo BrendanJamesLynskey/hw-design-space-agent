@@ -2,7 +2,41 @@ The eval asks one question: on the same budget of evaluations, does an LLM steer
 
 Milestone 1 found a split: the agent picked better designs than NSGA-II and random search, but mapped the trade-off curve far worse, because it dived at the spec's corner and stopped early. Milestone 2 set out to close that gap without losing the selection lead: a `map_front` decision, a 40% front-mapping reserve that code spends before a run stops, and five seeds instead of three. It ran three models through OpenRouter, Sonnet 5.5, DeepSeek V4.1 Flash and Qwen3.8-27B with reasoning off: <V of="m2.runs" fmt="int" /> runs, <V of="m2.calls.total" fmt="int" /> LLM calls, <V of="m2.total_usd" fmt="usd" /> of provider-reported usage. Every table below is mean ± population standard deviation over the seeds.
 
-Milestone 3 then put the design inside its system and tried a free-form agent on top of the structured one. Milestone 4, the last, added a second target (an ASIC on the open sky130 PDK, post-synthesis), a fleet of structured graphs orchestrated by code, and feedback from L2 to L1, and closed the project with a [write-up](/writeup). Milestone 4's results come first, losses first; milestones 3, 2 and 1 follow, as they were.
+Milestone 3 then put the design inside its system and tried a free-form agent on top of the structured one. Milestone 4, the last, added a second target (an ASIC on the open sky130 PDK, post-synthesis), a fleet of structured graphs orchestrated by code, and feedback from L2 to L1, and closed the project with a [write-up](/writeup). Milestone 4's results come first, losses first; milestones 3, 2 and 1 follow, as they were. Before them, the newest data: the local Vivado runs that settled the two FPGA questions milestone 4 left open.
+
+<div id="vivado" />
+
+## After M4: the local Vivado runs (<V of="v4.date" fmt="str" />)
+
+Vivado 2025.2 on the same part, run on the maintainer's machine: `high_precision`'s two candidates synthesised and routed again at the spec's own 20 ns clock, and `report_power` on the 14 measured designs, the first measured FPGA power. No LLM call and no eval re-run; the default cost model and every ground truth are unchanged. The power is Vivado's own **vectorless** estimate (<V of="v4.power.toggle" fmt="f1" />% default toggle rate, confidence Low), not a board measurement.
+
+**Where the models were wrong.**
+
+- **The better-fitting timing model got the one boundary wrong.** A refit with one path factor per family class cut the Vivado Fmax leave-one-out error from <V of="v4.cf.loo_without" fmt="f1" />% to <V of="v4.cf.loo_with" fmt="f1" />%, but predicted `high_precision`'s m=8 at <V of="v4.cf.m8" fmt="f2" /> MSPS (feasible); Vivado measures <V of="v4.m8.synth" fmt="f2" />. The rule, written before the fit, required both, so it was **rejected**.
+- **No model sees routing.** m=6 goes from <V of="v4.m6.synth" fmt="f2" /> MSPS post-synthesis to <V of="v4.m6.route" fmt="f2" /> post-route, a real margin of <V of="v4.m6.route_margin" fmt="spct" /> over 50 MSPS where the models' unrouted figures suggest <V of="v4.m6.model_margin_min" fmt="spct" /> to <V of="v4.m6.model_margin_max" fmt="spct" />. Across the Vivado designs, routed Fmax is <V of="v4.route.pipelined_min" fmt="f3" />–<V of="v4.route.pipelined_max" fmt="f3" />× the synthesised figure on plain `pipelined` and <V of="v4.route.unrolled_min" fmt="f3" />–<V of="v4.route.unrolled_max" fmt="f3" />× on `unrolled_k`: every model throughput on this site is an unrouted figure.
+- **The power index is off by <V of="v4.power.rms_synth" fmt="f1" />% RMS after synthesis and <V of="v4.power.rms_route" fmt="f1" />% after routing.** It reads `unrolled_k` low (<V of="v4.power.unrolled_synth_min" fmt="f2" />–<V of="v4.power.unrolled_synth_max" fmt="f2" />× post-synthesis, <V of="v4.power.unrolled_route_min" fmt="f2" />–<V of="v4.power.unrolled_route_max" fmt="f2" />× post-route) and plain `pipelined` high (<V of="v4.power.pipelined_synth_min" fmt="f2" />–<V of="v4.power.pipelined_synth_max" fmt="f2" />× and <V of="v4.power.pipelined_route_min" fmt="f2" />–<V of="v4.power.pipelined_route_max" fmt="f2" />×).
+
+**What held.**
+
+- **m=8 misses 50 MSPS at its own clock in both views** (<V of="v4.m8.synth" fmt="f2" /> post-synthesis, <V of="v4.m8.route" fmt="f2" /> post-route) and m=6 meets in both. The M1 model and the refit had both called m=8 infeasible, so `high_precision`'s winner stays m=6. Relaxing the clock from 10 to 20 ns did not move either design's post-synthesis figure.
+- **The refit, counted once, is the same fit.** The 20 ns post-synthesis rows duplicate the 10 ns ones, so `vivado-2025.2-m4` keeps one row per design (<V of="v4.refit.dropped" fmt="int" /> dropped) and equals `vivado-2025.2`: <V of="v4.refit.points" fmt="int" /> points, Vivado leave-one-out <V of="v4.refit.loo_luts" fmt="f1" />% LUT, <V of="v4.refit.loo_ffs" fmt="f1" />% FF, <V of="v4.refit.loo_fmax" fmt="f1" />% Fmax. No spec's winner changes; M1 stays the default.
+- **The power index ranks the designs well**: Spearman <V of="v4.power.spearman_synth" fmt="f3" /> post-synthesis and <V of="v4.power.spearman_route" fmt="f3" /> post-route. A per-family activity factor (4 parameters) cuts the error to <V of="v4.power.fit_in" fmt="f1" />% in-sample and <V of="v4.power.fit_loo" fmt="f1" />% leave-one-out; it is kept as a separate calibration, not the default.
+
+<Hp20Table />
+
+<ClassFactorTable />
+
+How the decision was recorded, in the repository's words: _<V of="v4.cf.history" fmt="str" />_
+
+<RefitM4Table />
+
+<RouteRatioChart />
+
+<PowerRatioChart />
+
+<PowerFitTable />
+
+Two designs tie at <V of="v4.power.tied_mw" fmt="f1" /> mW post-synthesis. The repository's Spearman ranks the tie by order of appearance (<V of="v4.power.spearman_synth" fmt="f3" />); averaging the tied ranks, the usual convention, gives <V of="v4.power.spearman_synth_tied" fmt="f3" />. Both are computed at export.
 
 <div id="m4" />
 

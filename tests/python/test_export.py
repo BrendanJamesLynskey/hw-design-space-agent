@@ -16,6 +16,7 @@ SITE = json.loads((ROOT / "src/data/site.json").read_text())
 LADDER = json.loads((ROOT / "src/data/ladder.json").read_text())
 M3 = json.loads((ROOT / "src/data/m3.json").read_text())
 M4 = json.loads((ROOT / "src/data/m4.json").read_text())
+VIV4 = json.loads((ROOT / "src/data/vivado_m4.json").read_text())
 
 
 def test_every_vendored_file_matches_its_hash():
@@ -292,3 +293,43 @@ def test_m4_feedback_spend_and_untouched_fpga_record():
     assert sp["trace_usd"] == 3.8366
     u = M4["untouched"]
     assert u["m2_replays"] == 60 and u["m3_structured_runs"] == 30
+
+
+def test_vivado_m4_high_precision_at_20ns_and_the_roadmap():
+    """After M4 (PR #7): m=8 misses 50 MSPS at its own 20 ns clock in both views, m=6 meets in both,
+    and the README's roadmap row for the local runs is done (no planned row lists them)."""
+    h = VIV4["high_precision_20ns"]
+    got = {(r["m"], r["stage"]): (r["msps"], r["meets"]) for r in h["rows"]}
+    assert got == {(6, "post-synthesis"): (65.39, True), (6, "post-route"): (53.96, True),
+                   (8, "post-synthesis"): (49.88, False), (8, "post-route"): (48.31, False)}
+    hp = LADDER["high_precision"]
+    m6, m8 = hp["candidates"]
+    assert (m8["post_synth_20"]["msps"], m8["post_route_20"]["msps"]) == (49.88, 48.31)
+    assert m8["post_synth_20"]["msps"] == m8["post_synth"]["msps"]  # relaxing the clock moved nothing
+    assert m8["class_factor"]["msps"] > 50 > m8["post_synth_20"]["msps"]
+    rows = SITE["roadmap"]
+    done = next(r for r in rows if "report_power" in r["levels"])
+    assert done["status"] == "done" and done["note"] == "M4 local runs" and "rejected" in done["levels"]
+    assert not any("Vivado" in r["levels"] or "20 ns" in r["levels"] for r in rows if r["status"] == "planned")
+
+
+def test_vivado_m4_refit_class_factor_route_and_power():
+    r = VIV4["refit"]
+    assert r["n_fit_points"] == 51 and r["dropped"] == 4 and r["winners_changed"] == []
+    assert r["loo_vivado"]["vivado-2025.2"] == r["loo_vivado"]["vivado-2025.2-m4"] == {"n": 14, "luts": 15.4, "ffs": 3.7, "fmax": 12.5}
+    c = VIV4["class_factor"]
+    assert (c["loo_without"], c["loo_with"], c["msps_with"]["8"]) == (12.5, 7.4, 52.514)
+    assert c["a"] and not c["b"] and not c["adopt"] and c["winner_with"].endswith("m=8")
+    pr = VIV4["post_route"]
+    assert (pr["min"], pr["max"]) == (0.6755, 1.0563) and len(pr["designs"]) == 16
+    p = VIV4["power"]
+    ps, pt = p["stages"]["post-synthesis"], p["stages"]["post-route"]
+    assert (round(ps["spearman"], 3), round(pt["spearman"], 3)) == (0.982, 0.969)
+    assert (round(ps["rms_pct"], 1), round(pt["rms_pct"], 1)) == (20.6, 36.3)
+    assert ps["tied_mw"] == [22.0] and round(ps["spearman_tied"], 3) == 0.988 and pt["tied_mw"] == []
+    assert (round(p["fit"]["per_family_in"], 1), round(p["fit"]["per_family_loo"], 1)) == (10.2, 13.9)
+    assert p["confidence"] == "Low" and p["toggle_pct"] == 12.5
+    # the measured mW at 100 MHz (from the 1 ns reports) agree with the 10 ns reports to their printed
+    # precision: core power is a sum of up to four parts, each printed to 1 mW at 10 ns
+    worst = max(abs(d["mw"] - d["mw_10ns"]) for d in ps["designs"] + pt["designs"])
+    assert worst <= 2.0, worst

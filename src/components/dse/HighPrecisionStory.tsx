@@ -3,9 +3,10 @@
 /**
  * high_precision's winner under measurement: the exhaustive grid's choice (pipelined_m
  * W=26 N=22 m=6) against its 4% smaller neighbour (m=8), on the spec's 50 MSPS constraint,
- * view by view: the M1 estimate, the vivado-2025.2 refit, Vivado post-synthesis and Vivado
- * post-route. Both are one result per cycle, so throughput (MSPS) is Fmax (MHz). The margins
- * are computed from the exported numbers; the verdict states how thin the post-synthesis one is.
+ * view by view: the M1 estimate, the vivado-2025.2 refit, the rejected class-factor candidate,
+ * Vivado post-synthesis and post-route at the anchors' 10 ns clock, then both again at the
+ * spec's own 20 ns clock (after M4). Both are one result per cycle, so throughput (MSPS) is
+ * Fmax (MHz). The margins are computed from the exported numbers.
  */
 import { useMemo } from "react";
 
@@ -30,8 +31,11 @@ const W = 600;
 const VIEW: Record<HpView, { label: string; prov: "estimate" | "measured" }> = {
   m1: { label: "M1 estimate", prov: "estimate" },
   refit: { label: "refit (vivado-2025.2)", prov: "estimate" },
-  post_synth: { label: "Vivado post-synthesis", prov: "measured" },
-  post_route: { label: "Vivado post-route", prov: "measured" },
+  class_factor: { label: "class factor (rejected)", prov: "estimate" },
+  post_synth: { label: "Vivado synth, 10 ns", prov: "measured" },
+  post_route: { label: "Vivado route, 10 ns", prov: "measured" },
+  post_synth_20: { label: "Vivado synth, 20 ns", prov: "measured" },
+  post_route_20: { label: "Vivado route, 20 ns", prov: "measured" },
 };
 
 export default function HighPrecisionStory({
@@ -45,7 +49,7 @@ export default function HighPrecisionStory({
   const font = useSvgFont(W);
   const narrow = font.narrow;
   // phones: each view's name sits above its bars, which take the full width
-  const M = { l: narrow ? 8 : 170, r: narrow ? 175 : 110, t: 28, b: 40 };
+  const M = { l: narrow ? 14 : 170, r: narrow ? 175 : 110, t: 28, b: 40 };
   const rowH = narrow ? 34 : 22;
   const label = narrow ? 26 : 0;
   const gap = narrow ? 14 : 10;
@@ -60,9 +64,9 @@ export default function HighPrecisionStory({
       summary={
         <>
           The spec needs ≥ {trim(hp.min_msps)} MSPS and the smallest LUT+FF. Two
-          candidates one notch apart, through four views of the same designs:
-          the models <Prov kind="estimate" /> and Vivado 2025.2{" "}
-          <Prov kind="measured" />.
+          candidates one notch apart, through seven views of the same designs:
+          three models <Prov kind="estimate" /> and Vivado 2025.2{" "}
+          <Prov kind="measured" /> at two clocks.
         </>
       }
       stepper={stepper}
@@ -225,7 +229,8 @@ export default function HighPrecisionStory({
             </tbody>
           </table>
           <p className="mt-2 text-[0.7rem] text-neutral-600 dark:text-neutral-400">
-            Dashed bars are model estimates; solid bars are Vivado 2025.2 on
+            Dashed bars are model estimates (the class-factor refit was a
+            candidate, rejected by its rule); solid bars are Vivado 2025.2 on
             xc7a35tcpg236-1. {hp.constraint_note}
           </p>
         </div>

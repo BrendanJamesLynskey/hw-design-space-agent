@@ -50,6 +50,7 @@ const PAGES: [string, string[]][] = [
     "/results",
     [
       commit,
+      "After M4: the local Vivado runs",
       "Milestone 4 at a glance",
       "Milestone 3 at a glance",
       "Where it got worse",
@@ -59,8 +60,28 @@ const PAGES: [string, string[]][] = [
   ],
   ["/writeup", [commit, "final technical report", "docs/WRITEUP.md", "$13.64"]],
   [
+    "/adoption",
+    [
+      commit,
+      "For a hardware team",
+      "Against a general-purpose agent",
+      "How it would be deployed",
+      "data-pending-widget",
+    ],
+  ],
+  [
     "/roadmap",
-    [commit, "M4", "pull/1", "pull/4", "pull/5", "pull/6", "After M4"],
+    [
+      commit,
+      "M4",
+      "pull/1",
+      "pull/4",
+      "pull/5",
+      "pull/6",
+      "pull/7",
+      "After M4",
+      "Done after M4",
+    ],
   ],
   ["/record", [commit, "Decision log", "decision-timeline"]],
   [

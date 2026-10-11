@@ -99,3 +99,7 @@ export const DeadlineReplay = dynamic(() => import("./DeadlineReplay"), {
   ssr: false,
   loading: loading("animation"),
 });
+export const DeploymentFlow = dynamic(() => import("./DeploymentFlow"), {
+  ssr: false,
+  loading: loading("animation"),
+});

@@ -188,6 +188,11 @@ export type HpCandidate = {
   refit: { luts_plus_ffs: number; msps: number };
   post_synth: { luts: number; ffs: number; msps: number; wns_ns: number };
   post_route: { luts: number; ffs: number; msps: number; wns_ns: number };
+  /** After M4: synthesised and routed again at the spec's own 20 ns clock. */
+  post_synth_20: { luts: number; ffs: number; msps: number; wns_ns: number };
+  post_route_20: { luts: number; ffs: number; msps: number; wns_ns: number };
+  /** The per-family-class path factor's candidate refit (rejected by its pre-set rule). */
+  class_factor: { msps: number };
   accuracy_bits: number;
   max_abs_err: number;
 };
@@ -198,7 +203,13 @@ export type HighPrecision = {
   candidates: [HpCandidate, HpCandidate];
   /** view -> m -> throughput / min - 1. */
   margin: Record<
-    "m1" | "refit" | "post_synth" | "post_route",
+    | "m1"
+    | "refit"
+    | "class_factor"
+    | "post_synth"
+    | "post_route"
+    | "post_synth_20"
+    | "post_route_20",
     Record<string, number>
   >;
   constraint_note: string;

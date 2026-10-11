@@ -29,6 +29,9 @@
  *   and model check, every structured, single, fleet (before_fix and after fix) and pilot run
  *   summary, and the M4 traces (llm_trace.jsonl, evaluations.csv.gz and INDEX.md for every run
  *   and fleet member; report.md for the structured runs only);
+ * - the local Vivado runs after M4 (07V/07R): high_precision at its own 20 ns clock, the
+ *   vectorless report_power CSV, the compare report, the vivado-2025.2-m4 refit and the class
+ *   path factor's decision record, and the two non-default calibrations they wrote;
  * - the example specs (system and ASIC specs included), the cost model's calibration files (the
  *   sky130 one too) and the two refit calibrations.
  *
@@ -121,6 +124,16 @@ const paths = [
   "eval/data/key_usage_m4.json",
   "eval/data/models_check_m4.json",
   "src/hw_dse/models/calibration_sky130hd.yaml",
+  "eval/data/vivado_measured_20ns.csv",
+  "eval/data/vivado_power.csv",
+  "eval/data/vivado_m4_compare.json",
+  "eval/data/vivado_m4_compare.md",
+  "eval/data/l5_refit_vivado-2025.2-m4.json",
+  "eval/data/l5_refit_vivado-2025.2-m4.md",
+  "eval/data/l5_class_path_factor_m4.json",
+  "eval/data/l5_class_path_factor_m4.md",
+  "src/hw_dse/models/calibration_artix7_refit_vivado-2025.2-m4.yaml",
+  "src/hw_dse/models/power_activity_artix7_vivado-2025.2-m4.yaml",
   ...tree("eval/data/agent_m4").filter((p) => p.endsWith(".json")),
   ...tree("eval/data/fleet_m4").filter((p) => p.endsWith(".json")),
   ...tree("eval/data/m4_pilot").filter((p) => p.endsWith(".json")),

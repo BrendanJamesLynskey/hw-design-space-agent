@@ -719,3 +719,51 @@ Model check (`eval/data/models_check_m4.json`, 2026-10-10T16:23:12Z, 458 models 
 
 Key usage snapshots (authoritative; `eval/data/key_usage_m4.json`): session_start_before_any_m4_call 2026-10-10T16:23:17Z $7.8163; after_pilot_structured 2026-10-10T16:25:37Z $7.8185; after_pilot_fleet 2026-10-10T16:27:23Z $7.8363; after_qwen 2026-10-10T18:03:43Z $8.5719; after_deepseek 2026-10-10T20:44:12Z $9.7514; after_sonnet_structured 2026-10-10T20:52:32Z $10.8584; after_sonnet_fleet_subset 2026-10-10T20:57:21Z $11.5831; after_eval_final 2026-10-10T20:59:36Z $11.6459; before_fleet_v2_qwen 2026-10-10T22:29:38Z $11.6459; after_fleet_v2_qwen 2026-10-10T23:07:37Z $11.9645.
 
+# 2026-10-11: the local Vivado runs (20 ns `high_precision`, `report_power`), compare and refit
+
+Generated from committed data like everything above (`eval/data/vivado_m4_compare.md`, `l5_refit_vivado-2025.2-m4.md`, `l5_class_path_factor_m4.md`). *measured (vivado 2025.2)*, xc7a35tcpg236-1; power is vectorless (12.5% default toggle, confidence Low). No LLM call and no eval re-run: the default cost model and every ground truth above are unchanged.
+
+## `high_precision` at its own 20 ns clock (needs ≥ 50 MSPS)
+
+| design | flow | measured MSPS | meets | M1 (default) | vivado-2025.2 refit | vivado-2025.2-m4 refit |
+|---|---|---|---|---|---|---|
+| m=6 | post-synthesis | 65.39 | yes | 62.52 | 63.74 | 63.74 |
+| m=6 | post-route | 53.96 | yes | 62.52 | 63.74 | 63.74 |
+| m=8 | post-synthesis | 49.88 | no | 48.00 | 48.93 | 48.93 |
+| m=8 | post-route | 48.31 | no | 48.00 | 48.93 | 48.93 |
+
+Model columns are unrouted (post-synthesis scale).
+
+## Refit `vivado-2025.2-m4`: leave-one-out RMS error, Vivado points (%)
+
+| refit | Vivado points | LUT | FF | Fmax |
+|---|---|---|---|---|
+| `vivado-2025.2` | 14 | 15.4 | 3.7 | 12.5 |
+| `vivado-2025.2-m4` | 14 | 15.4 | 3.7 | 12.5 |
+
+The 20 ns rows are counted once (4 rows dropped; each design is kept from its 10 ns row, whose post-synthesis figures are identical), so the m4 refit has the same points and constants as `vivado-2025.2`.
+
+Ground-truth winners changed under the m4 refit: none.
+
+## Per-family-class path factor: the pre-set rule
+
+(a) Vivado Fmax leave-one-out 12.5% → 7.4%: holds. (b) m=8 at 52.51 MSPS, m=6 at 68.48 (needs m=8 < 50 ≤ m=6): fails. **Rejected.**
+
+## Post-route / post-synthesis Fmax per family (Vivado)
+
+| family | designs | min | max | mean |
+|---|---|---|---|---|
+| iterative | 3 | 0.915 | 0.946 | 0.932 |
+| pipelined | 3 | 0.675 | 0.709 | 0.687 |
+| pipelined_m | 6 | 0.786 | 0.969 | 0.900 |
+| unrolled_k | 4 | 0.980 | 1.056 | 1.013 |
+
+## FPGA power index vs Vivado `report_power` (core power, 100 MHz)
+
+| stage | designs | Spearman | RMS log error |
+|---|---|---|---|
+| post-synthesis | 14 | 0.982 | 20.6% |
+| post-route | 14 | 0.969 | 36.3% |
+
+Per-family activity factor (4 parameters, post-synthesis; a separate calibration, not the default): 10.2% in-sample, 13.9% leave-one-out (one global scale: 18.8% / 20.4%).
+

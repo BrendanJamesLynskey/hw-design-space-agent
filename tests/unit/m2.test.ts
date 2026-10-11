@@ -16,6 +16,7 @@ import {
 import { ev, site } from "@/lib/dse/data";
 import { ladder, relErr, vivadoDesigns } from "@/lib/dse/ladder";
 import {
+  HP_MEASURED,
   HP_VIEWS,
   SCATTER_TOOLS,
   descentBars,
@@ -32,6 +33,7 @@ import {
   xy,
   type Metric,
 } from "@/lib/dse/m2frames";
+import { hp20, viv4 } from "@/lib/dse/vivado4";
 
 const w = ladder.worked;
 const proofs = ladder.formal.rows.filter((r) => r.family === w.family);
@@ -194,30 +196,55 @@ describe("high_precision: m=6 against m=8", () => {
     expect(frames[frames.length - 1]!.views).toEqual(HP_VIEWS);
   });
 
-  it("m=6 meets 50 MSPS in every view; m=8 in none", () => {
+  it("m=6 meets 50 MSPS in every view; m=8 in none but the rejected class factor", () => {
     for (const v of HP_VIEWS) {
       expect(hpMeets(hp, 6, v), v).toBe(true);
-      expect(hpMeets(hp, 8, v), v).toBe(false);
+      expect(hpMeets(hp, 8, v), v).toBe(v === "class_factor");
     }
     expect(hpMsps(hp, 8, "post_synth")).toBe(49.88);
     expect(hpMsps(hp, 8, "post_route")).toBe(46.46);
     expect(hpMsps(hp, 6, "post_route")).toBe(60.76);
     expect(hp.margin.post_synth["8"]).toBeCloseTo(-0.0024, 6);
+    // after M4, at the spec's own 20 ns clock (vivado_m4.json agrees)
+    expect(hpMsps(hp, 8, "post_synth_20")).toBe(49.88);
+    expect(hpMsps(hp, 8, "post_route_20")).toBe(48.31);
+    expect(hpMsps(hp, 6, "post_synth_20")).toBe(65.39);
+    expect(hpMsps(hp, 6, "post_route_20")).toBe(53.96);
+    expect(hpMsps(hp, 8, "class_factor")).toBe(52.514);
+    expect(hp20(8, "post-route").msps).toBe(hpMsps(hp, 8, "post_route_20"));
+    expect(hp20(6, "post-synthesis").msps).toBe(hpMsps(hp, 6, "post_synth_20"));
+    expect(viv4.class_factor.msps_with["8"]).toBe(
+      hpMsps(hp, 8, "class_factor"),
+    );
+    for (const v of HP_MEASURED) expect(HP_VIEWS).toContain(v);
   });
 
-  it("key frames: the captions state the margins, including the thin one", () => {
+  it("key frames: the captions state the margins, the rejected candidate and the measured verdict", () => {
     expect(hpCaption(frames[0]!, hp)).toContain("m=8, 4% smaller in Vivado");
     expect(hpCaption(frames[1]!, hp)).toContain(
       "M1 estimate: m=6 62.52 (+25.0%), m=8 48 MSPS (-4.00%). m=6 meets, m=8 misses",
     );
-    expect(hpCaption(frames[3]!, hp)).toContain(
-      "Vivado post-synthesis: m=6 65.39 (+30.8%), m=8 49.88 MSPS (-0.24%)",
+    expect(hpCaption(frames[2]!, hp)).toContain(
+      "The vivado-2025.2-m4 refit is the same fit",
     );
+    expect(hpCaption(frames[3]!, hp)).toContain(
+      "Class-factor refit (a candidate): m=6 68.48 (+37.0%), m=8 52.51 MSPS (+5.03%). It calls m=8 feasible.",
+    );
+    expect(hpCaption(frames[3]!, hp)).toContain("so it was rejected");
     expect(hpCaption(frames[4]!, hp)).toContain(
-      "Vivado post-route: m=6 60.76 (+21.5%), m=8 46.46 MSPS (-7.08%)",
+      "Vivado post-synthesis at 10 ns: m=6 65.39 (+30.8%), m=8 49.88 MSPS (-0.24%)",
     );
     expect(hpCaption(frames[5]!, hp)).toContain(
-      "only the routed figure settles it",
+      "Vivado post-route at 10 ns: m=6 60.76 (+21.5%), m=8 46.46 MSPS (-7.08%)",
+    );
+    expect(hpCaption(frames[7]!, hp)).toContain(
+      "Vivado post-route at its own 20 ns clock: m=6 53.96 (+7.9%), m=8 48.31 MSPS (-3.38%). m=6 meets, m=8 misses",
+    );
+    expect(hpCaption(frames[8]!, hp)).toContain(
+      "at its own 20 ns clock m=8 misses 50 MSPS in both views (49.88 post-synthesis, 48.31 post-route) and m=6 meets in both (65.39, 53.96)",
+    );
+    expect(hpCaption(frames[8]!, hp)).toContain(
+      "routed margin of +7.9%, not the models' +25.0%",
     );
   });
 });

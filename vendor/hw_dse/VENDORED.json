@@ -1,13 +1,13 @@
 {
   "repository": "https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent",
-  "commit": "b119c8a7bab4105a2fe1858d26dcedbd573c6fe7",
-  "committed": "2026-10-11T08:34:25+01:00",
+  "commit": "80415c6d92ca62912e8feede16f8d5ff76135df1",
+  "committed": "2026-10-11T21:15:00+01:00",
   "files": {
     "README.md": {
-      "sha256": "c0394dc7effb6eddc6cac48b6f2e128abc2d80437f5e5df962c462590c19c11e"
+      "sha256": "2f69a4989a9b67594d58cf53a96e5fa25ec24440559d721a6b6a487c883f3d38"
     },
     "eval/results.md": {
-      "sha256": "5bdbb114fbfa0c31f23dcbfbcf4b28b41e8030cf28638dfdcd1da72dd0b1c050"
+      "sha256": "8a37f566552d67a44461125b9955a34c7cf2b1938213a44218a02cd117c26600"
     },
     "eval/data/ground_truth.json": {
       "sha256": "dfca4e18299d61ebbbf49b79552093cd9a3a906a17738b2cb896806bdf1780ed"
@@ -31,7 +31,7 @@
       "sha256": "bb26f54a9fc55df5436b22faf164f48e4504441815148ef194f12c9ccb63c13c"
     },
     "eval/data/README.md": {
-      "sha256": "4ddfda5f538b0442de9a35d266c311910e5d376bb794517e4312c291837961ee"
+      "sha256": "ad9e57ed0f96d83036dabc712d1c4a31f452c652b093a1851e5e3f8344cbc900"
     },
     "eval/data/baselines_m2.json": {
       "sha256": "20fff50cad06f269fcac291e22d5f90412b29d7314bba754b137fe09cf1b555f"
@@ -757,10 +757,10 @@
       "sha256": "10b68b319f9c63c653af83e9840074a19ff264f32a89d6491162920b486b50bf"
     },
     "docs/WRITEUP.md": {
-      "sha256": "cee2280fffe9756fe240f7f82c93a4737758a5ef8ba4ab6b072a6e716b027d52"
+      "sha256": "bacce6bc5694f7018b173167383ec8ec828933fdb68b7d8cb8d7d59413f10a39"
     },
     "docs/writeup_facts.json": {
-      "sha256": "c928f15805b0133be92a628dba0925b38c6993924eef000a449b31c3fb2f3f54"
+      "sha256": "d1189d6d21c82d00ec44ddbee9c6afba793a6a28533de78ae8cef273a808abd6"
     },
     "eval/data/ground_truth_m4.json": {
       "sha256": "090519bcee0967328e3e9ce0645ec0d5d64b0c678b6b8fa1ed4e6ec7cb03a837"
@@ -794,6 +794,36 @@
     },
     "src/hw_dse/models/calibration_sky130hd.yaml": {
       "sha256": "94d05e8863810b46232e4c003e2d578eb7e988ada3bcd1bedf0b65f76f9275b9"
+    },
+    "eval/data/vivado_measured_20ns.csv": {
+      "sha256": "af80e45c3ec1437921060a7ef3e411f63f2f6d8f71336714b5a8b2430fcc3a5e"
+    },
+    "eval/data/vivado_power.csv": {
+      "sha256": "d302097335686dd8a85ae8f7093553f3b9eeaff5a24f8252d8318e8a3456b037"
+    },
+    "eval/data/vivado_m4_compare.json": {
+      "sha256": "264a7c4f56d4c0ef31fa2b1c3b907a20075204fa6daad8553fd5dda2806a29d2"
+    },
+    "eval/data/vivado_m4_compare.md": {
+      "sha256": "69eb8e147f91463b7f3734df318ab330fd78e1b0506ad48a1b99607809cacbea"
+    },
+    "eval/data/l5_refit_vivado-2025.2-m4.json": {
+      "sha256": "5b5c8aa8727b82ba7852c8e5eda2e84717fc4cf069ec31c6e75a6d2c3014794d"
+    },
+    "eval/data/l5_refit_vivado-2025.2-m4.md": {
+      "sha256": "a1308f40718aff6c34c525337a76b8a6290411faea385ba3f3bd286c3b304133"
+    },
+    "eval/data/l5_class_path_factor_m4.json": {
+      "sha256": "755a19a847f8bfc28a759acabad9e59d97d8fa9290e82d2032f736d0eba91b5c"
+    },
+    "eval/data/l5_class_path_factor_m4.md": {
+      "sha256": "102c22638cb6e0da9c697af679911d6c3396acfe7e734b61250e636475a6cb32"
+    },
+    "src/hw_dse/models/calibration_artix7_refit_vivado-2025.2-m4.yaml": {
+      "sha256": "eb5ddd016782756b7e6269e1279acc6ef3d1bd0080aee268789381b128f8351e"
+    },
+    "src/hw_dse/models/power_activity_artix7_vivado-2025.2-m4.yaml": {
+      "sha256": "2d2a8c91a6a15427fca11e3bde119af9d9c6bd59a240389e3ec6b4ba5b9fe849"
     },
     "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_low_area_seed0.json": {
       "sha256": "3a84149fd79092a8e0dfd65cdb955d3a993e727d080a835e561a6292903fac40"

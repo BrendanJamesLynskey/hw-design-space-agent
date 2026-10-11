@@ -1,8 +1,8 @@
 {
  "vendored": {
   "repository": "https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent",
-  "commit": "b119c8a7bab4105a2fe1858d26dcedbd573c6fe7",
-  "committed": "2026-10-11T08:34:25+01:00"
+  "commit": "80415c6d92ca62912e8feede16f8d5ff76135df1",
+  "committed": "2026-10-11T21:15:00+01:00"
  },
  "milestones": [
   {
@@ -46,8 +46,9 @@
   },
   {
    "id": "",
-   "levels": "measured power · `high_precision` m=8 synthesised at a 20 ns constraint · per-family-class path factor (deferred, not rejected)",
-   "status": "planned"
+   "levels": "measured power (Vivado `report_power`, 14 designs) · `high_precision` m=8 and m=6 synthesised at a 20 ns constraint · refit `vivado-2025.2-m4` · per-family-class path factor decided (rejected by a rule fixed beforehand)",
+   "status": "done",
+   "note": "M4 local runs"
   },
   {
    "id": "M3",
@@ -68,7 +69,7 @@
   },
   {
    "id": "",
-   "levels": "place and route on the ASIC target (OpenROAD) · an ASIC measure-and-re-explore loop (synthesise the selected designs, re-select under measured numbers), then a decision on an `unrolled_k` chain term, disclosed, with the held-out points kept held out · the local Vivado runs (`high_precision` at 20 ns, `report_power`) and the refit/compare they feed · per-family-class path factor (waits for the 20 ns data) · an LLM coordinator for the fleet · more functions and a richer family registry",
+   "levels": "place and route on the ASIC target (OpenROAD) · an ASIC measure-and-re-explore loop (synthesise the selected designs, re-select under measured numbers), then a decision on an `unrolled_k` chain term, disclosed, with the held-out points kept held out · an LLM coordinator for the fleet · more functions and a richer family registry",
    "status": "planned"
   }
  ],

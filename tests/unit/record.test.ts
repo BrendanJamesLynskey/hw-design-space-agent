@@ -11,6 +11,7 @@ import { ev, site } from "@/lib/dse/data";
 import { ladder } from "@/lib/dse/ladder";
 import { m3, sysSpec } from "@/lib/dse/m3";
 import { asicSpec, m4 } from "@/lib/dse/m4";
+import { hp20, viv4 } from "@/lib/dse/vivado4";
 import { cells, deciders, decisions, parseRecord } from "@/lib/record";
 
 const MD = readFileSync("content/record/project_record.md", "utf-8");
@@ -18,7 +19,7 @@ const rec = parseRecord(MD);
 const flat = MD.replace(/\s+/g, " ");
 
 describe("the record parses", () => {
-  it("into its sections (7b, 7c: M3's and M4's reviews) and its decision log", () => {
+  it("into its sections (7b, 7c, 7d: the M3, M4 and PR #7 reviews) and its decision log", () => {
     expect(rec.title).toBe("HW Design-Space Agent: project record");
     expect(rec.sections.map((s) => s.n)).toEqual([
       "1",
@@ -30,6 +31,7 @@ describe("the record parses", () => {
       "7",
       "7b",
       "7c",
+      "7d",
       "8",
       "9",
     ]);
@@ -183,7 +185,7 @@ describe("every number in the record matches the vendored data", () => {
       " ",
     );
     // the class factor's out-of-sample Fmax error on the Vivado points, as the README states it
-    expect(readme).toContain("from **12.5% to 7.4%**");
+    expect(readme).toContain("Vivado Fmax leave-one-out **12.5% → 7.4%**");
     has(
       "(better average out-of-sample Fmax error: 7.4% against 12.5% on Vivado points)",
     );
@@ -333,8 +335,8 @@ describe("every M4 number in the record matches the vendored data", () => {
 
   it("summary", () => {
     has("merged (b119c8a)");
-    has("re-vendored at b119c8a");
-    expect(site.vendored.commit.slice(0, 7)).toBe("b119c8a");
+    has("C4 (this version) re-vendored at 80415c6");
+    expect(site.vendored.commit.slice(0, 7)).toBe("80415c6");
     const c = m4.calibration;
     const h = m4.held_out;
     has(`${c.n_points} measured points + ${h.rows.length} held out`);
@@ -441,5 +443,77 @@ describe("every M4 number in the record matches the vendored data", () => {
     const next = rec.sections.find((x) => x.n === "9")!.body;
     expect(next).not.toMatch(/refit[^.;]*held|held[^.;]*refit|ASIC refit/i);
     has("no refit on the held-out points");
+  });
+});
+
+describe("every number of the local Vivado runs (PR #7) in the record matches the vendored data", () => {
+  const has = (x: string) => expect(flat, x).toContain(x);
+  const f2 = (x: number) => x.toFixed(2);
+  const p = viv4.power.stages;
+
+  it("summary and results", () => {
+    has("merged (80415c6)");
+    expect(site.vendored.commit.startsWith("80415c6")).toBe(true);
+    has(
+      `misses 50 MSPS (${f2(hp20(8, "post-synthesis").msps)} post-synthesis, ${f2(hp20(8, "post-route").msps)} post-route)`,
+    );
+    has(
+      `m=8 ${f2(hp20(8, "post-synthesis").msps)} MSPS post-synthesis (WNS −${(-hp20(8, "post-synthesis").wns_ns).toFixed(2)} ns), ${f2(hp20(8, "post-route").msps)}`,
+    );
+    has(
+      `m=6 ${f2(hp20(6, "post-synthesis").msps)} and ${f2(hp20(6, "post-route").msps)}`,
+    );
+    const c = viv4.class_factor;
+    has(
+      `from ${c.loo_without.toFixed(1)}% to ${c.loo_with.toFixed(1)}%, but it predicts m=8 at ${f2(c.msps_with["8"]!)} MSPS (+${((c.msps_with["8"]! / hp20(8, "post-synthesis").msps - 1) * 100).toFixed(1)}%)`,
+    );
+    has(`(${c.loo_without.toFixed(1)} → ${c.loo_with.toFixed(1)}%)`);
+    has(
+      `(m=8 at ${f2(c.msps_with["8"]!)} MSPS against ${f2(hp20(8, "post-synthesis").msps)} measured)`,
+    );
+    expect(c.adopt).toBe(false);
+    const r = viv4.refit;
+    const l = r.loo_vivado["vivado-2025.2-m4"]!;
+    has(
+      `(${r.n_fit_points} points; Vivado leave-one-out LUT ${l.luts.toFixed(1)}%, FF ${l.ffs.toFixed(1)}%, Fmax ${l.fmax.toFixed(1)}%; M1 ${r.m1_vivado.luts.toFixed(1)} / ${r.m1_vivado.ffs.toFixed(1)} / ${r.m1_vivado.fmax.toFixed(1)}%)`,
+    );
+    expect(r.winners_changed).toEqual([]);
+    has(
+      `(Spearman ${p["post-synthesis"].spearman.toFixed(3)} post-synthesis, ${p["post-route"].spearman.toFixed(3)} post-route) with ${p["post-synthesis"].rms_pct.toFixed(1)}% / ${p["post-route"].rms_pct.toFixed(1)}% log-RMS error`,
+    );
+    has(`(Spearman ${p["post-synthesis"].spearman.toFixed(2)})`);
+    has(`off by ${p["post-synthesis"].rms_pct.toFixed(1)}% RMS`);
+    const u = (s: "post-synthesis" | "post-route") => p[s].by_family.unrolled_k;
+    has(
+      `(${f2(u("post-synthesis")[0])}–${f2(u("post-synthesis")[1])}× post-synthesis, ${f2(u("post-route")[0])}–${f2(u("post-route")[1])}× post-route)`,
+    );
+    has(
+      `${viv4.power.fit.per_family_in.toFixed(1)}% in-sample, ${viv4.power.fit.per_family_loo.toFixed(1)}% leave-one-out`,
+    );
+    has(
+      `${viv4.post_route.min.toFixed(3)}× (\`pipelined\`) to ${viv4.post_route.max.toFixed(3)}× (\`unrolled_k\`)`,
+    );
+    expect(viv4.post_route.by_family.pipelined.min).toBe(viv4.post_route.min);
+    expect(viv4.post_route.by_family.unrolled_k.max).toBe(viv4.post_route.max);
+  });
+
+  it("the decision log: the deferral, its rule, the double count, the tie", () => {
+    has(
+      "(then; it was rejected on 2026-10-11 by a rule fixed before the fit, below)",
+    );
+    has("12.2% on 16 vs 12.5% counted once");
+    const readme = readFileSync("vendor/hw_dse/README.md", "utf-8").replace(
+      /\s+/g,
+      " ",
+    );
+    expect(readme).toContain("and so double-weighted two designs");
+    expect(readme).toContain('"12.2% on 16"');
+    const ps = p["post-synthesis"];
+    expect(ps.tied_mw).toEqual([22]);
+    has(
+      `Spearman (${ps.spearman.toFixed(3)}, ties ranked by order) with the tie-averaged value (${ps.spearman_tied.toFixed(3)}) beside it; two designs tie at ${ps.tied_mw[0]!.toFixed(1)} mW post-synthesis`,
+    );
+    has("site part C4");
+    has('\"For a hardware team\" at /adoption'.replace(/\\/g, ""));
   });
 });

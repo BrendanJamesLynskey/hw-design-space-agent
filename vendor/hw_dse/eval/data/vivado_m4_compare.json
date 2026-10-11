@@ -1,0 +1,576 @@
+{
+ "high_precision_20ns": [
+  {
+   "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=6",
+   "fmax_kind": "post-synthesis (1000/(T-WNS)); WNS 4.707 ns at 20 ns",
+   "measured_msps": 65.39,
+   "meets_50msps": true,
+   "estimates_msps": {
+    "M1 (default)": 62.52262146597915,
+    "vivado-2025.2 refit": 63.74351648757926,
+    "vivado-2025.2-m4 refit": 63.74351648757926
+   }
+  },
+  {
+   "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=6",
+   "fmax_kind": "post-route (1000/(T-WNS)); WNS 1.467 ns at 20 ns",
+   "measured_msps": 53.96,
+   "meets_50msps": true,
+   "estimates_msps": {
+    "M1 (default)": 62.52262146597915,
+    "vivado-2025.2 refit": 63.74351648757926,
+    "vivado-2025.2-m4 refit": 63.74351648757926
+   }
+  },
+  {
+   "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=8",
+   "fmax_kind": "post-synthesis (1000/(T-WNS)); WNS -0.05 ns at 20 ns",
+   "measured_msps": 49.88,
+   "meets_50msps": false,
+   "estimates_msps": {
+    "M1 (default)": 48.001788738655556,
+    "vivado-2025.2 refit": 48.92681478118216,
+    "vivado-2025.2-m4 refit": 48.92681478118216
+   }
+  },
+  {
+   "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=8",
+   "fmax_kind": "post-route (1000/(T-WNS)); WNS -0.7 ns at 20 ns",
+   "measured_msps": 48.31,
+   "meets_50msps": false,
+   "estimates_msps": {
+    "M1 (default)": 48.001788738655556,
+    "vivado-2025.2 refit": 48.92681478118216,
+    "vivado-2025.2-m4 refit": 48.92681478118216
+   }
+  }
+ ],
+ "post_route_over_post_synthesis": {
+  "designs": [
+   {
+    "key": "iterative:data_width=12,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "iterative",
+    "period_ns": 10.0,
+    "synth_mhz": 175.84,
+    "route_mhz": 166.39,
+    "ratio": 0.9463
+   },
+   {
+    "key": "iterative:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "iterative",
+    "period_ns": 10.0,
+    "synth_mhz": 172.83,
+    "route_mhz": 158.13,
+    "ratio": 0.9149
+   },
+   {
+    "key": "iterative:data_width=24,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "iterative",
+    "period_ns": 10.0,
+    "synth_mhz": 166.2,
+    "route_mhz": 155.16,
+    "ratio": 0.9336
+   },
+   {
+    "key": "pipelined:data_width=12,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "pipelined",
+    "period_ns": 10.0,
+    "synth_mhz": 341.18,
+    "route_mhz": 230.63,
+    "ratio": 0.676
+   },
+   {
+    "key": "pipelined:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "pipelined",
+    "period_ns": 10.0,
+    "synth_mhz": 327.44,
+    "route_mhz": 232.18,
+    "ratio": 0.7091
+   },
+   {
+    "key": "pipelined:data_width=24,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "pipelined",
+    "period_ns": 10.0,
+    "synth_mhz": 303.21,
+    "route_mhz": 204.83,
+    "ratio": 0.6755
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,m=2",
+    "family": "pipelined_m",
+    "period_ns": 10.0,
+    "synth_mhz": 185.94,
+    "route_mhz": 146.2,
+    "ratio": 0.7863
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,m=4",
+    "family": "pipelined_m",
+    "period_ns": 10.0,
+    "synth_mhz": 103.77,
+    "route_mhz": 99.37,
+    "ratio": 0.9576
+   },
+   {
+    "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=6",
+    "family": "pipelined_m",
+    "period_ns": 10.0,
+    "synth_mhz": 65.39,
+    "route_mhz": 60.76,
+    "ratio": 0.9292
+   },
+   {
+    "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=6",
+    "family": "pipelined_m",
+    "period_ns": 20.0,
+    "synth_mhz": 65.39,
+    "route_mhz": 53.96,
+    "ratio": 0.8252
+   },
+   {
+    "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=8",
+    "family": "pipelined_m",
+    "period_ns": 10.0,
+    "synth_mhz": 49.88,
+    "route_mhz": 46.46,
+    "ratio": 0.9314
+   },
+   {
+    "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=8",
+    "family": "pipelined_m",
+    "period_ns": 20.0,
+    "synth_mhz": 49.88,
+    "route_mhz": 48.31,
+    "ratio": 0.9685
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=2",
+    "family": "unrolled_k",
+    "period_ns": 10.0,
+    "synth_mhz": 113.83,
+    "route_mhz": 114.65,
+    "ratio": 1.0072
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=3",
+    "family": "unrolled_k",
+    "period_ns": 10.0,
+    "synth_mhz": 69.76,
+    "route_mhz": 73.69,
+    "ratio": 1.0563
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=4",
+    "family": "unrolled_k",
+    "period_ns": 10.0,
+    "synth_mhz": 66.16,
+    "route_mhz": 66.85,
+    "ratio": 1.0104
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=8",
+    "family": "unrolled_k",
+    "period_ns": 10.0,
+    "synth_mhz": 42.18,
+    "route_mhz": 41.32,
+    "ratio": 0.9796
+   }
+  ],
+  "by_family": {
+   "iterative": {
+    "n": 3,
+    "min": 0.9149,
+    "max": 0.9463,
+    "mean": 0.9316
+   },
+   "pipelined": {
+    "n": 3,
+    "min": 0.6755,
+    "max": 0.7091,
+    "mean": 0.6869
+   },
+   "pipelined_m": {
+    "n": 6,
+    "min": 0.7863,
+    "max": 0.9685,
+    "mean": 0.8997
+   },
+   "unrolled_k": {
+    "n": 4,
+    "min": 0.9796,
+    "max": 1.0563,
+    "mean": 1.0134
+   }
+  }
+ },
+ "power_post-synthesis": {
+  "stage": "post-synthesis",
+  "n": 14,
+  "provenance_index": "estimate: cost_fpga (artix7-xc7a35t-vivado2025.2-2anchor-v1, 2 anchors)",
+  "rms_log_ratio_pct": 20.610010567149438,
+  "spearman": 0.9824175824175824,
+  "designs": [
+   {
+    "key": "iterative:data_width=12,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 0.7517201117774128,
+    "measured_core_mw_100mhz": 4.5,
+    "measured_relative": 0.7894736842105262,
+    "ratio_index_to_measured": 0.9521788082513897
+   },
+   {
+    "key": "iterative:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 1.0,
+    "measured_core_mw_100mhz": 5.7,
+    "measured_relative": 1.0,
+    "ratio_index_to_measured": 1.0
+   },
+   {
+    "key": "iterative:data_width=24,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 1.4965597764451741,
+    "measured_core_mw_100mhz": 8.0,
+    "measured_relative": 1.4035087719298245,
+    "ratio_index_to_measured": 1.0662988407171867
+   },
+   {
+    "key": "pipelined:data_width=12,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 4.468678602171838,
+    "measured_core_mw_100mhz": 22.0,
+    "measured_relative": 3.859649122807017,
+    "ratio_index_to_measured": 1.1577940014717947
+   },
+   {
+    "key": "pipelined:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 5.724600944408135,
+    "measured_core_mw_100mhz": 27.700000000000003,
+    "measured_relative": 4.859649122807018,
+    "ratio_index_to_measured": 1.1779864759251397
+   },
+   {
+    "key": "pipelined:data_width=24,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 8.236445628880729,
+    "measured_core_mw_100mhz": 43.7,
+    "measured_relative": 7.666666666666667,
+    "ratio_index_to_measured": 1.0743189950713994
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,m=2",
+    "power_index_100mhz": 4.384920935172782,
+    "measured_core_mw_100mhz": 24.4,
+    "measured_relative": 4.280701754385964,
+    "ratio_index_to_measured": 1.024346284036265
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,m=4",
+    "power_index_100mhz": 3.7587248968616405,
+    "measured_core_mw_100mhz": 22.0,
+    "measured_relative": 3.859649122807017,
+    "ratio_index_to_measured": 0.973851450550516
+   },
+   {
+    "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=6",
+    "power_index_100mhz": 8.499517481766881,
+    "measured_core_mw_100mhz": 50.2,
+    "measured_relative": 8.807017543859649,
+    "ratio_index_to_measured": 0.9650846543042076
+   },
+   {
+    "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=8",
+    "power_index_100mhz": 8.17693164384902,
+    "measured_core_mw_100mhz": 49.0,
+    "measured_relative": 8.596491228070175,
+    "ratio_index_to_measured": 0.9511940891824371
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=2",
+    "power_index_100mhz": 1.3084016792529007,
+    "measured_core_mw_100mhz": 7.7,
+    "measured_relative": 1.3508771929824561,
+    "ratio_index_to_measured": 0.9685570872391603
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=3",
+    "power_index_100mhz": 1.5593192327562684,
+    "measured_core_mw_100mhz": 12.5,
+    "measured_relative": 2.192982456140351,
+    "ratio_index_to_measured": 0.7110495701368583
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=4",
+    "power_index_100mhz": 1.6776652830375973,
+    "measured_core_mw_100mhz": 15.6,
+    "measured_relative": 2.7368421052631575,
+    "ratio_index_to_measured": 0.6129930841868145
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=8",
+    "power_index_100mhz": 2.6650666921549164,
+    "measured_core_mw_100mhz": 18.3,
+    "measured_relative": 3.2105263157894735,
+    "ratio_index_to_measured": 0.8301027401794002
+   }
+  ]
+ },
+ "power_post-route": {
+  "stage": "post-route",
+  "n": 14,
+  "provenance_index": "estimate: cost_fpga (artix7-xc7a35t-vivado2025.2-2anchor-v1, 2 anchors)",
+  "rms_log_ratio_pct": 36.25302895877167,
+  "spearman": 0.9692307692307692,
+  "designs": [
+   {
+    "key": "iterative:data_width=12,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 0.7517201117774128,
+    "measured_core_mw_100mhz": 3.4000000000000004,
+    "measured_relative": 0.723404255319149,
+    "ratio_index_to_measured": 1.0391425074570118
+   },
+   {
+    "key": "iterative:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 1.0,
+    "measured_core_mw_100mhz": 4.7,
+    "measured_relative": 1.0,
+    "ratio_index_to_measured": 1.0
+   },
+   {
+    "key": "iterative:data_width=24,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 1.4965597764451741,
+    "measured_core_mw_100mhz": 7.6,
+    "measured_relative": 1.6170212765957446,
+    "ratio_index_to_measured": 0.9255040722753051
+   },
+   {
+    "key": "pipelined:data_width=12,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 4.468678602171838,
+    "measured_core_mw_100mhz": 16.6,
+    "measured_relative": 3.5319148936170213,
+    "ratio_index_to_measured": 1.265228278928171
+   },
+   {
+    "key": "pipelined:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 5.724600944408135,
+    "measured_core_mw_100mhz": 23.200000000000003,
+    "measured_relative": 4.9361702127659575,
+    "ratio_index_to_measured": 1.1597251913240618
+   },
+   {
+    "key": "pipelined:data_width=24,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "power_index_100mhz": 8.236445628880729,
+    "measured_core_mw_100mhz": 34.10000000000001,
+    "measured_relative": 7.255319148936171,
+    "ratio_index_to_measured": 1.1352285764146457
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,m=2",
+    "power_index_100mhz": 4.384920935172782,
+    "measured_core_mw_100mhz": 21.1,
+    "measured_relative": 4.48936170212766,
+    "ratio_index_to_measured": 0.9767359429057856
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,m=4",
+    "power_index_100mhz": 3.7587248968616405,
+    "measured_core_mw_100mhz": 20.4,
+    "measured_relative": 4.340425531914893,
+    "ratio_index_to_measured": 0.8659807360416525
+   },
+   {
+    "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=6",
+    "power_index_100mhz": 8.499517481766881,
+    "measured_core_mw_100mhz": 50.3,
+    "measured_relative": 10.702127659574467,
+    "ratio_index_to_measured": 0.7941895062485954
+   },
+   {
+    "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=8",
+    "power_index_100mhz": 8.17693164384902,
+    "measured_core_mw_100mhz": 48.9,
+    "measured_relative": 10.404255319148936,
+    "ratio_index_to_measured": 0.785921855339272
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=2",
+    "power_index_100mhz": 1.3084016792529007,
+    "measured_core_mw_100mhz": 7.2,
+    "measured_relative": 1.5319148936170213,
+    "ratio_index_to_measured": 0.8540955406234213
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=3",
+    "power_index_100mhz": 1.5593192327562684,
+    "measured_core_mw_100mhz": 12.6,
+    "measured_relative": 2.6808510638297873,
+    "ratio_index_to_measured": 0.5816508249170207
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=4",
+    "power_index_100mhz": 1.6776652830375973,
+    "measured_core_mw_100mhz": 16.3,
+    "measured_relative": 3.468085106382979,
+    "ratio_index_to_measured": 0.48374397731758934
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=8",
+    "power_index_100mhz": 2.6650666921549164,
+    "measured_core_mw_100mhz": 18.8,
+    "measured_relative": 4.0,
+    "ratio_index_to_measured": 0.6662666730387291
+   }
+  ]
+ },
+ "power_activity_fit": {
+  "stage": "post-synthesis",
+  "n": 14,
+  "parameters": 4,
+  "mw_per_index_unit": {
+   "iterative": 5.6712,
+   "pipelined": 5.0185,
+   "pipelined_m": 5.8268,
+   "unrolled_k": 7.4084
+  },
+  "implied_activity": {
+   "iterative": 0.1244,
+   "pipelined": 0.1101,
+   "pipelined_m": 0.1278,
+   "unrolled_k": 0.1625
+  },
+  "default_activity": 0.125,
+  "reference_mw": 5.7,
+  "rms_log_pct": {
+   "default_index_reference_normalised": 20.610010567149438,
+   "global_scale_in": 18.84854028262055,
+   "global_scale_loo": 20.437743448674574,
+   "per_family_in": 10.155483236739894,
+   "per_family_loo": 13.931267564283045
+  },
+  "spearman_fit": 0.9912087912087912,
+  "spearman_default": 0.9824175824175824,
+  "designs": [
+   {
+    "key": "iterative:data_width=12,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "iterative",
+    "power_index_100mhz": 0.7517201117774128,
+    "measured_core_mw_100mhz": 4.5,
+    "fitted_mw": 4.263162389390607,
+    "ratio_fit_to_measured": 0.9473694198645793,
+    "ratio_loo_to_measured": 0.9221021678440137
+   },
+   {
+    "key": "iterative:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "iterative",
+    "power_index_100mhz": 1.0,
+    "measured_core_mw_100mhz": 5.7,
+    "fitted_mw": 5.671209699725242,
+    "ratio_fit_to_measured": 0.9949490701272354,
+    "ratio_loo_to_measured": 0.9924331802195371
+   },
+   {
+    "key": "iterative:data_width=24,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "iterative",
+    "power_index_100mhz": 1.4965597764451741,
+    "measured_core_mw_100mhz": 8.0,
+    "fitted_mw": 8.487304320394513,
+    "ratio_fit_to_measured": 1.060913040049314,
+    "ratio_loo_to_measured": 1.0927471469380985
+   },
+   {
+    "key": "pipelined:data_width=12,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "pipelined",
+    "power_index_100mhz": 4.468678602171838,
+    "measured_core_mw_100mhz": 22.0,
+    "fitted_mw": 22.42602788906345,
+    "ratio_fit_to_measured": 1.0193649040483388,
+    "ratio_loo_to_measured": 1.029187530288298
+   },
+   {
+    "key": "pipelined:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "pipelined",
+    "power_index_100mhz": 5.724600944408135,
+    "measured_core_mw_100mhz": 27.700000000000003,
+    "fitted_mw": 28.728864136852753,
+    "ratio_fit_to_measured": 1.0371431096336732,
+    "ratio_loo_to_measured": 1.0562288595320213
+   },
+   {
+    "key": "pipelined:data_width=24,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc",
+    "family": "pipelined",
+    "power_index_100mhz": 8.236445628880729,
+    "measured_core_mw_100mhz": 43.7,
+    "fitted_mw": 41.33453663243135,
+    "ratio_fit_to_measured": 0.9458704034881316,
+    "ratio_loo_to_measured": 0.9199144795505253
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,m=2",
+    "family": "pipelined_m",
+    "power_index_100mhz": 4.384920935172782,
+    "measured_core_mw_100mhz": 24.4,
+    "fitted_mw": 25.55012954702207,
+    "ratio_fit_to_measured": 1.0471364568451669,
+    "ratio_loo_to_measured": 1.063337279831102
+   },
+   {
+    "key": "pipelined_m:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,m=4",
+    "family": "pipelined_m",
+    "power_index_100mhz": 3.7587248968616405,
+    "measured_core_mw_100mhz": 22.0,
+    "fitted_mw": 21.90140015435601,
+    "ratio_fit_to_measured": 0.9955181888343642,
+    "ratio_loo_to_measured": 0.994028719928978
+   },
+   {
+    "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=6",
+    "family": "pipelined_m",
+    "power_index_100mhz": 8.499517481766881,
+    "measured_core_mw_100mhz": 50.2,
+    "fitted_mw": 49.52512849305584,
+    "ratio_fit_to_measured": 0.986556344483184,
+    "ratio_loo_to_measured": 0.9821154092781662
+   },
+   {
+    "key": "pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m=8",
+    "family": "pipelined_m",
+    "power_index_100mhz": 8.17693164384902,
+    "measured_core_mw_100mhz": 49.0,
+    "fitted_mw": 47.64548001804605,
+    "ratio_fit_to_measured": 0.9723567350621644,
+    "ratio_loo_to_measured": 0.9633131798847856
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=2",
+    "family": "unrolled_k",
+    "power_index_100mhz": 1.3084016792529007,
+    "measured_core_mw_100mhz": 7.7,
+    "fitted_mw": 9.693102775279556,
+    "ratio_fit_to_measured": 1.258844516270072,
+    "ratio_loo_to_measured": 1.3592399268222917
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=3",
+    "family": "unrolled_k",
+    "power_index_100mhz": 1.5593192327562684,
+    "measured_core_mw_100mhz": 12.5,
+    "fitted_mw": 11.551988829001699,
+    "ratio_fit_to_measured": 0.9241591063201359,
+    "ratio_loo_to_measured": 0.9001792469272101
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=4",
+    "family": "unrolled_k",
+    "power_index_100mhz": 1.6776652830375973,
+    "measured_core_mw_100mhz": 15.6,
+    "fitted_mw": 12.428738260476246,
+    "ratio_fit_to_measured": 0.7967139910561696,
+    "ratio_loo_to_measured": 0.7385897196785138
+   },
+   {
+    "key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=trunc,k=8",
+    "family": "unrolled_k",
+    "power_index_100mhz": 2.6650666921549164,
+    "measured_core_mw_100mhz": 18.3,
+    "fitted_mw": 19.743757410019892,
+    "ratio_fit_to_measured": 1.0788938475420706,
+    "ratio_loo_to_measured": 1.106551476534459
+   }
+  ]
+ }
+}

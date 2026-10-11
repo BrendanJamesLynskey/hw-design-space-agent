@@ -121,3 +121,17 @@ Part C3 (M4, 2026-10-11) added:
   Never edit the vendored text to make it render: change the renderer.
 - The ladder has an `ASIC` rung (README L4, ASIC target); the hero marks it "not used by this run".
 - The record has a `7c` section; `pnpm smoke` checks the M4 headings, PR #6, "After M4" and /writeup.
+
+Part C4 (the local Vivado runs and "For a hardware team", 2026-10-11) added:
+
+- `scripts/export_vivado_m4.py` writes `src/data/vivado_m4.json` from the 07V/07R data (PR #7) and asserts every row
+  of results.md's appended "2026-10-11: the local Vivado runs" section verbatim; `scripts/export_ladder.py` adds the
+  20 ns rows and the rejected class-factor candidate to `high_precision` (the case-study widget's seven views).
+- results.md's power Spearman ranks tied values by order; the export checks the repository's figure that way and
+  records the tie-averaged one beside it (`spearman_tied`). Keep both if the data changes.
+- `/adoption` is a TSX page (not MDX): its numbers come from `V_()` values and the vendored write-up's facts, its
+  "next steps" are read from `docs/WRITEUP.md` ("What I would do next"), and `tests/unit/adoption.test.ts` resolves
+  every value and README anchor it uses. Keep proposals marked `<Proposal />` and claims linked with `<Ev>`.
+- `/writeup` tables keep identifiers whole (`.writeup-table`, a renderer class): they scroll at 390 px instead of
+  breaking `asic_low_area` one character per line.
+- LHCI and `pnpm smoke` include `/adoption` (10 URLs).
