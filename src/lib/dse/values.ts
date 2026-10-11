@@ -427,6 +427,7 @@ function m4Values(): Record<string, number | string> {
     "ab.qwen2.pairs": test(Q, "fleet_v2").select_regret.n,
     "ab.qwen2.regret_p": test(Q, "fleet_v2").select_regret.sign_p,
     "ab.qwen2.regret_diff": test(Q, "fleet_v2").select_regret.mean,
+    "ab.qwen2.regret_pts": test(Q, "fleet_v2").select_regret.mean * 100,
     "ab.qwen.single_regret": row(Q, "single").regret.mean,
     "ab.qwen.v2_regret": row(Q, "fleet_v2").regret.mean,
     "ab.qwen.single_hv": row(Q, "single").hv.mean,

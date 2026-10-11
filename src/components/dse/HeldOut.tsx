@@ -42,7 +42,7 @@ function ErrPanel({
   const [lo, hi] = metric === "area_err" ? [-10, 10] : [-20, 45];
   const ticks = metric === "area_err" ? [-10, -5, 0, 5, 10] : [-20, 0, 20, 40];
   const rowH = 22;
-  const M = { l: 22, r: 10, t: 26, b: 28 };
+  const M = { l: 22, r: 22, t: 26, b: 28 };
   const H = M.t + M.b + rows.length * rowH;
   const sx = (v: number) => M.l + ((v - lo) / (hi - lo)) * (W - M.l - M.r);
   return (
@@ -180,9 +180,7 @@ export default function HeldOut({
                   className={
                     !f.summary && i === f.shown - 1
                       ? "bg-indigo-50 dark:bg-indigo-950/40"
-                      : i < f.shown
-                        ? ""
-                        : "opacity-40"
+                      : ""
                   }
                 >
                   <td>{i + 1}</td>

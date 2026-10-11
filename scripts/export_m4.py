@@ -285,7 +285,7 @@ def held_out(md: str, writeup: str) -> dict[str, Any]:
             "optimistic_min_over_1pct": round(min(x for x in opt if x > 0.01), 6)}
 
 
-def replay_design(key: str, s: Spec, fmax_mhz: float, label: str, clock: str) -> dict[str, Any]:
+def replay_design(key: str, s: Spec, fmax_mhz: float, label: str, clock: str, cost_model: Any = None) -> dict[str, Any]:
     """One design's control loop simulated at a given clock (hw_dse.l2.system), as export_m3's
     system replay: every tick's batch latency, and the p99 tick request by request."""
     scn = s.system
@@ -305,7 +305,10 @@ def replay_design(key: str, s: Spec, fmax_mhz: float, label: str, clock: str) ->
     acc = r.accept_edge[idx] * r.period_ns - t0
     res = r.result_ns[idx] - t0
     lim = s.constraint_for("sys_p99_batch_us", "<=").value
-    rec = evaluate(a, s)
+    # the L1 bound at the same clock: the estimate's, or the measured design's (as the held-out
+    # check evaluates it, with the measured numbers as its cost model)
+    rec = evaluate(a, s, cost_model=cost_model) if cost_model is not None else evaluate(a, s)
+    assert math.isclose(float(rec["fmax_mhz"]), float(fmax_mhz), rel_tol=1e-9)
     return {"view": label, "clock": clock, "key": key, "family": a.family, "m": params_from_key(key).get("m"),
             "area_um2": r6(rec["area_um2"]), "fmax_mhz": r6(fmax_mhz), "period_ns": round(r.period_ns, 6),
             "latency": c.latency, "ii": c.ii, "bound_us": r6(rec["sys_p99_batch_us"]),
@@ -323,9 +326,12 @@ def deadline_miss(gt: dict[str, Any], ho: dict[str, Any], writeup: str) -> dict[
     plain = [r for r in ho["rows"] if r["meets"]["asic_multiaxis_control"]]
     assert len(plain) == 1 and plain[0]["family"] == "pipelined"
     est = evaluate(arch_of(w["winner"]), s)
+    pts = {p.arch.key(): p for p in load_csv(D / "asic_validation.csv")}
     designs = [replay_design(w["winner"], s, float(est["fmax_mhz"]), "winner", "estimated"),
-               replay_design(w["winner"], s, float(win["fmax_meas"]), "winner", "measured"),
-               replay_design(plain[0]["key"], s, float(plain[0]["fmax_meas"]), "pipelined", "measured")]
+               replay_design(w["winner"], s, float(pts[w["winner"]].fmax_mhz), "winner", "measured",
+                             _MeasuredAsicCost(pts[w["winner"]])),
+               replay_design(plain[0]["key"], s, float(pts[plain[0]["key"]].fmax_mhz), "pipelined", "measured",
+                             _MeasuredAsicCost(pts[plain[0]["key"]]))]
     # the estimate's p99 is the committed ground truth's; the measured clock's is the held-out table's
     gtw = json.loads((D / "ground_truth_m4.json").read_text())["asic_multiaxis_control"]["selected"]
     assert math.isclose(designs[0]["p99_us"], gtw["sys_p99_batch_us"], rel_tol=1e-6)
@@ -656,7 +662,7 @@ def fleet_run(md: str) -> dict[str, Any]:
     lanes = [{"member": m, "phase": ph, "evals": lane(ev)} for (m, ph), ev in recs_by.items()]
     distinct_after_p1 = len({r["key"] for r in recs1})
     gt = json.loads((D / "ground_truth_m4.json").read_text())[spec_name]
-    return {"arm": arm, "model": label_of(summ), "spec": spec_name, "seed": seed, "select_by": sel_by,
+    return {"arm": arm, "model": label_of(summ), "label": MODEL_LABELS[label_of(summ)], "spec": spec_name, "seed": seed, "select_by": sel_by,
             "budget": s.budget.total_evals, "members": members, "lanes": lanes,
             "lessons": {f: {k: (r6(v) if isinstance(v, float) else v) for k, v in x.items()} for f, x in les.items()},
             "phase2_budgets": summ["phase2_budgets"], "front1_share": dict(zip([m for m, _ in order], weights)),

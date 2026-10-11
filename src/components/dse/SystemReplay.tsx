@@ -49,6 +49,8 @@ export type ReplayConfig = {
   strip: [number, number];
   stripTicks: number[];
   stripAria: string;
+  /** The note under the chart on what clock each lane runs at. */
+  clockNote: ReactNode;
 };
 
 export default function SystemReplay({
@@ -64,7 +66,7 @@ export default function SystemReplay({
   const font = useSvgFont(W);
   const narrow = font.narrow;
   const strip = f.phase === "ticks" || f.phase === "verdict";
-  const M = { l: narrow ? 10 : 190, r: 16, t: 26, b: 34 };
+  const M = { l: narrow ? 10 : 190, r: 16, t: 26, b: narrow ? 44 : 34 };
   const label = narrow ? 30 : 0;
   const laneH = narrow ? 52 : 46;
   const H = M.t + M.b + rep.designs.length * (laneH + label);
@@ -89,6 +91,11 @@ export default function SystemReplay({
     strip: [340, 620],
     stripTicks: [360, 400, 440, 480, 520, 560, 600],
     stripAria: `Batch latency of every tick for m=7, m=5 and m=4 against the ${rep.limit_us} µs limit`,
+    clockNote: (
+      <>
+        Clocks are each design&apos;s estimated Fmax <Prov kind="estimate" />.
+      </>
+    ),
     ...config,
   };
   const [lo, hi] = strip ? cfg.strip : [0, 640];
@@ -326,8 +333,7 @@ export default function SystemReplay({
             {strip
               ? "Dashed line: the L1 analytic bound (estimate); thick line: the simulated p99 over all ticks."
               : "Thin marks: an accept at a clock edge; bars: a result out. Each design's p99 tick is shown."}{" "}
-            Clocks are each design&apos;s estimated Fmax{" "}
-            <Prov kind="estimate" />.
+            {cfg.clockNote}
           </p>
           <table className="mt-2 w-full text-xs" data-testid="system-table">
             <thead>

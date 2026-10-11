@@ -50,6 +50,14 @@ export default function DeadlineReplay({
         row: (d) => laneName(d as unknown as TickDesign),
         strip: [360, 600],
         stripTicks: [380, 420, 460, 500, 540, 580],
+        clockNote: (
+          <>
+            The winner runs at its estimated clock <Prov kind="estimate" /> and
+            at its measured clock <Prov kind="measured" />; plain pipelined at
+            its measured clock. The L1 bound is computed at the same clock as
+            each lane.
+          </>
+        ),
         stripAria: `Batch latency of every tick for the winner at ${trim(est.fmax_mhz, 3)} and ${trim(meas.fmax_mhz, 3)} MHz and for plain pipelined, against the ${rep.limit_us} µs limit`,
       }}
     />

@@ -102,7 +102,7 @@
    "repo_level": "L2",
    "what": "the candidate inside a SimPy model of its system (a DDS feeding a mixer, a control loop, a bursty request stream), clocked at its estimated Fmax; every L1-feasible design of a run is simulated",
    "ppa": "sustained throughput under back-pressure, p50/p99 and batch latency, queue depth (simulated)",
-   "check": "exhaustive ground truth for 3 system specs (1,092 distinct timing tuples cover all 635,040 designs); the winner changes on 2 of them; the device is checked request by request against the cycle model",
+   "check": "exhaustive ground truth for 3 system specs (1,092 distinct timing tuples cover all 635,040 designs); the winner changes on 2 of them, and on the ASIC system spec (M4: 8,533 designs pass the bound, 7,898 the simulation); the device is checked request by request against the cycle model",
    "status": "live",
    "plan_only": false
   },
@@ -152,7 +152,7 @@
   },
   {
    "id": "ASIC",
-   "name": "ASIC synthesis (sky130)",
+   "name": "Synthesis on sky130 (standard cells)",
    "milestone": "M4",
    "repo_level": "L4",
    "what": "the same generated RTL through Yosys 0.33 + OpenSTA 3.1.0 on sky130_fd_sc_hd (typical corner, 25 °C, 1.80 V, 10 ns clock): post-synthesis with a wire-load model, no place and route",

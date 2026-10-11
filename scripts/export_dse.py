@@ -143,6 +143,8 @@ def ladder_levels(lad: dict[str, Any], m3: dict[str, Any], m4: dict[str, Any]) -
     l3, fm, l4, viv = lad["l3"], lad["formal"], lad["l4"], lad["vivado"]
     cyc, gt3 = m3["cycle"], m3["ground_truth"]
     cal, ho = m4["calibration"], m4["held_out"]
+    gtm4 = next(x for x in m4["ground_truth"]["specs"] if x["name"] == "asic_multiaxis_control")
+    assert gtm4["l1_bound_winner"] != gtm4["winner"]
     changed = [r["name"] for r in gt3["specs"] if r["winner_changes"]]
     sims = " and ".join(s.split(" 20")[0] for s in l3["simulators"])
     n_viv = len({r["key"] for r in viv["rows"] if r["batch"] > 0})
@@ -160,8 +162,9 @@ def ladder_levels(lad: dict[str, Any], m3: dict[str, Any], m4: dict[str, Any]) -
                   "request stream), clocked at its estimated Fmax; every L1-feasible design of a run is simulated"),
          "ppa": "sustained throughput under back-pressure, p50/p99 and batch latency, queue depth (simulated)",
          "check": (f"exhaustive ground truth for {len(gt3['specs'])} system specs ({gt3['n_tuples']:,} distinct timing tuples "
-                   f"cover all 635,040 designs); the winner changes on {len(changed)} of them; the device is checked request "
-                   "by request against the cycle model")},
+                   f"cover all 635,040 designs); the winner changes on {len(changed)} of them, and on the ASIC system spec "
+                   f"(M4: {gtm4['l1_bound_feasible']:,} designs pass the bound, {gtm4['n_feasible']:,} the simulation); the "
+                   "device is checked request by request against the cycle model")},
         {"id": "L2", "name": "Cycle-level simulation", "milestone": "M3", "repo_level": "L2",
          "what": "a cycle-accurate model of each family's interface (ready, valid, latency, initiation interval), edge by edge",
          "ppa": "accepts, stalls and results per clock edge (exact); output codes from the golden model",
@@ -182,7 +185,7 @@ def ladder_levels(lad: dict[str, Any], m3: dict[str, Any], m4: dict[str, Any]) -
          "what": "the Yosys-mapped netlist, simulated with the vendor cell models (zero-delay)",
          "ppa": "function after synthesis (exact)",
          "check": f"every output code against the golden model: {l3['gate_runs']} runs, 0 mismatches"},
-        {"id": "ASIC", "name": "ASIC synthesis (sky130)", "milestone": "M4", "repo_level": "L4",
+        {"id": "ASIC", "name": "Synthesis on sky130 (standard cells)", "milestone": "M4", "repo_level": "L4",
          "what": (f"the same generated RTL through {cal['tool'].replace('yosys', 'Yosys')} on {cal['library']} (typical corner, "
                   f"25 °C, 1.80 V, {cal['clock_ns']:g} ns clock): post-synthesis with a wire-load model, no place and route"),
          "ppa": ("cell area, flip-flops, register-to-register Fmax and vectorless power measured; while exploring, an "

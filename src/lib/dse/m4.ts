@@ -179,6 +179,7 @@ export type FleetEval = [number, number, number | null, number];
 export type FleetRun = {
   arm: string;
   model: string;
+  label: string;
   spec: string;
   seed: number;
   select_by: string;
@@ -635,7 +636,7 @@ export function fleetCaption(f: FleetFrame, run: FleetRun): string {
   const p2 = run.members.find((m) => m.phase === 2);
   switch (f.phase) {
     case "start":
-      return `A real fleet run: ${run.model}, ${run.spec}, seed ${run.seed}, after the review fix. Code splits the families by contract class: member fsm (${fsm.families.join(", ")}) and member pipelined (${pipe.families.join(", ")}), each an unchanged structured graph with its own LLM architect. Phase 1: half the ${run.budget} evaluations, ${fsm.budget} each, in parallel.`;
+      return `A real fleet run: ${run.label}, ${run.spec}, seed ${run.seed}, after the review fix. Code splits the families by contract class: member fsm (${fsm.families.join(", ")}) and member pipelined (${pipe.families.join(", ")}), each an unchanged structured graph with its own LLM architect. Phase 1: half the ${run.budget} evaluations, ${fsm.budget} each, in parallel.`;
     case "p1": {
       const w = written(f);
       return `Phase 1: every evaluation is written to the shared LangGraph Store as it finishes (${w} so far). fsm: ${f.done[0]} evaluated, ${feasibleIn(run, 0, f.done[0]!)} meet the spec; pipelined: ${f.done[1]} evaluated, ${feasibleIn(run, 1, f.done[1]!)} meet it.${f.done[0] === fsm.n_evals && fsm.llm_declared_infeasible ? ` The fsm member's architect declared its families infeasible (decisions: ${fsm.decisions.join(" → ")}): no FSM design reaches 50 MSPS.` : ""}`;

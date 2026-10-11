@@ -56,14 +56,17 @@ export function AsicCalibrationTable(): JSX.Element {
   return (
     <Scroll label="ASIC cost model: fit and leave-one-out">
       <table className="w-full text-sm" data-testid="asic-cal-table">
+        <caption className="pb-1 text-left text-xs text-neutral-600 dark:text-neutral-400">
+          RMS error, %: in-sample / leave-one-out (power against OpenSTA)
+        </caption>
         <thead>
           <tr>
             <th className={TH}>Family</th>
             <th className={TH}>Points</th>
-            <th className={TH}>Area, RMS % (in / leave-one-out)</th>
-            <th className={TH}>Flip-flops</th>
+            <th className={TH}>Area</th>
+            <th className={TH}>FFs</th>
             <th className={TH}>Fmax</th>
-            <th className={TH}>Power vs OpenSTA</th>
+            <th className={TH}>Power</th>
           </tr>
         </thead>
         <tbody>

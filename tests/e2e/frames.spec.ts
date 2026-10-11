@@ -44,6 +44,16 @@ import {
   scatterFrames,
   shiftFrames,
 } from "@/lib/dse/m2frames";
+import {
+  asicCaption,
+  asicFrames,
+  deadlineCaption,
+  fleetCaption,
+  fleetFrames,
+  heldCaption,
+  heldFrames,
+  m4,
+} from "@/lib/dse/m4";
 import { races, raceSteps } from "@/lib/dse/race";
 import { replayFrames } from "@/lib/dse/replay";
 import type { RunData } from "@/lib/dse/runs";
@@ -326,4 +336,97 @@ test("the cycle model against the RTL: captions from the validation trace, both 
     for (const i of keySteps(frames.length))
       await frame(fig, i, cycleCaption(frames[i]!, w, c));
   }
+});
+
+test("FPGA or ASIC: captions from the exhaustive ground truth's depth sweeps", async ({
+  page,
+}) => {
+  await page.goto("/how-it-works");
+  const fig = page.getByTestId("asic-widget");
+  await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
+  const specs = m4.ground_truth.specs;
+  const frames = asicFrames(specs);
+  for (const i of keySteps(frames.length))
+    await frame(fig, i, asicCaption(frames[i]!, specs));
+  // the power spec's pick: m=3 on sky130 against m=7 on the FPGA
+  const pick = frames.findIndex(
+    (f) => f.phase === "pick" && f.spec === "asic_power_50msps",
+  );
+  await frame(fig, pick, asicCaption(frames[pick]!, specs));
+  await expect(
+    fig.locator('svg[data-panel="asic"] g[data-winner="true"]'),
+  ).toHaveAttribute("data-m", "3");
+  await expect(
+    fig.locator('svg[data-panel="fpga"] g[data-winner="true"]'),
+  ).toHaveAttribute("data-m", "7");
+  const mpick = frames.findIndex(
+    (f) => f.phase === "pick" && f.spec === "asic_multiaxis_control",
+  );
+  await frame(fig, mpick, asicCaption(frames[mpick]!, specs));
+  await expect(
+    fig.locator('svg[data-panel="asic"] g[data-winner="true"]'),
+  ).toHaveAttribute("data-m", "2");
+  await expect(
+    fig.locator('svg[data-panel="fpga"] g[data-winner="true"]'),
+  ).toHaveAttribute("data-m", "5");
+});
+
+test("the held-out check: captions from the nine sky130 measurements", async ({
+  page,
+}) => {
+  await page.goto("/how-it-works");
+  const fig = page.getByTestId("held-widget");
+  await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
+  const h = m4.held_out;
+  const specs = m4.ground_truth.specs;
+  const frames = heldFrames(h.rows);
+  for (const i of keySteps(frames.length))
+    await frame(fig, i, heldCaption(frames[i]!, h.rows, specs, h));
+  await expect(fig.locator('tr[data-current="true"]')).toHaveCount(0);
+  await frame(fig, 0, heldCaption(frames[0]!, h.rows, specs, h));
+  await expect(fig.locator('tr[data-current="true"]')).toContainText(
+    "unrolled_k W=15 N=13 k=2",
+  );
+});
+
+test("the deadline miss: captions from the SimPy replay at both clocks", async ({
+  page,
+}) => {
+  await page.goto("/how-it-works");
+  const fig = page.getByTestId("deadline-widget");
+  await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
+  const rep = m4.deadline;
+  const frames = sysFrames(rep as never);
+  for (const i of keySteps(frames.length))
+    await frame(fig, i, deadlineCaption(frames[i]!, rep));
+  // the verdict: the estimate meets, the measured clock misses, plain pipelined meets
+  await frame(fig, frames.length - 1, deadlineCaption(frames.at(-1)!, rep));
+  const lanes = fig.locator("g[data-view]");
+  await expect(lanes).toHaveCount(3);
+  for (const [i, ok] of ["true", "false", "true"].entries())
+    await expect(lanes.nth(i)).toHaveAttribute("data-meets", ok);
+});
+
+test("the fleet: captions from one fleet run's records, then the paired A/B", async ({
+  page,
+}) => {
+  await page.goto("/how-it-works");
+  const fig = page.getByTestId("fleet-widget");
+  await expect(fig).toBeVisible({ timeout: WIDGET_TIMEOUT });
+  const run = m4.fleet_run;
+  const frames = fleetFrames(run);
+  for (const i of keySteps(frames.length))
+    await frame(fig, i, fleetCaption(frames[i]!, run));
+  const seed = frames.findIndex((f) => f.phase === "seed");
+  await frame(fig, seed, fleetCaption(frames[seed]!, run));
+  await expect(fig.getByTestId("fleet-lessons")).toBeVisible();
+  const merge = frames.findIndex((f) => f.phase === "merge");
+  await frame(fig, merge, fleetCaption(frames[merge]!, run));
+  await expect(fig.locator('rect[data-front="true"]')).toHaveCount(
+    run.lanes.flatMap((l) => l.evals).filter((e) => e[3] === 1).length,
+  );
+  await frame(fig, frames.length - 1, fleetCaption(frames.at(-1)!, run));
+  await expect(
+    fig.locator("svg[data-metric='select_regret'] g[data-row]"),
+  ).toHaveCount(4);
 });

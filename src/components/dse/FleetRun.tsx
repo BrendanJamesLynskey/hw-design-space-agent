@@ -34,12 +34,12 @@ import { FAMILY_COLOUR, OKABE_ITO } from "@/lib/viz/palette";
 import { Prov } from "./Badges";
 
 const W = 600;
-const COLS = 50;
 
 function Lanes({ run, f }: { run: Run; f: FleetFrame }): JSX.Element {
   const font = useSvgFont(W);
   const narrow = font.narrow;
   const L = narrow ? 0 : 120;
+  const COLS = narrow ? 25 : 50;
   const cell = (W - L) / COLS;
   const label = narrow ? 18 : 0;
   const gap = 10;
@@ -132,11 +132,12 @@ function PairDots({
   const font = useSvgFont(W);
   const narrow = font.narrow;
   const rows = abRows();
-  const L = narrow ? 8 : 190;
-  const R = narrow ? 8 : 130;
-  const rowH = narrow ? 50 : 34;
-  const label = narrow ? 16 : 0;
-  const M = { t: 10, b: 30 };
+  const L = narrow ? 24 : 190;
+  const R = narrow ? 24 : 130;
+  const rowH = narrow ? 70 : 34;
+  const label = narrow ? 30 : 0;
+  const M = { t: 10, b: narrow ? 50 : 30 };
+  const dot = narrow ? 5.5 : 3.2;
   const H = M.t + M.b + rows.length * (rowH + label);
   const [lo, hi] = metric === "hv_frac" ? [-0.4, 0.2] : [-1, 1];
   const sx = (v: number) =>
@@ -164,7 +165,7 @@ function PairDots({
           />
           <text
             x={sx(v)}
-            y={H - M.b + 14}
+            y={H - M.b + (narrow ? 22 : 14)}
             textAnchor="middle"
             fontSize={font.fs(10)}
             fill="currentColor"
@@ -195,7 +196,7 @@ function PairDots({
           <g key={r.key} data-row={r.key} data-n={pairs.length}>
             <text
               x={narrow ? L : L - 8}
-              y={narrow ? top + 12 : y0 + rowH / 2 + 4}
+              y={narrow ? top + 22 : y0 + rowH / 2 + 4}
               textAnchor={narrow ? "start" : "end"}
               fontSize={font.fs(10)}
               fill="currentColor"
@@ -209,8 +210,8 @@ function PairDots({
               <circle
                 key={k}
                 cx={sx(p.d)}
-                cy={y0 + 6 + ((k * 7) % (rowH - 12))}
-                r={3.2}
+                cy={y0 + dot + 2 + ((k * 7) % (rowH - 2 * dot - 4))}
+                r={dot}
                 fill={
                   (metric === "hv_frac" ? p.d > 0 : p.d < 0)
                     ? OKABE_ITO.green
@@ -249,7 +250,7 @@ export default function FleetRun({ run }: { run: Run }): JSX.Element {
       title="The fleet: two graphs, one Store, code in between"
       summary={
         <>
-          A real fleet run ({run.model}, {run.spec}, seed {run.seed}), from its
+          A real fleet run ({run.label}, {run.spec}, seed {run.seed}), from its
           members&apos; recorded evaluations; then the paired A/B against the
           single graph. Filled cells met the spec <Prov kind="estimate" />; LLM
           cost <Prov kind="measured" />.
@@ -294,10 +295,10 @@ export default function FleetRun({ run }: { run: Run }): JSX.Element {
                   <thead>
                     <tr>
                       <th className="text-left font-semibold">Family</th>
-                      <th className="text-left font-semibold">Evaluated</th>
+                      <th className="text-left font-semibold">Evals</th>
                       <th className="text-left font-semibold">Feasible</th>
-                      <th className="text-left font-semibold">On the front</th>
-                      <th className="text-left font-semibold">Phase-2 seeds</th>
+                      <th className="text-left font-semibold">On front</th>
+                      <th className="text-left font-semibold">Seeds</th>
                     </tr>
                   </thead>
                   <tbody>

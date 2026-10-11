@@ -229,6 +229,7 @@ Round 1: no blocking, 7 should-fix, 15 nits; every data claim reproduced.
 - The fleet's shared store was never read and a 10-evaluation member budget could not be spent; fixed and re-run.
 - The Vivado power parser double-counted core power; the constructed feedback spec used a 1 MS/s floor against a
   130 MS/s stream; three doc slips. All fixed.
+
 Round 2: one doc fix (a ruled-out refit still listed as planned), fixed before merge.
 
 ## 8. Known limitations
