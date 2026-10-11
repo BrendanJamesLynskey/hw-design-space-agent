@@ -1,0 +1,154 @@
+{
+ "milestone": "m4",
+ "arm": "fleet",
+ "pilot": false,
+ "spec": "multiaxis_control",
+ "target": "fpga-artix7",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "status": "stopped",
+ "llm_calls": 8.0,
+ "llm_failures": 0.0,
+ "input_tokens": 21343.0,
+ "output_tokens": 6277.0,
+ "cost_usd": 0.013661476999999998,
+ "wall_s": 74.7,
+ "decisions": [
+  "add_family",
+  "infeasible",
+  "stop",
+  "refine",
+  "stop"
+ ],
+ "l1_selected_key": "pipelined_m:data_width=15,n_iter=14,angle_guard=4,frac_guard=3,rounding=round,m=3",
+ "l2_winner_changed": false,
+ "l2_feedback": null,
+ "back_annotation_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 17757.426216359574,
+ "hv_frac": 0.7879283517270447,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=15,n_iter=14,angle_guard=4,frac_guard=3,rounding=round,m=3",
+ "select_regret": 0.12991712512236311,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "members": [
+  {
+   "member": "fsm",
+   "families": [
+    "iterative",
+    "unrolled_k"
+   ],
+   "phase": 1,
+   "budget": 100,
+   "status": "infeasible",
+   "rounds": 2,
+   "decisions": [
+    "add_family",
+    "infeasible"
+   ],
+   "coverage_rounds": 0,
+   "wall_s": 33.6,
+   "run_dir": "runs/fleet_m4/multiaxis_control/seed2-20261010-172302/fsm-p1/multiaxis_control/20261010-172302-eb87",
+   "llm_declared_infeasible": true,
+   "n_evals": 100,
+   "cost_usd": 0.007749521
+  },
+  {
+   "member": "pipelined",
+   "families": [
+    "pipelined",
+    "pipelined_m"
+   ],
+   "phase": 1,
+   "budget": 100,
+   "status": "stopped",
+   "rounds": 2,
+   "decisions": [
+    "stop"
+   ],
+   "coverage_rounds": 1,
+   "wall_s": 31.1,
+   "run_dir": "runs/fleet_m4/multiaxis_control/seed2-20261010-172302/pipelined-p1/multiaxis_control/20261010-172302-1752",
+   "llm_declared_infeasible": false,
+   "n_evals": 100,
+   "cost_usd": 0.001697222
+  },
+  {
+   "member": "pipelined",
+   "families": [
+    "pipelined",
+    "pipelined_m"
+   ],
+   "phase": 2,
+   "budget": 200,
+   "status": "stopped",
+   "rounds": 3,
+   "decisions": [
+    "refine",
+    "stop"
+   ],
+   "coverage_rounds": 1,
+   "wall_s": 40.7,
+   "run_dir": "runs/fleet_m4/multiaxis_control/seed2-20261010-172302/pipelined-p2/multiaxis_control/20261010-172335-128a",
+   "llm_declared_infeasible": false,
+   "n_evals": 200,
+   "cost_usd": 0.0042147339999999995
+  }
+ ],
+ "phase2_budgets": {
+  "fsm": 0,
+  "pipelined": 200
+ },
+ "lessons": {
+  "iterative": {
+   "member": "fsm",
+   "evaluations": 50,
+   "feasible": 0,
+   "best_luts_plus_ffs": null,
+   "on_merged_front": 0,
+   "merged_front_size": 10,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "unrolled_k": {
+   "member": "fsm",
+   "evaluations": 50,
+   "feasible": 0,
+   "best_luts_plus_ffs": null,
+   "on_merged_front": 0,
+   "merged_front_size": 10,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "pipelined": {
+   "member": "pipelined",
+   "evaluations": 49,
+   "feasible": 40,
+   "best_luts_plus_ffs": 1843.4716419999997,
+   "on_merged_front": 2,
+   "merged_front_size": 10,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "pipelined_m": {
+   "member": "pipelined",
+   "evaluations": 51,
+   "feasible": 25,
+   "best_luts_plus_ffs": 1236.1414999999997,
+   "on_merged_front": 8,
+   "merged_front_size": 10,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  }
+ },
+ "store_evaluations_by_member": {
+  "fsm": 100,
+  "pipelined": 300
+ },
+ "store_distinct_designs": 348,
+ "run_dir": "runs/fleet_m4/multiaxis_control/seed2-20261010-172302"
+}

@@ -1,0 +1,48 @@
+{
+ "milestone": "m4",
+ "arm": "structured",
+ "pilot": false,
+ "spec": "asic_low_area",
+ "target": "asic-sky130hd",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "status": "stopped",
+ "llm_calls": 4.0,
+ "llm_failures": 0.0,
+ "input_tokens": 19820.0,
+ "output_tokens": 3146.0,
+ "cost_usd": 0.0711,
+ "wall_s": 28.5,
+ "decisions": [
+  "refine",
+  "refine",
+  "stop"
+ ],
+ "l1_selected_key": "iterative:data_width=15,n_iter=12,angle_guard=1,frac_guard=0,rounding=round",
+ "l2_winner_changed": false,
+ "l2_feedback": null,
+ "back_annotation_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 415699.14909615286,
+ "hv_frac": 0.9110965565243692,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=12,angle_guard=1,frac_guard=0,rounding=round",
+ "select_regret": 0.0,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "rounds": 4,
+ "coverage_rounds": 1,
+ "structured_method": "json_schema",
+ "run_dir": "runs/eval_m4/structured/asic_low_area/20261010-204552-e0c6",
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 160 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ]
+}

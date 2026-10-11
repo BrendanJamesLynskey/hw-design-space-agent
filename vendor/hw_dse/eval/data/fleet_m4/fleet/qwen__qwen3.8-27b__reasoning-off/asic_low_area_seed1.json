@@ -1,0 +1,173 @@
+{
+ "milestone": "m4",
+ "arm": "fleet",
+ "pilot": false,
+ "spec": "asic_low_area",
+ "target": "asic-sky130hd",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "status": "stopped",
+ "llm_calls": 9.0,
+ "llm_failures": 0.0,
+ "input_tokens": 21088.0,
+ "output_tokens": 5337.0,
+ "cost_usd": 0.009855283,
+ "wall_s": 44.5,
+ "decisions": [
+  "stop",
+  "stop",
+  "stop",
+  "refine",
+  "stop"
+ ],
+ "l1_selected_key": "iterative:data_width=15,n_iter=14,angle_guard=1,frac_guard=2,rounding=trunc",
+ "l2_winner_changed": false,
+ "l2_feedback": null,
+ "back_annotation_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 368743.1392253246,
+ "hv_frac": 0.8081820834145376,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=14,angle_guard=1,frac_guard=2,rounding=trunc",
+ "select_regret": 0.07940665902701578,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "members": [
+  {
+   "member": "fsm",
+   "families": [
+    "iterative",
+    "unrolled_k"
+   ],
+   "phase": 1,
+   "budget": 100,
+   "status": "stopped",
+   "rounds": 2,
+   "decisions": [
+    "stop"
+   ],
+   "coverage_rounds": 1,
+   "wall_s": 18.8,
+   "run_dir": "runs/fleet_m4/asic_low_area/seed1-20261010-170025/fsm-p1/asic_low_area/20261010-170025-d035",
+   "llm_declared_infeasible": false,
+   "n_evals": 100,
+   "cost_usd": 0.001655492
+  },
+  {
+   "member": "pipelined",
+   "families": [
+    "pipelined",
+    "pipelined_m"
+   ],
+   "phase": 1,
+   "budget": 100,
+   "status": "stopped",
+   "rounds": 2,
+   "decisions": [
+    "stop"
+   ],
+   "coverage_rounds": 1,
+   "wall_s": 21.6,
+   "run_dir": "runs/fleet_m4/asic_low_area/seed1-20261010-170025/pipelined-p1/asic_low_area/20261010-170025-8ead",
+   "llm_declared_infeasible": false,
+   "n_evals": 100,
+   "cost_usd": 0.002038662
+  },
+  {
+   "member": "fsm",
+   "families": [
+    "iterative",
+    "unrolled_k"
+   ],
+   "phase": 2,
+   "budget": 173,
+   "status": "stopped",
+   "rounds": 2,
+   "decisions": [
+    "stop"
+   ],
+   "coverage_rounds": 1,
+   "wall_s": 22.9,
+   "run_dir": "runs/fleet_m4/asic_low_area/seed1-20261010-170025/fsm-p2/asic_low_area/20261010-170047-b518",
+   "llm_declared_infeasible": false,
+   "n_evals": 173,
+   "cost_usd": 0.00178871
+  },
+  {
+   "member": "pipelined",
+   "families": [
+    "pipelined",
+    "pipelined_m"
+   ],
+   "phase": 2,
+   "budget": 27,
+   "status": "stopped",
+   "rounds": 2,
+   "decisions": [
+    "refine",
+    "stop"
+   ],
+   "coverage_rounds": 0,
+   "wall_s": 18.1,
+   "run_dir": "runs/fleet_m4/asic_low_area/seed1-20261010-170025/pipelined-p2/asic_low_area/20261010-170047-d0c5",
+   "llm_declared_infeasible": false,
+   "n_evals": 27,
+   "cost_usd": 0.004372419
+  }
+ ],
+ "phase2_budgets": {
+  "fsm": 173,
+  "pipelined": 27
+ },
+ "lessons": {
+  "iterative": {
+   "member": "fsm",
+   "evaluations": 62,
+   "feasible": 56,
+   "best_area_um2": 7405.099788199001,
+   "on_merged_front": 13,
+   "merged_front_size": 15,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "unrolled_k": {
+   "member": "fsm",
+   "evaluations": 38,
+   "feasible": 34,
+   "best_area_um2": 12183.097375678999,
+   "on_merged_front": 0,
+   "merged_front_size": 15,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "pipelined": {
+   "member": "pipelined",
+   "evaluations": 50,
+   "feasible": 45,
+   "best_area_um2": 43003.557066092,
+   "on_merged_front": 1,
+   "merged_front_size": 15,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "pipelined_m": {
+   "member": "pipelined",
+   "evaluations": 50,
+   "feasible": 30,
+   "best_area_um2": 42488.896671042,
+   "on_merged_front": 1,
+   "merged_front_size": 15,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  }
+ },
+ "store_evaluations_by_member": {
+  "fsm": 273,
+  "pipelined": 127
+ },
+ "store_distinct_designs": 356,
+ "run_dir": "runs/fleet_m4/asic_low_area/seed1-20261010-170025"
+}

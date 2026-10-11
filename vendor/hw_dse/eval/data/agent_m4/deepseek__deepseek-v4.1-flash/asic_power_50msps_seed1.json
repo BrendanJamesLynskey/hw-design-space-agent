@@ -1,0 +1,49 @@
+{
+ "milestone": "m4",
+ "arm": "structured",
+ "pilot": false,
+ "spec": "asic_power_50msps",
+ "target": "asic-sky130hd",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "status": "converged",
+ "llm_calls": 4.0,
+ "llm_failures": 0.0,
+ "input_tokens": 9786.0,
+ "output_tokens": 26914.0,
+ "cost_usd": 0.017921639,
+ "wall_s": 119.7,
+ "decisions": [
+  "map_front",
+  "refine",
+  "refine"
+ ],
+ "l1_selected_key": "pipelined_m:data_width=15,n_iter=15,angle_guard=2,frac_guard=3,rounding=round,m=3",
+ "l2_winner_changed": false,
+ "l2_feedback": null,
+ "back_annotation_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 383.76966659268794,
+ "hv_frac": 0.7899807708115001,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=15,n_iter=15,angle_guard=2,frac_guard=3,rounding=round,m=3",
+ "select_regret": 0.03966334244016319,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "rounds": 4,
+ "coverage_rounds": 2,
+ "structured_method": "json_schema",
+ "run_dir": "runs/eval_m4/structured/asic_power_50msps/20261010-181205-9f88",
+ "overrides": [
+  "'refine' overridden to stop: HV gain 0.52% < epsilon 1.00%",
+  "code: before stopping (converged), one front-mapping round with the remaining 100 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ]
+}

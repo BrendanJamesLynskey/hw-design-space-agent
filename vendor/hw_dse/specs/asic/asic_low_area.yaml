@@ -1,0 +1,16 @@
+# Milestone 4, ASIC target: the ASIC twin of specs/low_area_control.yaml
+# (same constraints, area in um^2 instead of LUTs + FFs).
+name: asic_low_area
+description: >
+  Motor-control sin/cos in sky130 standard cells: >= 1 MSPS, max error <= 2^-10.
+  Area is everything: minimise cell area.
+target: asic-sky130hd
+constraints:
+  - {metric: throughput_msps, op: ">=", value: 1}
+  - {metric: max_abs_err, op: "<=", value: "2^-10"}
+objectives:
+  - {metric: area_um2, direction: min, ref: 40000}
+  - {metric: accuracy_bits, direction: max, ref: 10}
+select_by: area_um2
+select_direction: min
+budget: {total_evals: 400, evals_per_round: 100, max_rounds: 4, hv_epsilon: 0.01}

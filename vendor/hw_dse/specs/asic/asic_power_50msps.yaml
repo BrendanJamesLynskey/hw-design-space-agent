@@ -1,0 +1,19 @@
+# Milestone 4, ASIC target: a power-driven spec. 50 MSPS at 12 bits, where the
+# relative power index (switching resources x the clock the design needs x
+# activity) decides, traded against accuracy. (Area was tried as the second
+# objective first: it agrees with the power index here, so the front was a
+# single design.)
+name: asic_power_50msps
+description: >
+  A 50 MSPS sin/cos unit in sky130 standard cells for a battery-powered radio:
+  max error <= 2^-12. Minimise the relative power index; accuracy is the trade-off.
+target: asic-sky130hd
+constraints:
+  - {metric: throughput_msps, op: ">=", value: 50}
+  - {metric: max_abs_err, op: "<=", value: "2^-12"}
+objectives:
+  - {metric: power_index, direction: min, ref: 40}
+  - {metric: accuracy_bits, direction: max, ref: 12}
+select_by: power_index
+select_direction: min
+budget: {total_evals: 400, evals_per_round: 100, max_rounds: 4, hv_epsilon: 0.01}

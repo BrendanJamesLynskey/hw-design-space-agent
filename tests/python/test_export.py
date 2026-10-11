@@ -15,6 +15,7 @@ VENDORED = json.loads((V / "VENDORED.json").read_text())
 SITE = json.loads((ROOT / "src/data/site.json").read_text())
 LADDER = json.loads((ROOT / "src/data/ladder.json").read_text())
 M3 = json.loads((ROOT / "src/data/m3.json").read_text())
+M4 = json.loads((ROOT / "src/data/m4.json").read_text())
 
 
 def test_every_vendored_file_matches_its_hash():
@@ -67,19 +68,25 @@ def test_trace_costs_sum_to_the_results_totals():
 
 
 def test_only_done_milestones_are_live():
-    """M3 is done (the README notes what the campaign agent did not achieve); M4 is planned.
-    Every ladder level is live, SimPy and L2 (cycle level) since M3; ASIC and the fleet are M4's
-    and stay on the roadmap."""
+    """Every milestone is done (M3 and M4 with a README note on what the campaign agent and the
+    fleet did not achieve), so every ladder level is live, the ASIC target (M4) included, and
+    the roadmap's only planned row is the after-M4 list."""
     status = {m["id"]: m["status"] for m in SITE["milestones"]}
-    assert status == {"M1": "done", "M2": "done", "M3": "done", "M4": "planned"}
-    m3 = next(m for m in SITE["milestones"] if m["id"] == "M3")
-    assert m3["note"].startswith("see the A/B")
+    assert status == {"M1": "done", "M2": "done", "M3": "done", "M4": "done"}
+    for mid in ("M3", "M4"):
+        m = next(m for m in SITE["milestones"] if m["id"] == mid)
+        assert m["note"].startswith("see the A/B")
     for lv in SITE["ladder"]:
         assert (lv["status"] == "live") == (status[lv["milestone"]] == "done"), lv["id"]
     live = [lv["id"] for lv in SITE["ladder"] if lv["status"] == "live"]
-    assert live == ["L0", "L1", "SYS", "L2", "L3", "L4", "GL", "L5"]
+    assert live == ["L0", "L1", "SYS", "L2", "L3", "L4", "GL", "ASIC", "L5"]
+    asic = next(lv for lv in SITE["ladder"] if lv["id"] == "ASIC")
+    assert "no place and route" in asic["what"] and "not silicon" in asic["ppa"]
     m4 = next(m for m in SITE["milestones"] if m["id"] == "M4")
     assert "ASIC" in m4["levels"] and "fleet" in m4["levels"]
+    after = SITE["roadmap"][-1]
+    assert after["id"] == "" and after["status"] == "planned" and "OpenROAD" in after["levels"]
+    assert "with the held-out points kept held out" in after["levels"]
 
 
 def test_hero_run_is_a_recorded_m2_run_down_the_ladder():
@@ -227,3 +234,61 @@ def test_m3_structured_ab_memory_and_spend():
     sp = M3["spend"]
     assert (sp["ledger_total_usd"], sp["ledger_entries"], sp["trace_usd"]) == (3.4901, 114, 3.4519)
     assert round(sp["key_usd"], 4) == 3.5775 and sp["key_usd"] <= sp["cap_usd"]
+
+
+def test_m4_asic_calibration_held_out_and_ground_truth():
+    cal = M4["calibration"]
+    assert cal["n_points"] == 57 and sum(cal["per_family"].values()) == 57
+    allrow = cal["rows"][0]
+    assert allrow["family"] == "all" and allrow["loo"] == {"area_um2": 8.66, "ffs": 4.61, "fmax_mhz": 10.55, "power_mw": 5.79}
+    ho = M4["held_out"]
+    assert len(ho["rows"]) == 9 and ho["area_within_5"] == 9
+    assert (round(ho["fmax_err_min"] * 100, 1), round(ho["fmax_err_max"] * 100, 1)) == (-14.9, 39.6)
+    assert ho["optimistic"] == 6 and ho["optimistic_over_1pct"] == 5
+    gt = {s["name"]: s for s in M4["ground_truth"]["specs"]}
+    assert [gt[n]["n_feasible"] for n in ("asic_low_area", "asic_power_50msps", "asic_multiaxis_control")] == [303056, 28565, 7898]
+    assert all(s["ranking"] == s["twin_ranking"] for s in gt.values())
+    assert (gt["asic_power_50msps"]["winner_m"], gt["asic_power_50msps"]["twin_m"]) == (3, 7)
+    assert (gt["asic_multiaxis_control"]["winner_m"], gt["asic_multiaxis_control"]["twin_m"]) == (2, 5)
+    for s in gt.values():
+        if s["sweeps"]:
+            for t, m in (("asic", s["winner_m"]), ("fpga", s["twin_m"])):
+                feas = [x for x in s["sweeps"][t] if x["feasible"]]
+                assert min(feas, key=lambda x: (x["select"], x["m"]))["m"] == m
+
+
+def test_m4_deadline_miss():
+    d = {(x["view"], x["clock"]): x for x in M4["deadline"]["designs"]}
+    est, meas, plain = d[("winner", "estimated")], d[("winner", "measured")], d[("pipelined", "measured")]
+    assert est["key"] == meas["key"] and est["meets"] and not meas["meets"] and plain["meets"]
+    assert round(meas["fmax_mhz"], 1) == 72.2 and round(est["fmax_mhz"], 1) == 82.5
+    assert round(meas["p99_us"], 3) == 0.567 and M4["deadline"]["limit_us"] == 0.5
+    assert all(len(x["batches_ns"]) == M4["deadline"]["n_ticks"] for x in d.values())
+
+
+def test_m4_asic_eval_ab_and_fleet_run():
+    ae = M4["asic_eval"]
+    assert (ae["meets"], ae["runs"]) == (45, 45)
+    t = {(x["model"], x["arm"]): x for x in M4["ab"]["tests"]}
+    pooled = t[("pooled", "fleet")]["hv_frac"]
+    assert (pooled["pos"], pooled["n"], round(pooled["sign_p"], 3)) == (18, 55, 0.014)
+    q2 = t[("qwen/qwen3.8-27b, reasoning off", "fleet_v2")]["select_regret"]
+    assert (q2["neg"], q2["n"], round(q2["sign_p"], 4)) == (22, 25, 0.0002)
+    assert M4["ab"]["sonnet_specs"] == ["asic_multiaxis_control"]
+    assert all(r["failures"] == 0 for r in M4["ab"]["rows"])
+    fr = M4["fleet_run"]
+    assert sum(len(l["evals"]) for l in fr["lanes"]) == fr["budget"] == 400
+    assert fr["phase2_budgets"] == {"fsm": 0, "pipelined": 200}
+    assert fr["seeds"]["iterative"] == fr["seeds"]["unrolled_k"] == [] and len(fr["seeds"]["pipelined_m"]) > 0
+
+
+def test_m4_feedback_spend_and_untouched_fpga_record():
+    fb = M4["feedback"]
+    assert fb["recorded"] == [0, 92] and fb["live"] == [0, 60] and fb["fired"] == [3, 15]
+    assert fb["recovered"] == [3, 3] and fb["uncorrected"] == [1, 3] and fb["v1"]["fired"] == [6, 15]
+    sp = M4["spend"]
+    assert round(sp["key_usd"], 2) == 4.15 and round(sp["key_first_pass_usd"], 2) == 3.83 and round(sp["key_rerun_usd"], 2) == 0.32
+    assert sp["key_usd"] <= sp["cap_usd"] and (sp["ledger_total_usd"], sp["ledger_entries"]) == (3.8438, 147)
+    assert sp["trace_usd"] == 3.8366
+    u = M4["untouched"]
+    assert u["m2_replays"] == 60 and u["m3_structured_runs"] == 30

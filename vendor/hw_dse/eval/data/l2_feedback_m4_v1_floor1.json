@@ -1,0 +1,1157 @@
+{
+ "recorded": [
+  {
+   "run": "M3 structured claude-sonnet-5.5 bursty_offload s0",
+   "fires": false,
+   "n_l1_feasible": 245,
+   "n_l2_pass": 245
+  },
+  {
+   "run": "M3 structured claude-sonnet-5.5 bursty_offload s1",
+   "fires": false,
+   "n_l1_feasible": 250,
+   "n_l2_pass": 250
+  },
+  {
+   "run": "M3 structured claude-sonnet-5.5 bursty_offload s2",
+   "fires": false,
+   "n_l1_feasible": 231,
+   "n_l2_pass": 231
+  },
+  {
+   "run": "M3 structured claude-sonnet-5.5 bursty_offload s3",
+   "fires": false,
+   "n_l1_feasible": 243,
+   "n_l2_pass": 243
+  },
+  {
+   "run": "M3 structured claude-sonnet-5.5 bursty_offload s4",
+   "fires": false,
+   "n_l1_feasible": 219,
+   "n_l2_pass": 219
+  },
+  {
+   "run": "M3 structured claude-sonnet-5.5 multiaxis_control s0",
+   "fires": false,
+   "n_l1_feasible": 160,
+   "n_l2_pass": 156
+  },
+  {
+   "run": "M3 structured claude-sonnet-5.5 multiaxis_control s1",
+   "fires": false,
+   "n_l1_feasible": 161,
+   "n_l2_pass": 158
+  },
+  {
+   "run": "M3 structured claude-sonnet-5.5 multiaxis_control s2",
+   "fires": false,
+   "n_l1_feasible": 139,
+   "n_l2_pass": 130
+  },
+  {
+   "run": "M3 structured claude-sonnet-5.5 multiaxis_control s3",
+   "fires": false,
+   "n_l1_feasible": 206,
+   "n_l2_pass": 204
+  },
+  {
+   "run": "M3 structured claude-sonnet-5.5 multiaxis_control s4",
+   "fires": false,
+   "n_l1_feasible": 150,
+   "n_l2_pass": 144
+  },
+  {
+   "run": "M3 structured deepseek-v4.1-flash bursty_offload s0",
+   "fires": false,
+   "n_l1_feasible": 269,
+   "n_l2_pass": 269
+  },
+  {
+   "run": "M3 structured deepseek-v4.1-flash bursty_offload s1",
+   "fires": false,
+   "n_l1_feasible": 276,
+   "n_l2_pass": 276
+  },
+  {
+   "run": "M3 structured deepseek-v4.1-flash bursty_offload s2",
+   "fires": false,
+   "n_l1_feasible": 203,
+   "n_l2_pass": 203
+  },
+  {
+   "run": "M3 structured deepseek-v4.1-flash bursty_offload s3",
+   "fires": false,
+   "n_l1_feasible": 248,
+   "n_l2_pass": 248
+  },
+  {
+   "run": "M3 structured deepseek-v4.1-flash bursty_offload s4",
+   "fires": false,
+   "n_l1_feasible": 301,
+   "n_l2_pass": 301
+  },
+  {
+   "run": "M3 structured deepseek-v4.1-flash multiaxis_control s0",
+   "fires": false,
+   "n_l1_feasible": 206,
+   "n_l2_pass": 202
+  },
+  {
+   "run": "M3 structured deepseek-v4.1-flash multiaxis_control s1",
+   "fires": false,
+   "n_l1_feasible": 202,
+   "n_l2_pass": 198
+  },
+  {
+   "run": "M3 structured deepseek-v4.1-flash multiaxis_control s2",
+   "fires": false,
+   "n_l1_feasible": 198,
+   "n_l2_pass": 184
+  },
+  {
+   "run": "M3 structured deepseek-v4.1-flash multiaxis_control s3",
+   "fires": false,
+   "n_l1_feasible": 187,
+   "n_l2_pass": 174
+  },
+  {
+   "run": "M3 structured deepseek-v4.1-flash multiaxis_control s4",
+   "fires": false,
+   "n_l1_feasible": 145,
+   "n_l2_pass": 143
+  },
+  {
+   "run": "M3 structured qwen3.8-27b bursty_offload s0",
+   "fires": false,
+   "n_l1_feasible": 206,
+   "n_l2_pass": 206
+  },
+  {
+   "run": "M3 structured qwen3.8-27b bursty_offload s1",
+   "fires": false,
+   "n_l1_feasible": 229,
+   "n_l2_pass": 229
+  },
+  {
+   "run": "M3 structured qwen3.8-27b bursty_offload s2",
+   "fires": false,
+   "n_l1_feasible": 196,
+   "n_l2_pass": 196
+  },
+  {
+   "run": "M3 structured qwen3.8-27b bursty_offload s3",
+   "fires": false,
+   "n_l1_feasible": 237,
+   "n_l2_pass": 237
+  },
+  {
+   "run": "M3 structured qwen3.8-27b bursty_offload s4",
+   "fires": false,
+   "n_l1_feasible": 226,
+   "n_l2_pass": 226
+  },
+  {
+   "run": "M3 structured qwen3.8-27b multiaxis_control s0",
+   "fires": false,
+   "n_l1_feasible": 198,
+   "n_l2_pass": 192
+  },
+  {
+   "run": "M3 structured qwen3.8-27b multiaxis_control s1",
+   "fires": false,
+   "n_l1_feasible": 184,
+   "n_l2_pass": 180
+  },
+  {
+   "run": "M3 structured qwen3.8-27b multiaxis_control s2",
+   "fires": false,
+   "n_l1_feasible": 153,
+   "n_l2_pass": 151
+  },
+  {
+   "run": "M3 structured qwen3.8-27b multiaxis_control s3",
+   "fires": false,
+   "n_l1_feasible": 226,
+   "n_l2_pass": 224
+  },
+  {
+   "run": "M3 structured qwen3.8-27b multiaxis_control s4",
+   "fires": false,
+   "n_l1_feasible": 235,
+   "n_l2_pass": 227
+  },
+  {
+   "run": "M3 campaign pool campaign/bursty_offload/20261009-175420-f2fc",
+   "fires": false,
+   "n_l1_feasible": 249,
+   "n_l2_pass": 249
+  },
+  {
+   "run": "M3 campaign pool campaign/bursty_offload/20261009-175427-3796",
+   "fires": false,
+   "n_l1_feasible": 244,
+   "n_l2_pass": 244
+  },
+  {
+   "run": "M3 campaign pool campaign/bursty_offload/20261009-181047-479c",
+   "fires": false,
+   "n_l1_feasible": 209,
+   "n_l2_pass": 209
+  },
+  {
+   "run": "M3 campaign pool campaign/bursty_offload/20261009-181516-74e2",
+   "fires": false,
+   "n_l1_feasible": 278,
+   "n_l2_pass": 278
+  },
+  {
+   "run": "M3 campaign pool campaign/bursty_offload/20261009-182611-6a7b",
+   "fires": false,
+   "n_l1_feasible": 217,
+   "n_l2_pass": 217
+  },
+  {
+   "run": "M3 campaign pool campaign/bursty_offload/20261009-182653-3aa2",
+   "fires": false,
+   "n_l1_feasible": 89,
+   "n_l2_pass": 89
+  },
+  {
+   "run": "M3 campaign pool campaign/bursty_offload/20261009-183725-4f9b",
+   "fires": false,
+   "n_l1_feasible": 210,
+   "n_l2_pass": 210
+  },
+  {
+   "run": "M3 campaign pool campaign/bursty_offload/20261009-184127-56cf",
+   "fires": false,
+   "n_l1_feasible": 222,
+   "n_l2_pass": 222
+  },
+  {
+   "run": "M3 campaign pool campaign/bursty_offload/20261009-184617-895a",
+   "fires": false,
+   "n_l1_feasible": 315,
+   "n_l2_pass": 315
+  },
+  {
+   "run": "M3 campaign pool campaign/bursty_offload/20261009-191854-6346",
+   "fires": false,
+   "n_l1_feasible": 229,
+   "n_l2_pass": 229
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-175131-9cda",
+   "fires": false,
+   "n_l1_feasible": 156,
+   "n_l2_pass": 153
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-175141-0f02",
+   "fires": false,
+   "n_l1_feasible": 253,
+   "n_l2_pass": 253
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-180752-525a",
+   "fires": false,
+   "n_l1_feasible": 195,
+   "n_l2_pass": 193
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-181314-588d",
+   "fires": false,
+   "n_l1_feasible": 223,
+   "n_l2_pass": 216
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-182334-fcbd",
+   "fires": false,
+   "n_l1_feasible": 207,
+   "n_l2_pass": 199
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-182517-de34",
+   "fires": false,
+   "n_l1_feasible": 149,
+   "n_l2_pass": 137
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-183525-a44c",
+   "fires": false,
+   "n_l1_feasible": 220,
+   "n_l2_pass": 220
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-183813-a9b3",
+   "fires": false,
+   "n_l1_feasible": 133,
+   "n_l2_pass": 128
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-184459-e74e",
+   "fires": false,
+   "n_l1_feasible": 187,
+   "n_l2_pass": 185
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-185751-16ff",
+   "fires": false,
+   "n_l1_feasible": 149,
+   "n_l2_pass": 139
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-192757-fcc0",
+   "fires": false,
+   "n_l1_feasible": 138,
+   "n_l2_pass": 132
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-192928-cb08",
+   "fires": false,
+   "n_l1_feasible": 106,
+   "n_l2_pass": 102
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-193035-9234",
+   "fires": false,
+   "n_l1_feasible": 162,
+   "n_l2_pass": 158
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-193144-2c30",
+   "fires": false,
+   "n_l1_feasible": 137,
+   "n_l2_pass": 126
+  },
+  {
+   "run": "M3 campaign pool campaign/multiaxis_control/20261009-193238-b28d",
+   "fires": false,
+   "n_l1_feasible": 121,
+   "n_l2_pass": 115
+  },
+  {
+   "run": "M3 campaign pool memory/bursty_offload/20261009-174055-b15d",
+   "fires": false,
+   "n_l1_feasible": 280,
+   "n_l2_pass": 280
+  },
+  {
+   "run": "M3 campaign pool memory/bursty_offload/20261009-175434-0255",
+   "fires": false,
+   "n_l1_feasible": 283,
+   "n_l2_pass": 283
+  },
+  {
+   "run": "M3 campaign pool memory/bursty_offload/20261009-180818-45e2",
+   "fires": false,
+   "n_l1_feasible": 247,
+   "n_l2_pass": 247
+  },
+  {
+   "run": "M3 campaign pool memory/multiaxis_control/20261009-174947-a817",
+   "fires": false,
+   "n_l1_feasible": 32,
+   "n_l2_pass": 26
+  },
+  {
+   "run": "M3 campaign pool memory/multiaxis_control/20261009-180053-1db2",
+   "fires": false,
+   "n_l1_feasible": 155,
+   "n_l2_pass": 151
+  },
+  {
+   "run": "M3 campaign pool memory/multiaxis_control/20261009-181428-7daf",
+   "fires": false,
+   "n_l1_feasible": 221,
+   "n_l2_pass": 216
+  },
+  {
+   "run": "M3 campaign pool pilot-campaign/multiaxis_control/20261009-173408-03c1",
+   "fires": false,
+   "n_l1_feasible": 154,
+   "n_l2_pass": 151
+  },
+  {
+   "run": "baseline nsga2 bursty_offload s0",
+   "fires": false,
+   "n_l1_feasible": 243,
+   "n_l2_pass": 243
+  },
+  {
+   "run": "baseline nsga2 bursty_offload s1",
+   "fires": false,
+   "n_l1_feasible": 267,
+   "n_l2_pass": 267
+  },
+  {
+   "run": "baseline nsga2 bursty_offload s2",
+   "fires": false,
+   "n_l1_feasible": 256,
+   "n_l2_pass": 256
+  },
+  {
+   "run": "baseline nsga2 bursty_offload s3",
+   "fires": false,
+   "n_l1_feasible": 232,
+   "n_l2_pass": 232
+  },
+  {
+   "run": "baseline nsga2 bursty_offload s4",
+   "fires": false,
+   "n_l1_feasible": 229,
+   "n_l2_pass": 229
+  },
+  {
+   "run": "baseline random bursty_offload s0",
+   "fires": false,
+   "n_l1_feasible": 90,
+   "n_l2_pass": 90
+  },
+  {
+   "run": "baseline random bursty_offload s1",
+   "fires": false,
+   "n_l1_feasible": 103,
+   "n_l2_pass": 103
+  },
+  {
+   "run": "baseline random bursty_offload s2",
+   "fires": false,
+   "n_l1_feasible": 102,
+   "n_l2_pass": 102
+  },
+  {
+   "run": "baseline random bursty_offload s3",
+   "fires": false,
+   "n_l1_feasible": 89,
+   "n_l2_pass": 89
+  },
+  {
+   "run": "baseline random bursty_offload s4",
+   "fires": false,
+   "n_l1_feasible": 92,
+   "n_l2_pass": 92
+  },
+  {
+   "run": "baseline nsga2 multiaxis_control s0",
+   "fires": false,
+   "n_l1_feasible": 177,
+   "n_l2_pass": 173
+  },
+  {
+   "run": "baseline nsga2 multiaxis_control s1",
+   "fires": false,
+   "n_l1_feasible": 223,
+   "n_l2_pass": 221
+  },
+  {
+   "run": "baseline nsga2 multiaxis_control s2",
+   "fires": false,
+   "n_l1_feasible": 189,
+   "n_l2_pass": 188
+  },
+  {
+   "run": "baseline nsga2 multiaxis_control s3",
+   "fires": false,
+   "n_l1_feasible": 176,
+   "n_l2_pass": 173
+  },
+  {
+   "run": "baseline nsga2 multiaxis_control s4",
+   "fires": false,
+   "n_l1_feasible": 167,
+   "n_l2_pass": 154
+  },
+  {
+   "run": "baseline random multiaxis_control s0",
+   "fires": false,
+   "n_l1_feasible": 46,
+   "n_l2_pass": 46
+  },
+  {
+   "run": "baseline random multiaxis_control s1",
+   "fires": false,
+   "n_l1_feasible": 55,
+   "n_l2_pass": 54
+  },
+  {
+   "run": "baseline random multiaxis_control s2",
+   "fires": false,
+   "n_l1_feasible": 62,
+   "n_l2_pass": 62
+  },
+  {
+   "run": "baseline random multiaxis_control s3",
+   "fires": false,
+   "n_l1_feasible": 52,
+   "n_l2_pass": 49
+  },
+  {
+   "run": "baseline random multiaxis_control s4",
+   "fires": false,
+   "n_l1_feasible": 41,
+   "n_l2_pass": 40
+  },
+  {
+   "run": "baseline nsga2 asic_multiaxis_control s0",
+   "fires": false,
+   "n_l1_feasible": 134,
+   "n_l2_pass": 133
+  },
+  {
+   "run": "baseline nsga2 asic_multiaxis_control s1",
+   "fires": false,
+   "n_l1_feasible": 137,
+   "n_l2_pass": 132
+  },
+  {
+   "run": "baseline nsga2 asic_multiaxis_control s2",
+   "fires": false,
+   "n_l1_feasible": 142,
+   "n_l2_pass": 140
+  },
+  {
+   "run": "baseline nsga2 asic_multiaxis_control s3",
+   "fires": false,
+   "n_l1_feasible": 106,
+   "n_l2_pass": 103
+  },
+  {
+   "run": "baseline nsga2 asic_multiaxis_control s4",
+   "fires": false,
+   "n_l1_feasible": 144,
+   "n_l2_pass": 138
+  },
+  {
+   "run": "baseline random asic_multiaxis_control s0",
+   "fires": false,
+   "n_l1_feasible": 16,
+   "n_l2_pass": 15
+  },
+  {
+   "run": "baseline random asic_multiaxis_control s1",
+   "fires": false,
+   "n_l1_feasible": 18,
+   "n_l2_pass": 18
+  },
+  {
+   "run": "baseline random asic_multiaxis_control s2",
+   "fires": false,
+   "n_l1_feasible": 32,
+   "n_l2_pass": 29
+  },
+  {
+   "run": "baseline random asic_multiaxis_control s3",
+   "fires": false,
+   "n_l1_feasible": 21,
+   "n_l2_pass": 20
+  },
+  {
+   "run": "baseline random asic_multiaxis_control s4",
+   "fires": false,
+   "n_l1_feasible": 18,
+   "n_l2_pass": 17
+  }
+ ],
+ "live_m4": [
+  {
+   "run": "M4 structured claude-sonnet-5.5 asic_multiaxis_control s0",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured claude-sonnet-5.5 asic_multiaxis_control s1",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured claude-sonnet-5.5 asic_multiaxis_control s2",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured claude-sonnet-5.5 asic_multiaxis_control s3",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured claude-sonnet-5.5 asic_multiaxis_control s4",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured deepseek-v4.1-flash asic_multiaxis_control s0",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured deepseek-v4.1-flash asic_multiaxis_control s1",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured deepseek-v4.1-flash asic_multiaxis_control s2",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured deepseek-v4.1-flash asic_multiaxis_control s3",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured deepseek-v4.1-flash asic_multiaxis_control s4",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured qwen3.8-27b asic_multiaxis_control s0",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured qwen3.8-27b asic_multiaxis_control s1",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured qwen3.8-27b asic_multiaxis_control s2",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured qwen3.8-27b asic_multiaxis_control s3",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 structured qwen3.8-27b asic_multiaxis_control s4",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 single deepseek-v4.1-flash multiaxis_control s0",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 single deepseek-v4.1-flash multiaxis_control s1",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 single deepseek-v4.1-flash multiaxis_control s2",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 single deepseek-v4.1-flash multiaxis_control s3",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 single deepseek-v4.1-flash multiaxis_control s4",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 single qwen3.8-27b multiaxis_control s0",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 single qwen3.8-27b multiaxis_control s1",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 single qwen3.8-27b multiaxis_control s2",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 single qwen3.8-27b multiaxis_control s3",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 single qwen3.8-27b multiaxis_control s4",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet claude-sonnet-5.5 asic_multiaxis_control s0",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet claude-sonnet-5.5 asic_multiaxis_control s1",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet claude-sonnet-5.5 asic_multiaxis_control s2",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet claude-sonnet-5.5 asic_multiaxis_control s3",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet claude-sonnet-5.5 asic_multiaxis_control s4",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet deepseek-v4.1-flash asic_multiaxis_control s0",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet deepseek-v4.1-flash asic_multiaxis_control s1",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet deepseek-v4.1-flash asic_multiaxis_control s2",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet deepseek-v4.1-flash asic_multiaxis_control s3",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet deepseek-v4.1-flash asic_multiaxis_control s4",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet deepseek-v4.1-flash multiaxis_control s0",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet deepseek-v4.1-flash multiaxis_control s1",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet deepseek-v4.1-flash multiaxis_control s2",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet deepseek-v4.1-flash multiaxis_control s3",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet deepseek-v4.1-flash multiaxis_control s4",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet qwen3.8-27b asic_multiaxis_control s0",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet qwen3.8-27b asic_multiaxis_control s1",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet qwen3.8-27b asic_multiaxis_control s2",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet qwen3.8-27b asic_multiaxis_control s3",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet qwen3.8-27b asic_multiaxis_control s4",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet qwen3.8-27b multiaxis_control s0",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet qwen3.8-27b multiaxis_control s1",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet qwen3.8-27b multiaxis_control s2",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet qwen3.8-27b multiaxis_control s3",
+   "fires": false,
+   "outcome": null
+  },
+  {
+   "run": "M4 fleet qwen3.8-27b multiaxis_control s4",
+   "fires": false,
+   "outcome": null
+  }
+ ],
+ "constructed_gt": {
+  "n_feasible_simulated": 447,
+  "n_feasible_l1_bound": 61461,
+  "best_luts_plus_ffs": 1249.6901679999999,
+  "winner_key": "pipelined:data_width=15,n_iter=12,angle_guard=1,frac_guard=0,rounding=round"
+ },
+ "constructed": [
+  {
+   "search": "nsga2 s0",
+   "fires": false,
+   "n_l1_feasible": 193,
+   "n_l2_pass": 2
+  },
+  {
+   "search": "nsga2 s1",
+   "fires": false,
+   "n_l1_feasible": 215,
+   "n_l2_pass": 1
+  },
+  {
+   "search": "nsga2 s2",
+   "fires": false,
+   "n_l1_feasible": 214,
+   "n_l2_pass": 2
+  },
+  {
+   "search": "nsga2 s3",
+   "fires": false,
+   "n_l1_feasible": 169,
+   "n_l2_pass": 2
+  },
+  {
+   "search": "nsga2 s4",
+   "fires": true,
+   "n_l1_feasible": 166,
+   "n_l2_pass": 0,
+   "corrected": {
+    "status": "recovered",
+    "n_evals": 120,
+    "selected_key": "pipelined:data_width=18,n_iter=14,angle_guard=-2,frac_guard=0,rounding=trunc",
+    "regret": 0.3068586725089766,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 7,
+      "n_passing": 0,
+      "selected_key": null
+     },
+     {
+      "round": 2,
+      "n_evals": 60,
+      "n_corrected_feasible": 10,
+      "n_passing": 1,
+      "selected_key": "pipelined:data_width=18,n_iter=14,angle_guard=-2,frac_guard=0,rounding=trunc"
+     }
+    ]
+   },
+   "ablation_uncorrected": {
+    "status": "no_feasible",
+    "n_evals": 180,
+    "selected_key": null,
+    "regret": null,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 23,
+      "n_passing": 0,
+      "selected_key": null
+     },
+     {
+      "round": 2,
+      "n_evals": 60,
+      "n_corrected_feasible": 34,
+      "n_passing": 0,
+      "selected_key": null
+     },
+     {
+      "round": 3,
+      "n_evals": 60,
+      "n_corrected_feasible": 19,
+      "n_passing": 0,
+      "selected_key": null
+     }
+    ]
+   }
+  },
+  {
+   "search": "random s0",
+   "fires": false,
+   "n_l1_feasible": 60,
+   "n_l2_pass": 2
+  },
+  {
+   "search": "random s1",
+   "fires": true,
+   "n_l1_feasible": 64,
+   "n_l2_pass": 0,
+   "corrected": {
+    "status": "recovered",
+    "n_evals": 60,
+    "selected_key": "pipelined:data_width=14,n_iter=14,angle_guard=1,frac_guard=1,rounding=round",
+    "regret": 0.17300243495234102,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 3,
+      "n_passing": 2,
+      "selected_key": "pipelined:data_width=14,n_iter=14,angle_guard=1,frac_guard=1,rounding=round"
+     }
+    ]
+   },
+   "ablation_uncorrected": {
+    "status": "recovered",
+    "n_evals": 60,
+    "selected_key": "pipelined:data_width=14,n_iter=14,angle_guard=1,frac_guard=1,rounding=round",
+    "regret": 0.17300243495234102,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 13,
+      "n_passing": 2,
+      "selected_key": "pipelined:data_width=14,n_iter=14,angle_guard=1,frac_guard=1,rounding=round"
+     }
+    ]
+   }
+  },
+  {
+   "search": "random s2",
+   "fires": false,
+   "n_l1_feasible": 71,
+   "n_l2_pass": 1
+  },
+  {
+   "search": "random s3",
+   "fires": true,
+   "n_l1_feasible": 63,
+   "n_l2_pass": 0,
+   "corrected": {
+    "status": "recovered",
+    "n_evals": 60,
+    "selected_key": "pipelined:data_width=16,n_iter=12,angle_guard=0,frac_guard=0,rounding=trunc",
+    "regret": 0.037926763940100076,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 15,
+      "n_passing": 3,
+      "selected_key": "pipelined:data_width=16,n_iter=12,angle_guard=0,frac_guard=0,rounding=trunc"
+     }
+    ]
+   },
+   "ablation_uncorrected": {
+    "status": "no_feasible",
+    "n_evals": 180,
+    "selected_key": null,
+    "regret": null,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 30,
+      "n_passing": 0,
+      "selected_key": null
+     },
+     {
+      "round": 2,
+      "n_evals": 60,
+      "n_corrected_feasible": 22,
+      "n_passing": 0,
+      "selected_key": null
+     },
+     {
+      "round": 3,
+      "n_evals": 60,
+      "n_corrected_feasible": 24,
+      "n_passing": 0,
+      "selected_key": null
+     }
+    ]
+   }
+  },
+  {
+   "search": "random s4",
+   "fires": true,
+   "n_l1_feasible": 56,
+   "n_l2_pass": 0,
+   "corrected": {
+    "status": "recovered",
+    "n_evals": 120,
+    "selected_key": "pipelined:data_width=18,n_iter=14,angle_guard=-2,frac_guard=0,rounding=trunc",
+    "regret": 0.3068586725089766,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 7,
+      "n_passing": 0,
+      "selected_key": null
+     },
+     {
+      "round": 2,
+      "n_evals": 60,
+      "n_corrected_feasible": 10,
+      "n_passing": 1,
+      "selected_key": "pipelined:data_width=18,n_iter=14,angle_guard=-2,frac_guard=0,rounding=trunc"
+     }
+    ]
+   },
+   "ablation_uncorrected": {
+    "status": "no_feasible",
+    "n_evals": 180,
+    "selected_key": null,
+    "regret": null,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 23,
+      "n_passing": 0,
+      "selected_key": null
+     },
+     {
+      "round": 2,
+      "n_evals": 60,
+      "n_corrected_feasible": 34,
+      "n_passing": 0,
+      "selected_key": null
+     },
+     {
+      "round": 3,
+      "n_evals": 60,
+      "n_corrected_feasible": 19,
+      "n_passing": 0,
+      "selected_key": null
+     }
+    ]
+   }
+  },
+  {
+   "search": "rule-based architect s0",
+   "fires": true,
+   "n_l1_feasible": 182,
+   "n_l2_pass": 0,
+   "corrected": {
+    "status": "recovered",
+    "n_evals": 60,
+    "selected_key": "pipelined:data_width=18,n_iter=14,angle_guard=-2,frac_guard=0,rounding=trunc",
+    "regret": 0.3068586725089766,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 7,
+      "n_passing": 1,
+      "selected_key": "pipelined:data_width=18,n_iter=14,angle_guard=-2,frac_guard=0,rounding=trunc"
+     }
+    ]
+   },
+   "ablation_uncorrected": {
+    "status": "recovered",
+    "n_evals": 60,
+    "selected_key": "pipelined:data_width=18,n_iter=14,angle_guard=-2,frac_guard=0,rounding=trunc",
+    "regret": 0.3068586725089766,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 14,
+      "n_passing": 1,
+      "selected_key": "pipelined:data_width=18,n_iter=14,angle_guard=-2,frac_guard=0,rounding=trunc"
+     }
+    ]
+   }
+  },
+  {
+   "search": "rule-based architect s1",
+   "fires": false,
+   "n_l1_feasible": 159,
+   "n_l2_pass": 2
+  },
+  {
+   "search": "rule-based architect s2",
+   "fires": false,
+   "n_l1_feasible": 170,
+   "n_l2_pass": 4
+  },
+  {
+   "search": "rule-based architect s3",
+   "fires": true,
+   "n_l1_feasible": 155,
+   "n_l2_pass": 0,
+   "corrected": {
+    "status": "recovered",
+    "n_evals": 60,
+    "selected_key": "pipelined:data_width=16,n_iter=12,angle_guard=0,frac_guard=0,rounding=trunc",
+    "regret": 0.037926763940100076,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 15,
+      "n_passing": 3,
+      "selected_key": "pipelined:data_width=16,n_iter=12,angle_guard=0,frac_guard=0,rounding=trunc"
+     }
+    ]
+   },
+   "ablation_uncorrected": {
+    "status": "no_feasible",
+    "n_evals": 180,
+    "selected_key": null,
+    "regret": null,
+    "rounds": [
+     {
+      "round": 1,
+      "n_evals": 60,
+      "n_corrected_feasible": 30,
+      "n_passing": 0,
+      "selected_key": null
+     },
+     {
+      "round": 2,
+      "n_evals": 60,
+      "n_corrected_feasible": 22,
+      "n_passing": 0,
+      "selected_key": null
+     },
+     {
+      "round": 3,
+      "n_evals": 60,
+      "n_corrected_feasible": 24,
+      "n_passing": 0,
+      "selected_key": null
+     }
+    ]
+   }
+  },
+  {
+   "search": "rule-based architect s4",
+   "fires": false,
+   "n_l1_feasible": 181,
+   "n_l2_pass": 4
+  }
+ ],
+ "summary_md": "Recorded data (M3 structured runs rebuilt from their archived evaluations, M3 campaign pools, NSGA-II/random baselines on every system spec, and the live M4 runs on the system specs): the feedback **fires in 0 of 92 recorded searches and 0 of 50 live M4 runs**: L2 always found a passing design among the L1-feasible ones, so on the committed specs it never fires.\n\nThe constructed spec `l2_feedback_bursty` (bursts of 32 at 130 MS/s, p99 <= 0.4 us, 61,461 designs pass the L1 bound, 447 the simulation; true winner `pipelined:data_width=15,n_iter=12,angle_guard=1,frac_guard=0,rounding=round`): it fires in **6 of 15** searches (5 NSGA-II, 5 random, 5 rule-based-architect runs of 400 evaluations). With the correction it recovers a passing design in **6 of 6** (regret +19.5% \u00b1 12.1); the ablation, the same re-exploration budget screened with the uncorrected bound, recovers in **2 of 6**.\n\n| search | L1-feasible | pass L2 | fires | corrected: outcome, evals, regret | uncorrected: outcome, evals |\n|---|---|---|---|---|---|\n| nsga2 s0 | 193 | 2 | no | \u2014 | \u2014 |\n| nsga2 s1 | 215 | 1 | no | \u2014 | \u2014 |\n| nsga2 s2 | 214 | 2 | no | \u2014 | \u2014 |\n| nsga2 s3 | 169 | 2 | no | \u2014 | \u2014 |\n| nsga2 s4 | 166 | 0 | yes | recovered, 120, +30.7% | no_feasible, 180 |\n| random s0 | 60 | 2 | no | \u2014 | \u2014 |\n| random s1 | 64 | 0 | yes | recovered, 60, +17.3% | recovered, 60 |\n| random s2 | 71 | 1 | no | \u2014 | \u2014 |\n| random s3 | 63 | 0 | yes | recovered, 60, +3.8% | no_feasible, 180 |\n| random s4 | 56 | 0 | yes | recovered, 120, +30.7% | no_feasible, 180 |\n| rule-based architect s0 | 182 | 0 | yes | recovered, 60, +30.7% | recovered, 60 |\n| rule-based architect s1 | 159 | 2 | no | \u2014 | \u2014 |\n| rule-based architect s2 | 170 | 4 | no | \u2014 | \u2014 |\n| rule-based architect s3 | 155 | 0 | yes | recovered, 60, +3.8% | no_feasible, 180 |\n| rule-based architect s4 | 181 | 4 | no | \u2014 | \u2014 |\n"
+}

@@ -1,0 +1,48 @@
+{
+ "milestone": "m4",
+ "arm": "structured",
+ "pilot": false,
+ "spec": "asic_multiaxis_control",
+ "target": "asic-sky130hd",
+ "seed": 3,
+ "provider": "openrouter",
+ "model_requested": "anthropic/claude-sonnet-5.5",
+ "models_served": [
+  "anthropic/claude-sonnet-5.5"
+ ],
+ "reasoning": "provider default",
+ "status": "stopped",
+ "llm_calls": 4.0,
+ "llm_failures": 0.0,
+ "input_tokens": 21792.0,
+ "output_tokens": 5254.0,
+ "cost_usd": 0.096124,
+ "wall_s": 43.4,
+ "decisions": [
+  "refine",
+  "refine",
+  "stop"
+ ],
+ "l1_selected_key": "pipelined:data_width=17,n_iter=14,angle_guard=3,frac_guard=0,rounding=round",
+ "l2_winner_changed": false,
+ "l2_feedback": null,
+ "back_annotation_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 245630.4501896948,
+ "hv_frac": 0.8040958910975851,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=17,n_iter=14,angle_guard=3,frac_guard=0,rounding=round",
+ "select_regret": 0.17819732482235762,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "rounds": 4,
+ "coverage_rounds": 1,
+ "structured_method": "json_schema",
+ "run_dir": "runs/eval_m4/structured/asic_multiaxis_control/20261010-205003-7311",
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 160 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ]
+}

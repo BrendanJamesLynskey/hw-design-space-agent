@@ -14,13 +14,18 @@ explored design into verified SystemVerilog (simulated in two simulators against
 golden model, formally checked, simulated again at gate level after synthesis),
 open-source synthesis and place-and-route on the anchors' Artix-7 part, a back-annotation
 path that refits the cost model to measured data, and an agent that maps the whole
-trade-off curve. **Milestone 3 (this release)** puts the design *in a system*: an **L2**
+trade-off curve. **Milestone 3** puts the design *in a system*: an **L2**
 rung with a cycle-accurate model of every family (checked cycle for cycle against the
 RTL) and SimPy models of a DDS, a control loop and a bursty request stream; specs with
 system-level constraints ("p99 latency ≤ 0.4 µs with bursts of 8") where the winner
 differs from the throughput-only view; an L5 loop that re-explores when a measurement
 changes the winner; and an optional outer **campaign agent** on LangChain Deep Agents,
-A/B-tested against the structured graph.
+A/B-tested against the structured graph. **Milestone 4 (this release, the last)** adds a
+second target, an **ASIC on the open sky130 PDK** (Yosys + OpenSTA, a fitted cost model, three
+ASIC specs), a **fleet of structured graphs orchestrated by code** with a shared LangGraph
+Store, A/B-tested against a single graph at equal budget, and an **L2 → L1 feedback** that
+corrects the L1 system bound when the simulation rejects everything L1 let through.
+**The final technical report is [`docs/WRITEUP.md`](docs/WRITEUP.md).**
 
 **Showcase site:** [hw-design-space-agent.vercel.app](https://hw-design-space-agent.vercel.app/)
 ([source](https://github.com/BrendanJamesLynskey/hw-design-space-agent)) presents this
@@ -48,7 +53,10 @@ Deterministic code produces every number:
 | system metrics: sustained throughput under back-pressure, p50/p99 latency, batch latency, queue depth, utilisation (M3) | SimPy models of the spec's system, clocked at the design's estimated Fmax, driven by the cycle model's contract | *simulated (model, version)*, naming the clock it ran at |
 | the same system metrics during exploration (M3) | analytic bounds, optimistic by construction (L1 screening) | *estimate* (L1 analytic bound) |
 | DDS SNR / SFDR (M3) | the golden model's exact outputs for a coherent DDS tone, FFT | *simulated (golden-model DDS, ...)* |
-| the search itself | Optuna NSGA-II inside the LLM's ranges, plus code-driven front-mapping rounds; Pareto and hypervolume maths | — |
+| ASIC (M4): cell area µm², gate equivalents, flip-flops, reg-to-reg critical path, OpenSTA vectorless power | Yosys 0.33 + OpenSTA 3.1.0 on `sky130_fd_sc_hd`, `tt_025C_1v80`, 10 ns clock, wire-load model (no placement) | *measured (yosys 0.33 + OpenSTA 3.1.0, sky130_fd_sc_hd, tt_025C_1v80)* |
+| ASIC (M4): the same metrics during exploration, and the ASIC power index | analytic cost model fitted to 57 measured designs | *estimate* (`sky130hd-tt_025C_1v80-yosys0.33-opensta-v1`) |
+| L1 system bound after L2 feedback (M4) | the analytic bound × an empirical correction fitted to L2 simulations | *estimate (L1 bound, corrected by L2 feedback)* |
+| the search itself | Optuna NSGA-II inside the LLM's ranges, plus code-driven front-mapping rounds; Pareto and hypervolume maths; the fleet's budget split and front merge (M4) | — |
 
 This shows up in the types: the LLM's structured-output schemas
 (`src/hw_dse/agent/schemas.py`) have fields for families, ranges, budget shares,
@@ -68,7 +76,8 @@ report.
 | | measured power · `high_precision` m=8 synthesised at a 20 ns constraint · per-family-class path factor (deferred, not rejected) | planned |
 | **M3** | **L2** cycle-accurate interface model per family (validated against the RTL cycle for cycle) + SimPy system models (DDS + mixer, control loop, bursty stream) · system-level constraints in specs, L1 bounds, L2 shortlist and re-selection · **L5 loop**: re-explore under the refit when a measured winner changes · `map_front` blind-spot fix (gated lever) · M2 replay proof · **campaign agent** on Deep Agents with cross-run memory · A/B and memory on/off eval | **done** (see the A/B for what the campaign agent did and did not achieve) |
 | | live L4 inside campaigns · any campaign-agent rework (only if the M4 fleet design needs it) | planned |
-| M4 | more functions and targets (an ASIC gate-equivalent `CostModel`), a fleet of agents, richer family registry, the write-up | planned |
+| **M4** | **ASIC target**: Yosys + OpenSTA on sky130_fd_sc_hd (57-point sweep, 9 held-out designs), fitted `AsicCostModel` with leave-one-out residuals, `target` in specs, three ASIC specs with exhaustive ground truth, ASIC back-annotation · **fleet** of structured graphs, code-orchestrated, shared LangGraph Store, A/B vs a single graph · **L2 → L1 feedback** · FPGA replay proof extended to M3 · Vivado exports for the local run · [`docs/WRITEUP.md`](docs/WRITEUP.md) | **done** (see the A/B for what the fleet did and did not achieve) |
+| | place and route on the ASIC target (OpenROAD) · an ASIC measure-and-re-explore loop (synthesise the selected designs, re-select under measured numbers), then a decision on an `unrolled_k` chain term, disclosed, with the held-out points kept held out · the local Vivado runs (`high_precision` at 20 ns, `report_power`) and the refit/compare they feed · per-family-class path factor (waits for the 20 ns data) · an LLM coordinator for the fleet · more functions and a richer family registry | planned |
 
 ## The fidelity ladder
 
@@ -76,9 +85,10 @@ report.
 |---|---|---|---|
 | L0 | spec intake: YAML or natural language → validated `Spec`, human confirmation | `spec.py`, `intake` node | done (M1) |
 | L1 | analytical exploration: golden-model accuracy (*exact*) + cost model (*estimate*), NSGA-II inside LLM-chosen boxes | `models/`, `explore.py`, agent | done (M1); front-mapping levers (M2) |
-| L2 | cycle-accurate interface model per family; SimPy system models; L1 analytic bounds; shortlist + re-selection | `l2/`, `l2_simulate` node | **done (M3)**: 48/48 bursty traces identical to the RTL (Verilator + Icarus); 2 system specs change the winner |
+| L2 | cycle-accurate interface model per family; SimPy system models; L1 analytic bounds; shortlist + re-selection | `l2/`, `l2_simulate` node | **done (M3)**: 48/48 bursty traces identical to the RTL (Verilator + Icarus); the winner changes on 3 system specs (`multiaxis_control` and `bursty_offload` in M3, `asic_multiaxis_control` in M4) |
 | L3 | parametrised SystemVerilog per family; Verilator + Icarus vs golden model; SymbiYosys | `rtl/`, `rtl_golden/`, `formal/` | **done (M2)**: 47 configurations × 2 simulators, 0 mismatches; 7 proofs |
 | L4 | synthesis + place-and-route; gate-level simulation of the netlist | `synth/flow.py`, `synth/gatesim.py` | **done (M2)** with Yosys 0.68 + nextpnr-xilinx: 39 measured points; 22 gate-level runs, 0 mismatches. Vivado 2025.2: 14 generated designs |
+| L4, ASIC target | synthesis + static timing + vectorless power on sky130_fd_sc_hd (no place-and-route) | `synth/asic.py`, `synth/asic_sweep.py`, `models/cost_asic.py` | **live (M4)**: Yosys 0.33 + OpenSTA 3.1.0, 57 calibration points + 9 held-out; cost model leave-one-out RMS area 8.7%, Fmax 10.6% |
 | L5 | back-annotation: measured vs estimate, refit per tool, flag winner changes, re-explore | `synth/recalibrate.py`, `back_annotate` + `l5_reexplore` nodes | **done** (M2: comparison, refit, flagging; M3: re-exploration under the refit) |
 
 ## Agent graph
@@ -102,6 +112,7 @@ graph TD;
 	analyse(analyse)
 	select(select)
 	l2_simulate(l2_simulate)
+	l2_feedback(l2_feedback)
 	back_annotate(back_annotate)
 	l5_reexplore(l5_reexplore)
 	report(report)
@@ -116,7 +127,9 @@ graph TD;
 	confirm_spec -.-> report;
 	explore_family --> analyse;
 	intake --> confirm_spec;
-	l2_simulate --> back_annotate;
+	l2_feedback --> back_annotate;
+	l2_simulate -.-> back_annotate;
+	l2_simulate -.-> l2_feedback;
 	l5_reexplore --> report;
 	propose -.-> explore_family;
 	select --> l2_simulate;
@@ -124,7 +137,6 @@ graph TD;
 	classDef default fill:#f2f0ff,line-height:1.2
 	classDef first fill-opacity:0
 	classDef last fill:#bfb6fc
-
 ```
 <!-- graph:end -->
 
@@ -137,6 +149,7 @@ graph TD;
 | `analyse` | code → LLM → code | code merges the front, feasibility, hypervolume; LLM reads a compact summary and returns `refine` / `widen` / `add_family` / `map_front` / `infeasible` / `stop`; code applies the stopping rules and the whole-curve levers (below) |
 | `select` | human / code | `interrupt()` to pick a design off the front, or auto-select by the spec's rule |
 | `l2_simulate` (M3) | code | L2: every L1-feasible design the run evaluated is simulated in the spec's system (SimPy; cached per (latency, ii, Fmax), so a few dozen simulations), system constraints re-checked on simulated numbers, the best passing design becomes the selection; the report shows the top 5. Not just the L1 front: a design that passes L2 can be dominated in the L1 objectives by one that only passed the bound (the `multiaxis_control` case; fixed after review). No system scenario: the selected design's contract and DDS spectrum go in the report, nothing changes |
+| `l2_feedback` (M4) | code | only when L2 rejects every L1-feasible design of the run: fits a correction of the L1 system bound to the L2 simulations (monotone in utilisation, per contract class), re-explores with a separate budget (3 × 60 evaluations, not L1's) and re-selects; see [L2 → L1 feedback](#l2--l1-feedback-m4) |
 | `back_annotate` | code | L5: measured data for the selected design (committed L4 CSV, or a fresh synthesis if configured) vs its estimates; front designs with measurements re-scored on the Vivado scale; flags a winner change in the report |
 | `l5_reexplore` (M3) | code | only after a flagged winner change: 60 evaluations (a separate L5 budget) of NSGA-II around the measured front designs under the `vivado-2025.2` refit; re-selection under the refit (`l5_selected`). The L1 evaluations and selection are untouched |
 | `report` | code | `runs/<spec>/<timestamp>/`: `report.md`, `pareto.png`, `evaluations.csv`, `llm_trace.jsonl` |
@@ -366,7 +379,7 @@ What the data says:
   (`iterative` +3% LUT / +1% FF; `pipelined` −3% / −4%), Fmax does not, and in opposite
   directions: generated `iterative` is **13% slower** (172.8 vs 198.3 MHz), generated
   `pipelined` **20% faster** (327.4 vs 272.9). The M1 model, fitted on the reference
-  anchors, therefore overestimates generated `iterative` Fmax (+14 to +15% at W=12–24) and
+  anchors, therefore overestimates generated `iterative` Fmax (+14 to +16% at W=12–24) and
   underestimates generated `pipelined` Fmax (−15 to −17%); `pipelined_m` is within 4–8%.
 * **Yosys vs Vivado on the same generated RTL:** LUTs agree within 7% for the pipelined
   families; Yosys maps **29% more** LUTs for `iterative` and 5–9% more for `unrolled_k` k=2/3,
@@ -663,6 +676,241 @@ written. Store contents after the eval: `eval/data/campaign_m3_memory_store.json
   offline: `tests/test_campaign.py` checks the ladder, the sub-agent, to-dos, files, the
   budget, the forced re-plan, memory read/write and the off switch, and the loop guards.
 
+## ASIC target on sky130 (M4)
+
+**The flow** (`src/hw_dse/synth/asic.py`): the same generated RTL as the FPGA path, through
+**Yosys 0.33** (`synth -flatten`; `dfflibmap` and `abc -D 10000` against the liberty) and
+**OpenSTA 3.1.0** (register-to-register paths at a 10 ns clock; vectorless `report_power` with
+every net toggling at 0.125 per clock) on **`sky130_fd_sc_hd`** at the **typical corner
+`tt_025C_1v80`**. Why this library: it is the default sky130 library of the open flows
+(OpenROAD-flow-scripts, OpenLane), its liberty is public, and Yosys and OpenSTA read it
+directly. The liberty is pinned to an OpenROAD-flow-scripts commit and checked by SHA-256
+(the upstream sky130 repositories ship per-corner JSON, not merged `.lib` files). Yosys 0.33 has
+no `abc -dont_use`, and ABC otherwise maps logic onto `lpflow_*` power-gating cells, so those
+and the `probe_*` cells (35 in all) are removed from the copy both tools read, as the
+OpenROAD sky130hd platform's do-not-use list does. Area is Yosys's `stat -liberty` cell area;
+gate equivalents are area / 3.7536 µm² (`nand2_1`). Timing is **post-synthesis with the
+library's wire-load model, no placement**: the counterpart of the Vivado anchors'
+post-synthesis Fmax, not of nextpnr's post-route figure.
+
+**Place and route was not done.** OpenROAD has no Ubuntu 24.04 package; a conda build from the
+`litex-hub` channel (2.0-12381, 2024) does install, but only through Anaconda's commercial
+`defaults` channel, and it needs tech/cell LEFs, a floorplan and a PDN script per design. That
+was more than "reasonable effort" for this milestone, so it stays planned; nothing here claims
+post-route ASIC numbers. The route to try next avoids the commercial channel: OpenROAD's
+prebuilt release `.deb` packages pinned by URL and SHA-256, or its container image pinned by
+digest.
+
+**Measured** (`eval/data/asic_synthesis.csv`, 57 generated designs: every generated point of
+the FPGA sweep plus an ASIC spread; logs in `eval/data/asic_logs/`;
+`python scripts/run_asic_sweep.py`, about 70 s on 4 cores; deterministic, and CI re-measures
+every row and requires identical numbers). Selected rows (W=16, N=14):
+
+| design | area µm² (GE) | flip-flops | Fmax MHz | power mW at 100 MHz |
+|---|---|---|---|---|
+| `iterative` | 7,491 (1,996) | 111 | 154.5 | 0.686 |
+| `unrolled_k` k=2 / k=4 | 9,061 / 14,122 | 96 / 96 | 73.6 / 36.1 | 0.688 / 0.882 |
+| `pipelined_m` m=4 | 23,544 | 251 | 45.2 | 1.781 |
+| `pipelined` | 35,714 (9,515) | 752 | 160.3 | 4.047 |
+
+* **Area ratios move less than you might expect.** `pipelined` / `iterative` is 4.8× in
+  cell area on sky130 and 5.4× in LUT+FF on Vivado (1,471 vs 271). The FSM's barrel shifters
+  are cheap in mux4 cells; a flip-flop is 5.3 NAND2 equivalents.
+* **Adders ripple.** The fitted delay is 0.29 ns per adder bit (Yosys's default `$alu`
+  mapping, re-mapped by ABC at a relaxed 10 ns target). Chained rotations therefore cost far
+  more clock on the ASIC than on the FPGA's CARRY4 chains: `unrolled_k` k=2 runs at 48% of
+  `iterative`'s clock (Vivado: 66%), so on this ASIC k=2 *loses* throughput (7.4 vs 9.1 MSPS),
+  where Vivado measured a 12% gain.
+* **Power** (OpenSTA, vectorless) is 76% sequential for `iterative` (`eval/data/asic_logs/`);
+  across the sweep it is close to linear in flip-flop count and area, which is how the model's
+  power index is built (5.8% RMS leave-one-out against OpenSTA, below).
+
+**The cost model** (`src/hw_dse/models/cost_asic.py`, `calibration_sky130hd.yaml`, report
+`eval/data/asic_calibration.md`): the FPGA model's structural counts re-weighted for standard
+cells (adder bits with a separate FSM constant and FSM overhead, 2:1 shifter muxes, register
+bits; a ripple-adder path), fitted by non-negative least squares on relative error to all 57
+points, with leave-one-out:
+
+| family | n | area RMS in / LOO | FFs | Fmax | power (vs OpenSTA) |
+|---|---|---|---|---|---|
+| all | 57 | 7.8 / 8.7% | 4.5 / 4.6% | 10.0 / 10.6% | 5.3 / 5.8% |
+| `iterative` | 14 | 6.4 / 7.5% | 6.7 / 6.9% | 7.2 / 7.5% | 5.4 / 5.8% |
+| `unrolled_k` | 14 | 11.5 / 12.8% | 5.7 / 5.9% | 11.8 / 12.5% | 8.1 / 9.0% |
+| `pipelined` | 13 | 4.7 / 5.1% | 1.6 / 1.7% | 12.3 / 12.9% | 2.3 / 2.5% |
+| `pipelined_m` | 16 | 6.7 / 7.3% | 1.1 / 1.1% | 8.1 / 8.7% | 3.5 / 3.8% |
+
+One adder constant for every family was tried first (leave-one-out area 14.8%); the FSM
+families' adders sit behind operand-select logic the pipelined stages lack. The ASIC **power
+index** uses the FPGA formula (switching resources × operating clock × activity, reference
+`iterative` W=16 N=14 at 100 MHz = 1.0) with the switching resources weighted to reproduce
+OpenSTA's vectorless power, so it inherits that tool's assumption of uniform toggle rates; it
+is a ranking aid, never watts.
+
+**Specs name their target.** `Spec.target` is `fpga-artix7` (every M1-M3 spec, unchanged) or
+`asic-sky130hd`; `evaluate()` picks the target's default cost model; ASIC specs use
+`area_um2` / `gate_eq` (FPGA-only metrics such as `luts` are refused on an ASIC spec and vice
+versa); the architect gets an ASIC system prompt (the FPGA prompt is byte-identical to M1-M3,
+which the replays check); `back_annotate` compares an ASIC run with the sky130 measurements,
+never with FPGA ones. It flags a winner change but does not re-explore: there is no ASIC L5
+loop yet, and the nine held-out designs are kept out of the fit so that they stay a test.
+
+**Three ASIC specs** (`specs/asic/`), exhaustive ground truth over the same 635,040 designs
+(`python eval/run_eval.py ground-truth-m4` → `eval/data/ground_truth_m4.json`), each with an
+**FPGA twin** (the same constraints with area in LUTs + FFs, on the FPGA ground truth):
+
+| spec | constraints | true winner (ASIC) | FPGA twin's winner |
+|---|---|---|---|
+| `asic_low_area` | ≥ 1 MSPS, error ≤ `2^-10`; min area | `iterative` W=15 N=12 a.g.=1 round, 6,860 µm² | the same design |
+| `asic_power_50msps` | ≥ 50 MSPS, error ≤ `2^-12`; min power index | `pipelined_m` W=17 N=14 **m=3**, index 1.68 | `pipelined_m` W=17 N=14 **m=7** |
+| `asic_multiaxis_control` | 32 requests per 1 µs tick back within 0.5 µs (p99), error ≤ `2^-12`; min area | `pipelined_m` W=17 N=16 a.g.=0 **m=2**, 32,845 µm² | `pipelined_m` W=17 N=14 **m=5** |
+
+**Does the family ranking differ between FPGA and ASIC? No.** On all three specs the families
+rank in the same order on both targets (`iterative` < `unrolled_k` < `pipelined_m` <
+`pipelined` for low area; `pipelined_m` < `pipelined` where only the pipelined families can
+meet the rate). **What differs is the winning configuration inside a family**: the ASIC's
+slow ripple adders force shallower pipelining (m=3 instead of 7; m=2 instead of 5), and the
+gaps shrink (`pipelined` / `iterative` on `asic_low_area` 4.17× vs 4.99×; on
+`asic_multiaxis_control` `pipelined` is 14% above the winner on the ASIC and 61% on the FPGA).
+
+**L2 carries over unchanged**: it is driven by the interface contract and the design's Fmax,
+both target-independent in code. On `asic_multiaxis_control` 8,533 designs pass the L1 bound
+and 7,898 the simulation, and **L2 changes the winner** (the bound's `pipelined_m` W=17 N=14
+a.g.=1 m=2 misses the deadline through clock-edge alignment; the simulation's pick trades two
+more iterations for a narrower angle path and a faster clock, +12.7% area).
+
+**Held-out check** (`python scripts/run_asic_sweep.py --validate` → `eval/data/asic_validation.csv`,
+never fitted): every per-family optimum of the three specs, the FPGA twins' optima and the
+L1-bound pick, synthesised. Area is within 5% on all nine. Fmax is not: −15% to +40%, the
+worst `unrolled_k` k=2 (+40%: the model's per-stage term misses k=2's longer chain). Two
+consequences, both reported by the eval rather than hidden:
+
+* `asic_power_50msps`: the measured m=3 winner holds (54.0 MHz, model 54.3); the FPGA twin's
+  m=7 runs at 26.7 MHz on sky130, infeasible on the ASIC.
+* `asic_multiaxis_control`: the model's winner measures **72.2 MHz** (estimate 82.5), and at
+  that clock its simulated p99 batch latency is **0.567 µs against the 0.5 µs deadline**: it
+  misses; of the nine held-out designs only plain `pipelined` W=17 N=14
+  (119.1 MHz measured) meets the spec with measured numbers. A run that selects the model's
+  winner is flagged by `back_annotate` (a winner change), exactly the case L5 exists for; as
+  on the FPGA, feasibility margins thinner than the model's Fmax error (10.6% leave-one-out)
+  are only as settled as a measurement makes them.
+
+## L2 → L1 feedback (M4)
+
+L1 screens system constraints with an analytic bound that is optimistic by construction (a
+design failing the bound fails the simulation, not the reverse). When L2 rejects **every**
+L1-feasible design of a run, the run has spent its budget where the bound was wrong. The new
+`l2_feedback` node (`src/hw_dse/l2/feedback.py`) does what L5 does for cost, with L2
+simulations as the measurements:
+
+1. the ratio *simulated / bound* of each system-constrained metric for every simulated design;
+2. a correction per contract class (`fsm`, `pipelined`) as a **monotone lower envelope in the
+   utilisation ρ = offered rate × ii / Fmax** (the error grows with ρ: on the constructed spec
+   below the ratio is 2.0 at ρ = 0.48 and above 40 beyond ρ = 1); κ(ρ) is the envelope at the
+   largest observed ρ not above the design's, 1 below every observation. The corrected bound
+   never exceeds the simulation at any design L2 has seen; for unseen designs it assumes the
+   error does not shrink as utilisation grows, so it is labelled *empirical*;
+3. re-exploration with a **separate budget** (3 rounds × 60 evaluations, not L1's), over the
+   families that had L1-feasible designs, those with a design that met every system constraint
+   at the analytic bound (kept out by something else, such as a too-narrow first box), and any
+   the run never explored, screened by the
+   corrected bound; every new corrected-feasible design is simulated and the spec's rule picks
+   among those that pass.
+
+Tested offline (`tests/test_l2_feedback.py`; a scripted architect that only explores
+`pipelined_m` triggers it and the node recovers a passing design). Results on recorded data
+and the constructed spec are in [Eval M4](#eval-m4-asic-specs-the-fleet-ab-the-feedback).
+
+## A fleet of agents, orchestrated by code (M4)
+
+M3's LLM outer loop gained nothing over the structured graph, so M4 tries the other way to
+scale out: **several structured graphs at once, with deterministic code deciding everything
+between them** (`src/hw_dse/fleet/`).
+
+```mermaid
+flowchart LR
+    C["coordinator (code)"] -->|"phase 1: 100 evals each"| F["member fsm<br/>iterative, unrolled_k<br/>structured graph"]
+    C -->|"phase 1: 100 evals each"| P["member pipelined<br/>pipelined, pipelined_m<br/>structured graph"]
+    F -->|every evaluation| S[("shared LangGraph Store<br/>evaluated designs · lessons")]
+    P -->|every evaluation| S
+    S -->|"merged front → code-written lessons"| C
+    C -->|"phase 2: remaining 200 by share of the merged front"| F
+    C -->|"phase 2"| P
+    S -.->|"phase 2: stored front designs seed each study"| F
+    S -.->|"phase 2"| P
+    C --> M["merge · select · L2 · L2→L1 feedback"]
+```
+
+* **Members** are ordinary structured graphs restricted to their families (default split by
+  contract class: `fsm` = iterative + unrolled_k, `pipelined` = pipelined + pipelined_m;
+  `SPLIT_BY_FAMILY` gives one per family). Inside a member the LLM does exactly what it does
+  alone: chooses families (now only its own; code cuts anything else, with a note) and ranges,
+  and one of the typed decisions. Code still clamps ranges and applies every stopping rule.
+* **Budget**: half of the spec's `total_evals` split equally (phase 1, in parallel threads);
+  the rest in proportion to each member's designs on the *merged* Pareto front (phase 2;
+  nothing feasible anywhere → equal shares, so infeasibility is still established with the
+  whole budget). The fleet never exceeds `total_evals` on L1, and every Optuna trial counts,
+  as for a single graph and the baselines.
+* **Shared Store**: a LangGraph `InMemoryStore`. Each member's `explore_family` node writes
+  every evaluation to `("fleet", spec, "evaluated")` as it finishes; between phases code writes
+  per-family facts (evaluations, feasible designs, best selection metric, designs on the merged
+  front) to `("fleet", spec, "lessons")`, and reads them back to template a block in the
+  phase-2 members' prompts. In phase 2 every study a member runs is warm-started from the
+  Store: the fleet's stored front designs of that family become NSGA-II seeds (seeds are not
+  new evaluations). *Before the review fix* (the first A/B, kept as `before_fix`) the Store was
+  written but not read back by members, phase-2 members started cold, and the member minimum
+  budget was 10, which the 40% coverage reserve could not always spend (one run used 396 of
+  400); it is now 20, and `split()` never drops budget. There is no free-text channel: nothing an LLM wrote reaches the store or another
+  member (M3's notes into the inner architect were one of its two failure modes).
+* **Merge**: one front over the union, the spec's rule, then L2 once (every L1-feasible design
+  of the fleet simulated) and, if L2 rejects them all, the L2 → L1 feedback. Members skip their
+  own L2, feedback and back-annotation.
+
+**No LLM coordinator.** The prompt allowed one only after fixing M3's two problems (a loop
+breaker for non-identical repeated calls; no free-text notes into the inner architect). The
+coordinator's decisions here are a budget split and a front merge, arithmetic over numbers code
+already has; M3's A/B showed an LLM in that seat spent 1.4-2.2× as much and added nothing, and
+fixing the campaign layer would have needed its own A/B inside the same $5 cap. So it was not
+built; the fleet's structure leaves a seat for it (the coordinator is one function).
+
+## What the local Vivado run needs (M4)
+
+Two exports for the maintainer's machine (Vivado 2025.2, the anchors' flow and part); nothing
+here was run in Vivado.
+
+```bash
+# (a) high_precision at its own clock: pipelined_m W=26 N=22 round, m=8 and m=6 (control), 20 ns
+python scripts/vivado_m4.py export-20ns --out ../vivado_m4_20ns
+(cd ../vivado_m4_20ns && ./run_all.sh)
+mkdir -p eval/data/vivado_logs_m4_20ns && for d in ../vivado_m4_20ns/cordic_*; do \
+  mkdir -p eval/data/vivado_logs_m4_20ns/$(basename $d) && cp $d/design_key.txt $d/period_ns.txt $d/*.rpt eval/data/vivado_logs_m4_20ns/$(basename $d)/; done
+python scripts/vivado_m4.py collect-20ns --dir eval/data/vivado_logs_m4_20ns --out eval/data/vivado_measured_20ns.csv
+
+# (b) report_power on the 14 Vivado designs (post-synthesis and post-route; at 10 ns and, for resolution, 1 ns)
+python scripts/vivado_m4.py export-power --out ../vivado_m4_power
+(cd ../vivado_m4_power && ./run_all.sh)
+mkdir -p eval/data/vivado_logs_m4_power && for d in ../vivado_m4_power/cordic_*; do \
+  mkdir -p eval/data/vivado_logs_m4_power/$(basename $d) && cp $d/design_key.txt $d/power_*.rpt eval/data/vivado_logs_m4_power/$(basename $d)/; done
+python scripts/vivado_m4.py collect-power --dir eval/data/vivado_logs_m4_power --out eval/data/vivado_power.csv
+
+# then, with either or both CSVs present
+python scripts/vivado_m4.py compare   # -> eval/data/vivado_m4_compare.md/.json: the 20 ns verdict vs M1 and the refit; power index vs measured
+python scripts/vivado_m4.py refit     # recalibrate with the 20 ns rows -> calibration_artix7_refit_vivado-2025.2-m4.yaml (not the default)
+```
+
+* **CSV schemas**: `vivado_measured_20ns.csv` is the existing measured-points schema
+  (`hw_dse.synth.measured`), tool version `2025.2 (20 ns constraint)` so the refit keeps these
+  rows apart from the 10 ns rows of the same designs, Fmax = 1000 / (20 − WNS);
+  `vivado_power.csv` is `hw_dse.synth.vivado_power.COLUMNS` (stage, report clock, total /
+  dynamic / static / core / clocks / slice logic / signals / I/O watts, confidence, source
+  report). The comparison uses *core* power (I/O and device static excluded) scaled to
+  100 MHz, relative to the reference `iterative`, against the power index at 100 MHz: Spearman
+  rank correlation and RMS of the ratio.
+* **Why a 1 ns power report**: `report_power` prints watts to 3 decimals, coarse for designs
+  drawing a few mW; dynamic power is linear in frequency, so the flow reports a second time with
+  the clock redefined to 1 ns for the power report only, then restores 10 ns before
+  implementation.
+* The per-family-class path factor stays deferred until the 20 ns data is in.
+
 ## Quick start
 
 ```bash
@@ -671,7 +919,7 @@ cd HW_Design_Space_Agent
 python -m venv .venv && . .venv/bin/activate
 pip install -e '.[dev,openrouter]'      # extras: openai, anthropic, gemini, ollama, campaign (Deep Agents)
 
-pytest                                   # < 60 s, offline, no LLM; tool tests skip if tools are absent
+pytest                                   # offline, no LLM; ~53 s with the EDA tools absent (they skip)
 
 # Offline demo with the rule-based fake architect (not an LLM):
 hw-dse run --spec specs/dds_250msps.yaml --provider fake --auto-approve --auto-select
@@ -688,7 +936,7 @@ hw-dse resume --thread-id <id> --choice 3      # or --choice auto
 ```
 
 **EDA tools** (optional locally; each class of test skips cleanly without them, and CI
-requires them through `HW_DSE_REQUIRE_RTL/SIM/FORMAL/GATE/SYNTH=1`):
+requires them through `HW_DSE_REQUIRE_RTL/SIM/FORMAL/GATE/SYNTH/ASIC=1`):
 
 ```bash
 # simulation, formal, Yosys (Ubuntu 24.04 packages)
@@ -709,6 +957,39 @@ python -m hw_dse.synth.recalibrate --measured eval/data/l4_synthesis.csv --measu
 python scripts/worked_example.py        # docs/worked_example_m2.md
 python -m hw_dse.l2.validate            # L2: cycle model vs RTL -> eval/data/l2_cycle_validation.csv
 python scripts/worked_example_m3.py     # docs/worked_example_m3.md (Icarus optional)
+```
+
+**ASIC target (M4)**: Yosys from Ubuntu 24.04 (0.33) and OpenSTA built from source at the
+pinned commit (the CI `asic` job does exactly this and caches the build):
+
+```bash
+sudo apt install yosys cmake tcl-dev swig bison flex libfl-dev libeigen3-dev zlib1g-dev autoconf automake libtool
+git clone https://github.com/The-OpenROAD-Project/cudd.git && git -C cudd checkout d47718fedea39fa2ef7d4907432b92b032a8ff72
+(cd cudd && autoreconf -fi; ./configure --prefix=/opt/eda/cudd && make -j4 && make install)
+git clone https://github.com/The-OpenROAD-Project/OpenSTA.git && git -C OpenSTA checkout d1e43c6f9f4e66cb59c3d7958a4aa7d1626b4614
+cmake -S OpenSTA -B OpenSTA/build -DCUDD_DIR=/opt/eda/cudd -DCMAKE_INSTALL_PREFIX=/opt/eda/opensta \
+      -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF -DUSE_TCL_READLINE=OFF
+cmake --build OpenSTA/build -j4 && cmake --install OpenSTA/build && export PATH=/opt/eda/opensta/bin:$PATH
+python scripts/run_asic_sweep.py --fetch-lib    # sky130_fd_sc_hd tt_025C_1v80 liberty, SHA-256 checked, into build/pdk/
+python scripts/run_asic_sweep.py                # 57 designs -> eval/data/asic_synthesis.csv (~70 s)
+python -m hw_dse.models.cost_asic               # refit -> calibration_sky130hd.yaml, eval/data/asic_calibration.md
+python scripts/run_asic_sweep.py --validate     # held-out ground-truth designs -> eval/data/asic_validation.csv
+HW_DSE_REQUIRE_ASIC=1 pytest tests/test_asic.py
+```
+
+**Milestone 4 eval** (live runs need `OPENROUTER_API_KEY`):
+
+```bash
+python eval/run_eval.py ground-truth-m4          # ASIC specs + FPGA twins + family rankings
+python eval/run_eval.py baselines-m4             # NSGA-II / random on the ASIC specs
+python eval/run_eval.py models-m4                # free: models listed with tools + structured_outputs
+python eval/run_eval.py key-usage-m4 --tag before_eval
+python eval/run_eval.py agent-m4 --model qwen/qwen3.8-27b --reasoning off                # ASIC specs, structured
+python eval/run_eval.py agent-m4 --model qwen/qwen3.8-27b --reasoning off --arm single --specs low_area_control,multiaxis_control
+python eval/run_eval.py fleet-m4 --model qwen/qwen3.8-27b --reasoning off --fleet-version v1  # the first fleet arm (before_fix)
+python eval/run_eval.py fleet-m4 --model qwen/qwen3.8-27b --reasoning off                # the fixed fleet (v2, default)
+python eval/run_eval.py l2-feedback-m4           # offline: where the L2 -> L1 feedback fires
+python scripts/archive_traces_m4.py              # traces -> eval/data/traces/m4/
 ```
 
 **Milestone 3 eval** (live runs need `OPENROUTER_API_KEY`; everything else is offline):
@@ -895,7 +1176,7 @@ the spend cap and will not be run for M3.
 
 | model | HV, mean over the 5 feasible specs (structured → campaign) | regret, same | cost / run | input tokens / run | wall / run | failures |
 |---|---|---|---|---|---|---|
-| DeepSeek V4.1 Flash (30 → 30 runs) | 0.905 → 0.893 | +7.3% → +7.8% | $0.012 → $0.020 | 13k → 80k | 99 → 133 s | 0/30 → 0/30 |
+| DeepSeek V4.1 Flash (30 → 30 runs) | 0.905 → 0.893 | +7.3% → +7.7% | $0.012 → $0.020 | 13k → 80k | 99 → 133 s | 0/30 → 0/30 |
 | Qwen3.8-27B, reasoning off (30 → 30) | 0.872 → 0.819 | +9.2% → +19.0% | $0.008 → $0.011 | 10k → 90k | 60 → 178 s | 0/30 → **4/30** |
 | Sonnet 5.5 (`multiaxis_control` only, 5 → 5) | 0.839 → 0.833 | +3.2% → +5.7% | $0.100 → $0.224 | 24k → 86k | 45 → 62 s | 0 → 0 |
 
@@ -948,6 +1229,104 @@ the client and report no usage. Pilots on the cheapest model first: structured (
 `multiaxis_control` seed 0) $0.0095; campaign attempt 1 failed ($0.058, the `ls` loop above),
 attempt 2 succeeded ($0.018).
 
+## Eval M4: ASIC specs, the fleet A/B, the feedback
+
+Full tables, regenerated from committed data: the M4 section at the end of
+[`eval/results.md`](eval/results.md). Models re-confirmed in `/api/v1/models` with `tools` and
+`structured_outputs` on 2026-10-10 (`eval/data/models_check_m4.json`; no substitution). Cells
+are mean ± population std over 5 seeds; 400 L1 evaluations per spec for every method.
+
+**Structured graph on the ASIC specs** (selection regret; HV in `results.md`):
+
+| spec | NSGA-II | random | Sonnet 5.5 | DeepSeek V4.1 Flash | Qwen3.8-27B, reasoning off |
+|---|---|---|---|---|---|
+| asic_low_area | +6.1 ± 3.3% | +8.1 ± 2.2% | **+0.8 ± 0.7%** | +4.7 ± 4.6% | +10.6 ± 13.5% |
+| asic_power_50msps | +54.0 ± 36.1% | +60.0 ± 44.5% | **+3.5 ± 2.0%** | +15.6 ± 19.5% | +10.1 ± 6.4% |
+| asic_multiaxis_control | +23.4 ± 5.0% | +37.6 ± 5.5% | **+17.9 ± 3.2%** | +25.1 ± 3.0% | +21.6 ± 2.5% |
+
+Every selected design met its spec (45/45). HV is below NSGA-II's on `asic_power_50msps`
+(0.754-0.794 vs 0.812), level with it on `asic_low_area` for Sonnet and DeepSeek, and 0.820-0.864
+vs 0.837 on `asic_multiaxis_control`. On `asic_multiaxis_control` every method is ~18-25% off the
+true winner, whose trick (two more iterations for a narrower angle path and a faster clock) the
+L1 bound hides; L2 changed the L1 pick in 2 Sonnet runs.
+
+**A/B: single structured graph vs the code-orchestrated fleet** (5 specs: the three ASIC ones,
+`low_area_control`, `multiaxis_control`; seeds 0-4; the same 400 L1 evaluations; **every run
+started only after the previous one finished, nothing else running**; Sonnet's fleet arm on
+`asic_multiaxis_control` only, for the spend cap). *Fleet, before_fix* is the first A/B (phase-2
+members cold, member minimum 10); *fleet, after fix* is the re-run after review (phase 2
+warm-started from the Store, minimum 20), Qwen only, same specs and seeds:
+
+| model | arm | runs | HV fraction | regret | cost / run | input tokens / run | failures | failed LLM calls | wall / run |
+|---|---|---|---|---|---|---|---|---|---|
+| Qwen3.8-27B, reasoning off | single | 25 | **0.829 ± 0.071** | +14.8 ± 11.4% | **$0.0090** | 10,594 | 0/25 | 1 | **57 ± 48 s** |
+| | fleet, before_fix | 25 | 0.796 ± 0.099 | +11.7 ± 19.9% | $0.0127 | 20,029 | 0/25 | 7 | 171 ± 188 s |
+| | fleet, after fix | 25 | 0.788 ± 0.117 | **+6.3 ± 6.0%** | $0.0131 | 19,513 | 0/25 | 0 | 89 ± 38 s |
+| DeepSeek V4.1 Flash | single | 25 | **0.870 ± 0.061** | **+12.1 ± 11.9%** | **$0.0167** | 14,535 | 0/25 | 2 | **153 ± 148 s** |
+| | fleet, before_fix | 25 | 0.834 ± 0.080 | +15.8 ± 21.5% | $0.0257 | 22,233 | 0/25 | 10 | 229 ± 260 s |
+| Sonnet 5.5 (one spec) | single | 5 | **0.820 ± 0.069** | **+17.9 ± 3.2%** | **$0.0931** | 22,318 | 0/5 | 0 | **41 ± 2 s** |
+| | fleet, before_fix | 5 | 0.794 ± 0.051 | +19.9 ± 3.6% | $0.1488 | 41,738 | 0/5 | 0 | 49 ± 1 s |
+
+**Paired results** (same spec and seed; exact sign test and paired t, two-sided; the full table
+is in `results.md`):
+
+* **HV, single vs first fleet: the single graph is higher, significantly for DeepSeek and
+  pooled, not for Qwen or Sonnet.** Pooled, the fleet had the higher HV in 18 of 55 pairs (sign
+  p = 0.014; paired t p = 0.006). DeepSeek 6 of 25 (sign p = 0.015, t = −3.03, p = 0.006). Qwen
+  10 of 25 (p = 0.42). Sonnet 2 of 5 (no test power).
+* **Regret: a gain for the fleet with Qwen.** The first fleet selected the better design in
+  18 of 24 untied pairs (sign p = 0.023); the fixed fleet in 22 of 25 (p = 0.0002, mean −8.6
+  points). DeepSeek 12 of 24 untied pairs either way; Sonnet 2 of 5.
+* **Did the cold restart explain the HV loss? No.** The fixed fleet against the single graph:
+  higher HV in 8 of 25 (p = 0.11); against the first fleet 12 higher, 13 lower (p = 1.0). Its
+  regret is 5.4 points lower than the first fleet's on average, not significant (t p = 0.21).
+* **Cost**: the fleet costs 1.41 (Qwen), 1.54 (DeepSeek), 1.60 (Sonnet) times as much per spec.
+  Wall-clock is dominated by provider latency and the arms ran at different times; take it as
+  measured, not as a property of the design.
+
+What the records show (readings, not tested causes): the fleet spends more on the FSM families
+(180 of 400 evaluations on average for Qwen and DeepSeek, against 128 and 166 in their single
+graphs; 100 against 18 for Sonnet on a spec no FSM design can meet); phase 2 went wholly to the
+pipelined member in 14 (Qwen) and 15 (DeepSeek) of 25 runs, and 15 for the fixed fleet. The HV
+loss is largest on the system specs (`multiaxis_control`, Qwen: 0.840 single, 0.734 first
+fleet, 0.745 fixed fleet). One plausible reading is that a fixed split by contract class
+allocates worse than the architect's own early choice of families plus one front-mapping round
+over all of them, and that smaller per-member studies cost front coverage; the regret gain
+would fit a pipelined member that searches only the families the selection rule picks from.
+
+**Throughput, measured** (L1 evaluations per hour of wall-clock, one run at a time): single
+graph 25,212 (Qwen), 9,410 (DeepSeek), 35,002 (Sonnet, one spec); first fleet 8,400, 6,292,
+29,256; fixed Qwen fleet 16,094.
+Cost per spec: $0.0090 / $0.0167 / $0.0931 single, $0.0127 / $0.0257 / $0.1488 fleet.
+*Projection, not run:* one machine like this one running Qwen single-graph runs back to back
+would evaluate about 605,000 designs and close about 1,500 specs a day for about $14, if
+provider latency, rate limits and the spec mix stayed as measured.
+
+**L2 → L1 feedback** (`python eval/run_eval.py l2-feedback-m4` → `eval/data/l2_feedback_m4.json`):
+it fires in **0 of 92** recorded searches (the M3 structured runs rebuilt from their archived
+evaluations, the M3 campaign pools, NSGA-II and random on every system spec) and **0 of 60** live
+M4 runs on system specs: on the committed specs L2 always found a passing design. On the
+constructed spec `specs/m4/l2_feedback_bursty.yaml` (bursts of 32 at 130 MS/s, a sustained
+throughput floor of 130 MS/s, p99 ≤ 0.4 µs; 37,882 designs pass the bound, 447 the simulation)
+it fires in **3 of 15** searches (5 each of NSGA-II, random and the rule-based architect; all
+three are random search) and recovers a passing design in **3 of 3** (regret +17.3 ± 11.0%);
+the ablation with the same extra budget and the *uncorrected* bound recovers **1 of 3**. The
+first version of the spec had a 1 MS/s throughput floor, a strawman against a 130 MS/s stream;
+with it the feedback fired in 6 of 15 (`eval/data/l2_feedback_m4_v1_floor1.json`).
+
+**Provider drift.** Qwen on `low_area_control`, through a graph that replays its M2 runs
+identically, had +3.7% mean regret in M2 and +22.8% in this session's single arm. Arms are
+compared only within one session.
+
+**Spend** (`eval/data/key_usage_m4.json`, `spend_ledger.jsonl`, plan in
+`eval/data/spend_plan_m4.md`): the key's usage went from **$7.8163** (2026-10-10T16:23:17Z, before
+any M4 call) to **$11.6459** (2026-10-10T20:59:36Z) for the first eval, and to **$11.9645**
+(2026-10-10T23:07:37Z) after the post-review Qwen fleet re-run ($0.3186 by the key):
+**$4.15 for M4**, under the $5 cap. Provider-reported ledger: $3.8438 over 147 runs; the key and
+the ledger differ by calls that fail inside the client and report no usage, and by when the
+key's counter catches up. Pilots (Qwen, `asic_multiaxis_control` seed 0): structured $0.0071,
+fleet $0.0158.
+
 ## Limitations
 
 - **The eval's cost model is still the two-anchor Vivado calibration.** It is the default
@@ -957,7 +1336,7 @@ attempt 2 succeeded ($0.018).
   `vivado-2025.2` refit predicts unseen Vivado points no better (15.4 / 3.7 / 12.5%
   leave-one-out). It also gets the one decision the measurements test right
   (`high_precision`: m=6 feasible, m=8 not). Its known biases: generated `pipelined` Fmax
-  −15 to −17%, `iterative` Fmax +14 to +15%, `unrolled_k` LUTs −37 to −40% at k=3–4.
+  −15 to −17%, `iterative` Fmax +14 to +16%, `unrolled_k` LUTs −37 to −40% at k=3–4.
 - **Yosys/nextpnr are not Vivado.** On the reference RTL Yosys maps 1.5–1.7× Vivado's
   LUTs; on generated RTL the two agree within 7% for the pipelined families but not for
   the FSM ones (`iterative` +29%, `unrolled_k` −11 to +9%). nextpnr's post-route Fmax is
@@ -990,7 +1369,30 @@ attempt 2 succeeded ($0.018).
   one path factor per tool cannot capture Vivado's larger Fmax advantage on pipelined
   designs, and the biggest (W=26–28) and smallest (W=8) designs sit furthest off.
 - **Power index** is resource-count × clock × a fixed activity factor. It ignores
-  glitching, clock-tree and static power and real toggle rates. No power is measured yet.
+  glitching, clock-tree and static power and real toggle rates. On the FPGA no power is
+  measured yet (the `report_power` export for the 14 Vivado designs is ready for the local
+  run). On the ASIC the index is fitted to OpenSTA's *vectorless* power, itself a toggle-rate
+  model, so agreement with it (5.8% leave-one-out) says nothing about real switching.
+- **The ASIC numbers are post-synthesis only** (M4): Yosys 0.33 + OpenSTA at one corner
+  (`tt_025C_1v80`), the liberty's wire-load model, no placement, no buffering or sizing (a
+  flip-flop driving a barrel shifter sees 1.65 ns clock-to-Q), no clock tree. Yosys's default
+  adder mapping ripples (0.29 ns/bit), which is why chained rotations cost so much clock here;
+  a flow with faster adders could rank `unrolled_k` and deep `pipelined_m` differently. Place and
+  route (OpenROAD) was not run.
+- **The ASIC cost model's Fmax is the weak part**: 10.6% RMS leave-one-out, and on the nine
+  held-out designs −15% to +40% (`unrolled_k` k=2 worst). With measured numbers the model's
+  `asic_multiaxis_control` winner misses its deadline (72.2 vs 82.5 MHz estimated). The ASIC
+  ground truth is the model's, like the FPGA's; the held-out table says where it is wrong.
+- **Family ranking FPGA vs ASIC**: compared on three specs and their FPGA twins, under each
+  target's *model*; measurements cover the ground-truth optima (ASIC, held-out) and 14 Vivado
+  designs, not every family's best on every spec.
+- **The L2 → L1 feedback never fires on the committed specs**; its evidence is a constructed
+  spec and offline searches. Its corrected bound is empirical (optimistic at every design L2
+  simulated, an assumption elsewhere).
+- **The fleet is one design** (two members split by contract class, a 50/50 phase split,
+  reallocation by front share), A/B-tested on five specs with Qwen and DeepSeek and on one
+  spec (`asic_multiaxis_control`) with Sonnet 5.5, for the spend cap; the fixed fleet was
+  re-run for Qwen only.
 - **Verification scope.** RTL and gate-level simulation compare every output code on the
   documented angle sets (exhaustive for W ≤ 16, up to 131,072 deduplicated angles above, so a lower bound on
   the worst case there). Gate-level simulation is zero-delay on the Yosys netlist, not the
@@ -1061,19 +1463,28 @@ src/hw_dse/
   l2/                          M3: cycle model + RTL validation, SimPy systems, L1 bounds,
                                DDS spectrum, the l2_simulate node's logic
   campaign/                    M3: Deep Agents campaign agent: tools, memory, agent, fake model, runner
+  fleet/                       M4: the code-orchestrated fleet (coordinator) and its shared LangGraph Store
+  l2/feedback.py               M4: the L2 -> L1 feedback (corrected system bound, re-exploration)
+  models/cost_asic.py          M4: sky130_fd_sc_hd cost model (estimate), fitted; calibration_sky130hd.yaml
+  synth/asic.py, asic_sweep.py M4: Yosys + OpenSTA flow, the ASIC sweep and held-out set
+  synth/vivado_power.py        M4: report_power schema, parser, power-index comparison
   cli.py                       hw-dse run | resume | ping | diagram
 third_party/CORDIC/            vendored reference RTL (MIT) + VENDORED.md
 rtl_golden/                    committed golden examples, one per family
 rtl_harness/                   stimulus/capture harnesses (reference RTL; generated RTL)
 formal/                        SymbiYosys jobs (.sby + wrapper modules)
-specs/                         example specs (YAML); specs/system/: system-level specs (M3)
+specs/                         example specs (YAML); specs/system/: system-level specs (M3); specs/asic/: ASIC specs (M4);
+                               specs/m4/: the spec constructed for the L2 -> L1 feedback
 eval/run_eval.py               ground truth, baselines, live agent runs, results.md
 eval/tune_levers.py            offline lever tuning by replaying recorded LLM decisions
 eval/m3_offline.py             M2 replay proof; the map_front fix, offline
 eval/data/                     every result table (see eval/data/README.md)
 scripts/                       L3/L4/gate/worked-example runners, chip database, vendoring check
 tests/                         offline pytest suite (no LLM output needed)
-docs/                          worked examples (M1 LLM run; M2 ladder; M3 L2 rung)
+docs/                          WRITEUP.md (the final report); worked examples (M1 LLM run; M2 ladder; M3 L2 rung)
+eval/m4.py                     M4 eval: ASIC ground truth, baselines, structured + fleet arms, L2 feedback, report
+scripts/run_asic_sweep.py      M4: the ASIC sweep, smoke, re-measurement check, held-out set
+scripts/vivado_m4.py           M4: the local Vivado exports (20 ns, report_power), collect, compare, refit
 ```
 
 ## Licence

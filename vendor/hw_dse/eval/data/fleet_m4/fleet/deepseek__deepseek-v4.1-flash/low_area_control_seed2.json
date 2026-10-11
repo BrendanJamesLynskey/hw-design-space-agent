@@ -1,0 +1,154 @@
+{
+ "milestone": "m4",
+ "arm": "fleet",
+ "pilot": false,
+ "spec": "low_area_control",
+ "target": "fpga-artix7",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "status": "stopped",
+ "llm_calls": 8.0,
+ "llm_failures": 0.0,
+ "input_tokens": 19274.0,
+ "output_tokens": 17036.0,
+ "cost_usd": 0.016500193,
+ "wall_s": 115.8,
+ "decisions": [
+  "stop",
+  "stop",
+  "map_front",
+  "map_front",
+  "stop"
+ ],
+ "l1_selected_key": "iterative:data_width=15,n_iter=13,angle_guard=0,frac_guard=1,rounding=trunc",
+ "l2_winner_changed": false,
+ "l2_feedback": null,
+ "back_annotation_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 14967.54370972693,
+ "hv_frac": 0.8981297096110591,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=13,angle_guard=0,frac_guard=1,rounding=trunc",
+ "select_regret": 0.04132356393009975,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "members": [
+  {
+   "member": "fsm",
+   "families": [
+    "iterative",
+    "unrolled_k"
+   ],
+   "phase": 1,
+   "budget": 100,
+   "status": "stopped",
+   "rounds": 2,
+   "decisions": [
+    "stop"
+   ],
+   "coverage_rounds": 1,
+   "wall_s": 18.7,
+   "run_dir": "runs/fleet_m4/low_area_control/seed2-20261010-193940/fsm-p1/low_area_control/20261010-193940-a828",
+   "llm_declared_infeasible": false,
+   "n_evals": 100,
+   "cost_usd": 0.003026731
+  },
+  {
+   "member": "pipelined",
+   "families": [
+    "pipelined",
+    "pipelined_m"
+   ],
+   "phase": 1,
+   "budget": 100,
+   "status": "stopped",
+   "rounds": 2,
+   "decisions": [
+    "stop"
+   ],
+   "coverage_rounds": 1,
+   "wall_s": 56.9,
+   "run_dir": "runs/fleet_m4/low_area_control/seed2-20261010-193940/pipelined-p1/low_area_control/20261010-193940-37dd",
+   "llm_declared_infeasible": false,
+   "n_evals": 100,
+   "cost_usd": 0.007682422
+  },
+  {
+   "member": "fsm",
+   "families": [
+    "iterative",
+    "unrolled_k"
+   ],
+   "phase": 2,
+   "budget": 200,
+   "status": "stopped",
+   "rounds": 3,
+   "decisions": [
+    "map_front",
+    "map_front",
+    "stop"
+   ],
+   "coverage_rounds": 2,
+   "wall_s": 58.8,
+   "run_dir": "runs/fleet_m4/low_area_control/seed2-20261010-193940/fsm-p2/low_area_control/20261010-194037-eac4",
+   "llm_declared_infeasible": false,
+   "n_evals": 200,
+   "cost_usd": 0.00579104
+  }
+ ],
+ "phase2_budgets": {
+  "fsm": 200,
+  "pipelined": 0
+ },
+ "lessons": {
+  "iterative": {
+   "member": "fsm",
+   "evaluations": 88,
+   "feasible": 65,
+   "best_luts_plus_ffs": 261.013338,
+   "on_merged_front": 18,
+   "merged_front_size": 18,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "unrolled_k": {
+   "member": "fsm",
+   "evaluations": 12,
+   "feasible": 8,
+   "best_luts_plus_ffs": 363.20179899999994,
+   "on_merged_front": 0,
+   "merged_front_size": 18,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "pipelined": {
+   "member": "pipelined",
+   "evaluations": 24,
+   "feasible": 15,
+   "best_luts_plus_ffs": 1320.7852239999997,
+   "on_merged_front": 0,
+   "merged_front_size": 18,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "pipelined_m": {
+   "member": "pipelined",
+   "evaluations": 76,
+   "feasible": 54,
+   "best_luts_plus_ffs": 788.0717679999999,
+   "on_merged_front": 0,
+   "merged_front_size": 18,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  }
+ },
+ "store_evaluations_by_member": {
+  "fsm": 300,
+  "pipelined": 100
+ },
+ "store_distinct_designs": 356,
+ "run_dir": "runs/fleet_m4/low_area_control/seed2-20261010-193940"
+}

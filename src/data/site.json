@@ -1,8 +1,8 @@
 {
  "vendored": {
   "repository": "https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent",
-  "commit": "a92fe650163d769da96f38727023855e2265871d",
-  "committed": "2026-10-10T09:36:38+01:00"
+  "commit": "b119c8a7bab4105a2fe1858d26dcedbd573c6fe7",
+  "committed": "2026-10-11T08:34:25+01:00"
  },
  "milestones": [
   {
@@ -23,8 +23,9 @@
   },
   {
    "id": "M4",
-   "levels": "more functions and targets (an ASIC gate-equivalent `CostModel`), a fleet of agents, richer family registry, the write-up",
-   "status": "planned"
+   "levels": "ASIC target: Yosys + OpenSTA on sky130_fd_sc_hd (57-point sweep, 9 held-out designs), fitted `AsicCostModel` with leave-one-out residuals, `target` in specs, three ASIC specs with exhaustive ground truth, ASIC back-annotation · fleet of structured graphs, code-orchestrated, shared LangGraph Store, A/B vs a single graph · L2 → L1 feedback · FPGA replay proof extended to M3 · Vivado exports for the local run · [`docs/WRITEUP.md`](docs/WRITEUP.md)",
+   "status": "done",
+   "note": "see the A/B for what the fleet did and did not achieve"
   }
  ],
  "roadmap": [
@@ -61,7 +62,13 @@
   },
   {
    "id": "M4",
-   "levels": "more functions and targets (an ASIC gate-equivalent `CostModel`), a fleet of agents, richer family registry, the write-up",
+   "levels": "ASIC target: Yosys + OpenSTA on sky130_fd_sc_hd (57-point sweep, 9 held-out designs), fitted `AsicCostModel` with leave-one-out residuals, `target` in specs, three ASIC specs with exhaustive ground truth, ASIC back-annotation · fleet of structured graphs, code-orchestrated, shared LangGraph Store, A/B vs a single graph · L2 → L1 feedback · FPGA replay proof extended to M3 · Vivado exports for the local run · [`docs/WRITEUP.md`](docs/WRITEUP.md)",
+   "status": "done",
+   "note": "see the A/B for what the fleet did and did not achieve"
+  },
+  {
+   "id": "",
+   "levels": "place and route on the ASIC target (OpenROAD) · an ASIC measure-and-re-explore loop (synthesise the selected designs, re-select under measured numbers), then a decision on an `unrolled_k` chain term, disclosed, with the held-out points kept held out · the local Vivado runs (`high_precision` at 20 ns, `report_power`) and the refit/compare they feed · per-family-class path factor (waits for the 20 ns data) · an LLM coordinator for the fleet · more functions and a richer family registry",
    "status": "planned"
   }
  ],
@@ -140,6 +147,17 @@
    "what": "the Yosys-mapped netlist, simulated with the vendor cell models (zero-delay)",
    "ppa": "function after synthesis (exact)",
    "check": "every output code against the golden model: 22 runs, 0 mismatches",
+   "status": "live",
+   "plan_only": false
+  },
+  {
+   "id": "ASIC",
+   "name": "ASIC synthesis (sky130)",
+   "milestone": "M4",
+   "repo_level": "L4",
+   "what": "the same generated RTL through Yosys 0.33 + OpenSTA 3.1.0 on sky130_fd_sc_hd (typical corner, 25 °C, 1.80 V, 10 ns clock): post-synthesis with a wire-load model, no place and route",
+   "ppa": "cell area, flip-flops, register-to-register Fmax and vectorless power measured; while exploring, an estimate from a model fitted to 57 of those points; an open-PDK estimate, not silicon",
+   "check": "CI re-synthesises all 57 calibration points and requires identical numbers; 9 held-out designs never fitted: area within 5% on 9/9, Fmax -14.9% to +39.6%",
    "status": "live",
    "plan_only": false
   },

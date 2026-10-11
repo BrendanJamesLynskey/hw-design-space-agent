@@ -1,0 +1,48 @@
+{
+ "milestone": "m4",
+ "arm": "structured",
+ "pilot": false,
+ "spec": "asic_low_area",
+ "target": "asic-sky130hd",
+ "seed": 2,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "status": "stopped",
+ "llm_calls": 4.0,
+ "llm_failures": 0.0,
+ "input_tokens": 10370.0,
+ "output_tokens": 3088.0,
+ "cost_usd": 0.007441693,
+ "wall_s": 61.8,
+ "decisions": [
+  "refine",
+  "refine",
+  "stop"
+ ],
+ "l1_selected_key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=round,k=2",
+ "l2_winner_changed": false,
+ "l2_feedback": null,
+ "back_annotation_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 350794.86943305534,
+ "hv_frac": 0.7688444835208114,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "unrolled_k:data_width=16,n_iter=14,angle_guard=0,frac_guard=0,rounding=round,k=2",
+ "select_regret": 0.3746663134285605,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "rounds": 4,
+ "coverage_rounds": 1,
+ "structured_method": "json_schema",
+ "run_dir": "runs/eval_m4/structured/asic_low_area/20261010-163237-7d1d",
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 160 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ]
+}
