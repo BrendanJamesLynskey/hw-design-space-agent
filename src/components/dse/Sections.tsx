@@ -7,9 +7,14 @@ import type { ReactNode } from "react";
 import { ev, site, why } from "@/lib/dse/data";
 import { ladder } from "@/lib/dse/ladder";
 import { m3 } from "@/lib/dse/m3";
+import { m4 } from "@/lib/dse/m4";
 
 import {
+  AsicTargets,
   Calculator,
+  DeadlineReplay,
+  FleetRun,
+  HeldOut,
   CycleRtl,
   DescentWidget,
   HighPrecisionStory,
@@ -119,4 +124,24 @@ export function HowSystem(): JSX.Element {
 /** The cycle model against the generated RTL (How it works). */
 export function HowCycle(): JSX.Element {
   return <CycleRtl cycle={m3.cycle} />;
+}
+
+/** FPGA against ASIC on the three ASIC specs (How it works). */
+export function HowAsic(): JSX.Element {
+  return <AsicTargets specs={m4.ground_truth.specs} />;
+}
+
+/** The nine held-out sky130 designs, measured against the model (How it works). */
+export function HowHeldOut(): JSX.Element {
+  return <HeldOut held={m4.held_out} specs={m4.ground_truth.specs} />;
+}
+
+/** The asic_multiaxis_control winner at its estimated and its measured clock: M3's replay. */
+export function HowDeadline(): JSX.Element {
+  return <DeadlineReplay rep={m4.deadline} />;
+}
+
+/** One real fleet run, then the paired A/B (How it works). */
+export function HowFleet(): JSX.Element {
+  return <FleetRun run={m4.fleet_run} />;
 }

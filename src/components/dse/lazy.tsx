@@ -83,3 +83,19 @@ export const CycleRtl = dynamic(() => import("./CycleRtl"), {
   ssr: false,
   loading: loading("animation"),
 });
+export const AsicTargets = dynamic(() => import("./AsicTargets"), {
+  ssr: false,
+  loading: loading("animation"),
+});
+export const HeldOut = dynamic(() => import("./HeldOut"), {
+  ssr: false,
+  loading: loading("animation"),
+});
+export const FleetRun = dynamic(() => import("./FleetRun"), {
+  ssr: false,
+  loading: loading("animation"),
+});
+export const DeadlineReplay = dynamic(() => import("./DeadlineReplay"), {
+  ssr: false,
+  loading: loading("animation"),
+});

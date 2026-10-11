@@ -6,7 +6,7 @@ Each level offers its own power, performance and area trade-offs, and each costs
 
 <LadderTable column="ppa" />
 
-At the vendored commit, milestones 1 to 3 are done and every level of the ladder is live: spec intake (L0), analytical exploration (L1), system-level simulation in SimPy and the cycle-accurate model (together the repository's L2, milestone 3), RTL simulation (L3), synthesis (L4), gate-level simulation of the netlist and back-annotation (L5). Milestone 4 (an ASIC cost model on an open PDK, a fleet of agents) is planned and has no results. Exploration itself still happens at L1, where a design costs microseconds to score; the lower levels check, measure and correct what L1 chose.
+At the vendored commit all four milestones are done and every level of the ladder is live: spec intake (L0), analytical exploration (L1), system-level simulation in SimPy and the cycle-accurate model (together the repository's L2, milestone 3), RTL simulation (L3), synthesis (L4), gate-level simulation of the netlist, synthesis on a second target, an ASIC on the open sky130 PDK (milestone 4), and back-annotation (L5). The ASIC rung is **post-synthesis only**: there is no place and route, and its numbers are an open-PDK estimate, not silicon. Exploration itself still happens at L1, where a design costs microseconds to score; the lower levels check, measure and correct what L1 chose.
 
 ## The design principle: the LLM never produces a number
 
@@ -20,7 +20,7 @@ It is also in the types. Each LLM call names a Pydantic schema (`ExplorationPlan
 
 ## The graph, replayed
 
-The agent is a LangGraph `StateGraph`. `intake` turns the spec into a validated `Spec`; `confirm_spec` stops for a human with `interrupt()`; `propose` asks the LLM for a plan; `explore_family` runs once per family, fanned out in parallel with `Send`, each branch an Optuna NSGA-II study inside the box the LLM chose; `analyse` merges the results, computes the Pareto front and its hypervolume, shows the LLM a compact summary and asks what next. Code then applies hard rules the LLM cannot override: the round cap, the budget, and no "infeasible" verdict while feasible designs exist. After `select`, milestone 2's graph adds `back_annotate`: the selected design's estimates against any measured synthesis data, and a flag if the winner would change. Milestone 3 adds two more nodes, both code only: `l2_simulate` before it, which simulates every L1-feasible design of the run inside the spec's system and re-selects on the simulated numbers, and `l5_reexplore` after it, which re-explores around the measured designs under the refit cost model when a measurement flags a winner change.
+The agent is a LangGraph `StateGraph`. `intake` turns the spec into a validated `Spec`; `confirm_spec` stops for a human with `interrupt()`; `propose` asks the LLM for a plan; `explore_family` runs once per family, fanned out in parallel with `Send`, each branch an Optuna NSGA-II study inside the box the LLM chose; `analyse` merges the results, computes the Pareto front and its hypervolume, shows the LLM a compact summary and asks what next. Code then applies hard rules the LLM cannot override: the round cap, the budget, and no "infeasible" verdict while feasible designs exist. After `select`, milestone 2's graph adds `back_annotate`: the selected design's estimates against any measured synthesis data, and a flag if the winner would change. Milestone 3 adds two more nodes, both code only: `l2_simulate` before it, which simulates every L1-feasible design of the run inside the spec's system and re-selects on the simulated numbers, and `l5_reexplore` after it, which re-explores around the measured designs under the refit cost model when a measurement flags a winner change. Milestone 4 adds a third, `l2_feedback`, also code only: when L2 rejects every L1-feasible design, it corrects the L1 bound from the simulations and re-explores (below). It also lets a spec name its target: the same graph explores an ASIC spec with an ASIC cost model and an ASIC system prompt, and the FPGA prompt stays byte for byte what it was.
 
 Milestone 2 also changed how the agent spends its budget, to map the whole trade-off curve and not only the corner the spec's selection rule cares about. The LLM gained a `map_front` decision, which asks code for a front-mapping round: NSGA-II over the ranges of the families on the front so far. And 40% of the budget is held in reserve: before a run stops, code spends whatever is left on one final front-mapping round, with no LLM call.
 
@@ -48,6 +48,38 @@ A system model is only as good as its contract, so the cycle model is checked ag
 
 <HowCycle />
 
+## A second target: an ASIC on sky130
+
+Milestone 4 takes the same generated RTL to standard cells. The flow (<V of="m4.cal.tool" fmt="str" />) runs it against the open `sky130_fd_sc_hd` library at its typical corner (25 °C, 1.80 V) with a <V of="m4.cal.clock_ns" fmt="int" /> ns clock: cell area, flip-flops, the register-to-register path with the library's wire-load model, and vectorless power <Prov kind="measured" />. There is no placement and no routing: these are post-synthesis numbers, the counterpart of the Vivado anchors, not of a routed chip. OpenROAD place and route was left out (no package for this Ubuntu, a commercial install channel, and a floorplan and power grid per design); it is on the roadmap, from its own pinned release binaries.
+
+<V of="m4.cal.points" fmt="int" /> synthesised designs across all four families calibrate an ASIC cost model, the FPGA model's structural counts re-weighted for standard cells. Leave-one-out it is off by <V of="m4.cal.loo_area" fmt="f1" />% on area, <V of="m4.cal.loo_ffs" fmt="f1" />% on flip-flops and <V of="m4.cal.loo_fmax" fmt="f1" />% on Fmax <Prov kind="estimate" />. The fitted adder delay is about <V of="m4.cal.t_bit" fmt="f2" /> ns per bit: Yosys's default adder mapping ripples, so every rotation stage costs more clock on sky130 than on the FPGA's carry chains.
+
+<AsicCalibrationTable />
+
+Three ASIC specs each get an exhaustive ground truth over the same <V of="designs" fmt="int" /> designs, and an FPGA twin: the same constraints with area in LUTs + FFs, scored on the FPGA ground truth. Does the target change the answer? Not the family ranking: it is the same on all three, though on two of them only the two pipelined families can meet the rate, so that is one pairwise comparison each. What changes is the depth inside a family:
+
+<HowAsic />
+
+### The held-out check
+
+<V of="m4.ho.n" fmt="int" /> more designs were synthesised and **never fitted**: each spec's per-family optima, the FPGA twins' winners and the L1 bound's pick. Area holds (within 5% on <V of="m4.ho.area_within_5" fmt="int" /> of <V of="m4.ho.n" fmt="int" />). Fmax does not: from <V of="m4.ho.fmax_min" fmt="spct" /> to <V of="m4.ho.fmax_max" fmt="spct" />, and the model is optimistic on <V of="m4.ho.optimistic" fmt="int" /> of the nine.
+
+<HowHeldOut />
+
+### The deadline miss
+
+That optimism matters where a spec's margin is thinner than the model's error. `asic_multiaxis_control` is milestone 3's control loop on sky130, with a 0.5 µs deadline. Its ground-truth winner, `pipelined_m` m=2, meets it at the estimated <V of="m4.dl.est_mhz" fmt="f1" /> MHz; synthesised, it runs at <V of="m4.dl.meas_mhz" fmt="f1" /> MHz, and at that clock it **misses the deadline** (p99 <V of="m4.dl.meas_p99" fmt="f3" /> µs). The same SimPy replay as milestone 3's, at both clocks:
+
+<HowDeadline />
+
+The repository states the miss plainly and does not refit the model on the held-out points, which would end their role as a test. The ASIC back-annotation flags this case, but there is no ASIC re-exploration loop yet; a measure-and-re-explore loop is on the [roadmap](/roadmap).
+
+## L2 → L1 feedback
+
+L1's system bound is optimistic by construction. If L2 rejects **every** L1-feasible design of a run, the run spent its budget where the bound was wrong. The `l2_feedback` node then does for the bound what L5 does for the cost model: it measures the bound's error on every simulated design, fits a monotone correction in the design's utilisation per contract class (never more optimistic than any simulation it has seen, so labelled an empirical estimate), and re-explores with a separate budget of 3 × 60 evaluations under the corrected bound.
+
+On the committed specs it never fires: 0 of <V of="m4.fb.recorded" fmt="int" /> recorded searches and 0 of <V of="m4.fb.live" fmt="int" /> live runs found an L1-feasible set that L2 rejected whole. So the repository constructed a spec where it does (bursts of 32 requests at 130 MS/s, a 130 MS/s throughput floor, p99 within 0.4 µs). It fired in <V of="m4.fb.fired" fmt="int" /> of <V of="m4.fb.searches" fmt="int" /> searches, all random search, and recovered a passing design in <V of="m4.fb.recovered" fmt="int" /> of <V of="m4.fb.fired" fmt="int" />; the same extra budget with the uncorrected bound recovered <V of="m4.fb.uncorrected" fmt="int" />. Evidence for the mechanism, on three cases; the [results](/results#feedback) have every search.
+
 ## Verification at every level
 
 A level is only useful if its numbers can be trusted, so every level is checked against the one golden model before the agent relies on it.
@@ -74,10 +106,26 @@ It is **experimental**: optional, off by default, and used by nothing in the str
 
 ## Many agents at once
 
-There are two kinds of parallelism. Inside a run, `Send` fans `explore_family` out across the families the LLM chose, so the studies run side by side and a reducer merges their evaluations. Across runs, every run is an independent graph with its own SQLite checkpoint, so runs can be queued and run side by side, and a run interrupted for human input, or killed, resumes from its last completed step. That is what makes a fleet of agents running 24/7 possible, each evaluating a real design decision. Each eval was a small fleet:
+There are three kinds of parallelism. Inside a run, `Send` fans `explore_family` out across the families the LLM chose, so the studies run side by side and a reducer merges their evaluations. Across runs, every run is an independent graph with its own SQLite checkpoint, so runs can be queued and run side by side, and a run interrupted for human input, or killed, resumes from its last completed step. And since milestone 4, several graphs can work on one spec as a fleet <LevelBadge status="live" milestone="M4" />.
+
+### The fleet: orchestrated by code
+
+Milestone 3's lesson was that an LLM in the outer loop adds cost and loops without adding search. So the fleet puts **code** between the graphs. Two members, one per contract class (the FSM families and the pipelined families), each an unchanged structured graph restricted to its families, with its own LLM architect. Phase 1 splits half the budget equally; every evaluation goes to a shared LangGraph Store; code computes per-family lessons from the Store (counts and best values, nothing an LLM wrote), gives the other half to the members in proportion to their share of the merged Pareto front, and seeds each phase-2 study with the Store's front designs of its family. Code merges, selects and runs L2 once.
+
+**Why no LLM coordinator?** Its decisions here are a budget split and a front merge: arithmetic over numbers code already has. Milestone 3's A/B showed what an LLM in that seat costs (<V of="m3.ab.cost_ratio_min" fmt="f2" />–<V of="m3.ab.cost_ratio_max" fmt="f2" />× as much per spec, for no gain), and its free-text notes into the inner architect narrowed the first box in its worst run. In the fleet there is no channel for free text at all. Code also enforces the equal budget: the fleet never spends more than the 400 L1 evaluations a single graph gets, so the two can be compared.
+
+The replay below is one real fleet run, after the review fix that added the warm start; then the A/B against the single graph, pair by pair.
+
+<HowFleet />
+
+The fleet did not map the front better, and the warm start did not change that; with Qwen it picked better designs. The [results](/results#fleet) have the whole A/B.
+
+### The eval runs as a fleet
+
+Each eval was itself a small fleet of independent runs:
 
 <FleetTimeline ms="m2" />
 
 <FleetTimeline ms="m1" />
 
-Those timelines are measured, not projections: M2 ran <V of="m2.runs" fmt="int" /> runs with <V of="m2.calls.total" fmt="int" /> LLM calls, up to <V of="m2.fleet.max" fmt="int" /> at once; M1 ran <V of="m1.runs" fmt="int" /> runs with <V of="m1.calls.total" fmt="int" /> calls, up to <V of="m1.fleet.max" fmt="int" /> at once. What a larger fleet would cost is on the [results](/results#calculator) page, worked out from the measured runs.
+Those timelines are measured, not projections: M2 ran <V of="m2.runs" fmt="int" /> runs with <V of="m2.calls.total" fmt="int" /> LLM calls, up to <V of="m2.fleet.max" fmt="int" /> at once; M1 ran <V of="m1.runs" fmt="int" /> runs with <V of="m1.calls.total" fmt="int" /> calls, up to <V of="m1.fleet.max" fmt="int" /> at once. Milestone 4 ran its A/B one run at a time, so its wall-clock is each run's own: a single Qwen graph evaluated <V of="m4.ab.dph.qwen_single" fmt="int" /> designs per hour, the fixed fleet <V of="m4.ab.dph.qwen_v2" fmt="int" /> (measured). What a fleet running 24/7 would cost is on the [results](/results#calculator) page, worked out from the measured runs.

@@ -11,7 +11,7 @@ import { AGENT_REPO, GITHUB_URL, agentFile } from "@/lib/site";
 export const metadata = {
   title: "Roadmap",
   description:
-    "Milestones M1 to M4: what each adds to the fidelity ladder (RTL, synthesis, gate-level simulation and back-annotation in M2; cycle-level and SimPy system-level simulation and an experimental campaign layer in M3, both done; an ASIC cost model and a fleet in M4, planned), their status and their pull requests.",
+    "Milestones M1 to M4, all done: what each adds to the fidelity ladder (RTL, synthesis, gate-level simulation and back-annotation in M2; cycle-level and SimPy system-level simulation and an experimental campaign layer in M3; an ASIC target on sky130, a code-orchestrated fleet and L2 → L1 feedback in M4), their pull requests, and what is planned after M4.",
 };
 
 const A =
@@ -22,13 +22,19 @@ const ADDS: Record<string, string> = {
   M1: "The agent itself: spec intake with a human in the loop, LLM-steered exploration over tested fast models, the exhaustive ground truth and the eval against NSGA-II and random search with real models.",
   M2: "From estimates to measurements, and the whole trade-off curve: one generator of SystemVerilog for every family, verified against the golden model in Verilator and Icarus and with SymbiYosys proofs; open-source synthesis and place-and-route (Yosys + nextpnr-xilinx) and gate-level simulation of the netlist; back-annotation that refits the cost model per tool and flags a winner change; front-mapping levers for the agent, and a five-seed eval. Then a follow-up pull request: Vivado 2025.2 on 14 generated designs and the vivado-2025.2 refit (no spec's winner changed; the default cost model stays M1's).",
   M3: "The design in its system: a cycle-accurate model of every family's interface, checked against the generated RTL cycle for cycle, and SimPy models of three systems (a DDS feeding a mixer, a control loop, a bursty request stream); system-level specs, screened at L1 by optimistic bounds and re-selected at L2 on simulated numbers; an L5 loop that re-explores under the refit when a measurement changes the winner; a gated fix for M2's front-mapping blind spot; and a campaign agent on LangChain Deep Agents with cross-run memory, measured in an A/B against the structured graph. The A/B found no gain at a higher cost, so the campaign agent stays experimental, off by default.",
-  M4: "Breadth and feedback: an ASIC cost model on an open PDK, a fleet of agents, L2 results fed back into L1, more measured data (high_precision's m=8 synthesised at its own 20 ns clock), a richer family registry and the write-up. Planned; no results yet.",
+  M4: "A second target and a fleet: the same generated RTL synthesised on the open sky130 PDK (Yosys + OpenSTA, post-synthesis only, no place and route), an ASIC cost model fitted to 57 measured designs and checked on 9 held-out ones, three ASIC specs with exhaustive ground truth and FPGA twins; a fleet of structured graphs orchestrated by code around a shared LangGraph Store, in a paired A/B against the single graph; L2 → L1 feedback that corrects the system bound when the simulation rejects every candidate; the exports for a local Vivado run; and the final write-up. The fleet mapped the front worse and, with Qwen, selected better; the ASIC model's winner misses its deadline when measured. Both are stated plainly on the results page.",
 };
 
 /** What a milestone's site text says is the project's plan rather than the README's. */
-const PLAN_NOTE: Record<string, string> = {
-  M4: "The README lists more functions and targets (an ASIC gate-equivalent cost model), a fleet of agents, a richer registry and the write-up for M4; the open PDK, L2 → L1 feedback and the extra measurements are the project's plan.",
-};
+const PLAN_NOTE: Record<string, string> = {};
+
+/** After M4: the project record's plan (§9), with no results. */
+const AFTER_M4: string[] = [
+  "The local Vivado run: high_precision's m=8 and m=6 synthesised at their own 20 ns clock, and report_power on the 14 measured designs (the exports are ready in the repository).",
+  "An ASIC measure-and-re-explore loop: synthesise the selected designs, re-select under the measured numbers, as the FPGA path's L5 loop does. The nine held-out points stay held out.",
+  "OpenROAD place and route on sky130, from OpenROAD's own pinned release binaries (or a digest-pinned image), never from a commercial package channel.",
+  "The per-family-class path factor for the FPGA cost model, once the 20 ns data is in.",
+];
 
 /** Pull requests per milestone, in the agent's repository and this site's. */
 const PRS: Record<string, { href: string; label: string }[]> = {
@@ -58,6 +64,16 @@ const PRS: Record<string, { href: string; label: string }[]> = {
     {
       href: `${AGENT_REPO}/pull/5`,
       label: "HW_Design_Space_Agent #5: M3 (merged)",
+    },
+    {
+      href: `${GITHUB_URL}/pulls?q=is%3Apr`,
+      label: "this site's pull requests",
+    },
+  ],
+  M4: [
+    {
+      href: `${AGENT_REPO}/pull/6`,
+      label: "HW_Design_Space_Agent #6: M4 (merged)",
     },
     {
       href: `${GITHUB_URL}/pulls?q=is%3Apr`,
@@ -165,6 +181,28 @@ export default function RoadmapPage(): JSX.Element {
           );
         })}
       </ol>
+      <section
+        data-testid="after-m4"
+        className="mt-8 rounded-lg border border-dashed border-neutral-300 p-5 dark:border-neutral-700"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-xl font-semibold tracking-tight">After M4</h2>
+          <LevelBadge status="planned" milestone="plan" />
+        </div>
+        <p className="mt-2 text-sm text-neutral-700 dark:text-neutral-300">
+          All four planned milestones are done. What comes next is the
+          project&apos;s plan, from the{" "}
+          <Link href="/record#what-s-next" className={A}>
+            project record
+          </Link>
+          ; none of it has run, so there are no results:
+        </p>
+        <ol className="ml-5 mt-2 list-decimal space-y-1 text-sm text-neutral-700 dark:text-neutral-300">
+          {AFTER_M4.map((x) => (
+            <li key={x}>{x}</li>
+          ))}
+        </ol>
+      </section>
       <p className="mt-8 max-w-3xl text-sm text-neutral-600 dark:text-neutral-400">
         How each milestone was planned, verified and decided is in the{" "}
         <Link href="/record" className={A}>
@@ -176,7 +214,11 @@ export default function RoadmapPage(): JSX.Element {
         </Link>{" "}
         and the{" "}
         <Link href="/results" className={A}>
-          results so far
+          results
+        </Link>
+        , and the{" "}
+        <Link href="/writeup" className={A}>
+          final write-up
         </Link>
         .
       </p>

@@ -8,7 +8,8 @@
  * Levels that are not built yet are never visited, and neither are levels the run did not use:
  * the hero is an M2 run on a spec with no system scenario, so the spec card goes from L1
  * straight to L3, and the system and cycle levels (live since M3) are marked as not used by
- * this run. The final frame shows any planned levels, ghosted, with their milestone.
+ * this run; so is the ASIC target (live since M4), since this is an FPGA spec. The final frame
+ * shows any planned levels, ghosted, with their milestone.
  */
 import type { Hero, Level } from "./data";
 
@@ -54,6 +55,9 @@ export type HeroFrame = {
 
 /** The levels a spec without a system scenario does not visit. */
 export const SYSTEM_LEVELS = ["SYS", "L2"];
+
+/** The levels an FPGA spec does not visit: the ASIC target (milestone 4). */
+export const TARGET_LEVELS = ["ASIC"];
 
 /** The levels the selected design goes down after L1, in order, and the phase of each. */
 export const DESCENT: { level: string; phase: HeroPhase }[] = [
@@ -126,7 +130,7 @@ export function heroFrames(hero: Hero, ladder: Level[]): HeroFrame[] {
     phase: "select",
     selected: true,
     checked: ["L0", "L1"],
-    skipped: SYSTEM_LEVELS.filter((l) => live.has(l)),
+    skipped: [...SYSTEM_LEVELS, ...TARGET_LEVELS].filter((l) => live.has(l)),
   });
   for (const d of DESCENT) {
     if (!live.has(d.level)) break; // never animate a level that is not built

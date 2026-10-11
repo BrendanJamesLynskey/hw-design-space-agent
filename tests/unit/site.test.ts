@@ -47,11 +47,13 @@ describe("vendored data", () => {
 describe("honesty", () => {
   it("only the done milestones' levels are live; planned levels say when", () => {
     const done = site.milestones.filter((m) => m.status === "done");
-    expect(done.map((m) => m.id)).toEqual(["M1", "M2", "M3"]);
-    expect(site.milestones.find((m) => m.id === "M4")!.status).toBe("planned");
+    expect(done.map((m) => m.id)).toEqual(["M1", "M2", "M3", "M4"]);
     expect(
       site.ladder.filter((l) => l.status === "live").map((l) => l.id),
-    ).toEqual(["L0", "L1", "SYS", "L2", "L3", "L4", "GL", "L5"]);
+    ).toEqual(["L0", "L1", "SYS", "L2", "L3", "L4", "GL", "ASIC", "L5"]);
+    const asic = site.ladder.find((l) => l.id === "ASIC")!;
+    expect(asic.milestone).toBe("M4");
+    expect(asic.what).toContain("no place and route");
     expect(site.ladder.filter((l) => l.status !== "live")).toEqual([]);
   });
   it("M1: NSGA-II beat every agent on hypervolume on two specs", () => {

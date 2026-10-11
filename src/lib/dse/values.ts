@@ -11,6 +11,7 @@ import { arch } from "./families";
 import { fleetSpan, maxConcurrent } from "./fleet";
 import { ladder, vivadoDesigns } from "./ladder";
 import { m3, sysSpec } from "./m3";
+import { asicSpec, m4 } from "./m4";
 
 export type Fmt =
   | "num"
@@ -25,6 +26,7 @@ export type Fmt =
   | "f1"
   | "f2"
   | "f3"
+  | "p"
   | "str";
 
 const gt = site.ground_truth;
@@ -318,6 +320,156 @@ function m3Values(): Record<string, number | string> {
   );
 }
 
+/** Milestone 4's values, under "m4." (src/data/m4.json, checked against results.md, the write-up and the README). */
+function m4Values(): Record<string, number | string> {
+  const cal = m4.calibration;
+  const all = cal.rows[0]!;
+  const fam = (f: string) => cal.rows.find((r) => r.family === f)!;
+  const ho = m4.held_out;
+  const la = asicSpec("asic_low_area");
+  const pw = asicSpec("asic_power_50msps");
+  const mx = asicSpec("asic_multiaxis_control");
+  const laf = (f: string) => la.families.find((x) => x.family === f)!;
+  const [est, meas, plain] = m4.deadline.designs;
+  const ae = m4.asic_eval;
+  const regret = (spec: string, k: string) =>
+    ae.cells.select_regret![spec]![k]!.mean!;
+  const hv = (spec: string, k: string) => ae.cells.hv_frac![spec]![k]!.mean!;
+  const Q = "qwen/qwen3.8-27b, reasoning off";
+  const DS = "deepseek/deepseek-v4.1-flash";
+  const S = "anthropic/claude-sonnet-5.5";
+  const row = (m: string, arm: string) =>
+    m4.ab.rows.find((r) => r.model === m && r.arm === arm)!;
+  const test = (m: string, arm: string) =>
+    m4.ab.tests.find((t) => t.model === m && t.arm === arm)!;
+  const fb = m4.feedback;
+  const sp = m4.spend;
+  const fr = m4.fleet_run;
+  const out: Record<string, number | string> = {
+    "cal.points": cal.n_points,
+    "cal.loo_area": all.loo.area_um2!,
+    "cal.loo_ffs": all.loo.ffs!,
+    "cal.loo_fmax": all.loo.fmax_mhz!,
+    "cal.loo_power": all.loo.power_mw!,
+    "cal.worst_area_unrolled": fam("unrolled_k").loo.area_um2!,
+    "cal.worst_fmax_pipelined": fam("pipelined").loo.fmax_mhz!,
+    "cal.one_adder_area": cal.alternatives["area: one adder constant"]!,
+    "cal.t_bit": cal.t_bit_ns ?? 0,
+    "cal.clock_ns": cal.clock_ns,
+    "cal.tool": cal.tool,
+    "ho.n": ho.rows.length,
+    "ho.area_within_5": ho.area_within_5,
+    "ho.fmax_min": ho.fmax_err_min,
+    "ho.fmax_max": ho.fmax_err_max,
+    "ho.optimistic": ho.optimistic_over_1pct,
+    "ho.optimistic_any": ho.optimistic,
+    "ho.optimistic_min": ho.optimistic_min_over_1pct,
+    "gt.low_area.feasible": la.n_feasible,
+    "gt.power.feasible": pw.n_feasible,
+    "gt.multi.feasible": mx.n_feasible,
+    "gt.multi.feasible_bound": mx.l1_bound_feasible!,
+    "gt.low_area.winner_area": la.winner_value,
+    "gt.low_area.pipelined_ratio": laf("pipelined").asic_ratio!,
+    "gt.low_area.pipelined_ratio_fpga": laf("pipelined").fpga_ratio!,
+    "gt.power.m": pw.winner_m!,
+    "gt.power.twin_m": pw.twin_m!,
+    "gt.multi.m": mx.winner_m!,
+    "gt.multi.twin_m": mx.twin_m!,
+    "gt.multi.winner_area": mx.winner_value,
+    "dl.est_mhz": est!.fmax_mhz,
+    "dl.meas_mhz": meas!.fmax_mhz,
+    "dl.est_p99": est!.p99_us,
+    "dl.meas_p99": meas!.p99_us,
+    "dl.plain_mhz": plain!.fmax_mhz,
+    "dl.plain_p99": plain!.p99_us,
+    "dl.limit": m4.deadline.limit_us,
+    "dl.miss": meas!.p99_us / m4.deadline.limit_us - 1,
+    "eval.meets": ae.meets,
+    "eval.runs": ae.runs,
+    "eval.power.nsga2": regret("asic_power_50msps", "nsga2"),
+    "eval.power.sonnet": regret("asic_power_50msps", S),
+    "eval.power.deepseek": regret("asic_power_50msps", DS),
+    "eval.power.qwen": regret("asic_power_50msps", Q),
+    "eval.low.nsga2": regret("asic_low_area", "nsga2"),
+    "eval.low.sonnet": regret("asic_low_area", S),
+    "eval.multi.nsga2": regret("asic_multiaxis_control", "nsga2"),
+    "eval.multi.min": Math.min(
+      ...["nsga2", S, DS, Q].map((k) => regret("asic_multiaxis_control", k)),
+    ),
+    "eval.multi.max": Math.max(
+      ...["nsga2", S, DS, Q].map((k) => regret("asic_multiaxis_control", k)),
+    ),
+    "eval.power.hv_nsga2": hv("asic_power_50msps", "nsga2"),
+    "eval.power.hv_min": Math.min(
+      ...[S, DS, Q].map((k) => hv("asic_power_50msps", k)),
+    ),
+    "eval.power.hv_max": Math.max(
+      ...[S, DS, Q].map((k) => hv("asic_power_50msps", k)),
+    ),
+    "eval.l2_changed_sonnet": ae.models.find((m) => m.model === S)!.l2_changed,
+    "ab.pooled.higher": test("pooled", "fleet").hv_frac.pos,
+    "ab.pooled.pairs": test("pooled", "fleet").hv_frac.n,
+    "ab.pooled.p": test("pooled", "fleet").hv_frac.sign_p,
+    "ab.ds.higher": test(DS, "fleet").hv_frac.pos,
+    "ab.ds.pairs": test(DS, "fleet").hv_frac.n,
+    "ab.ds.p": test(DS, "fleet").hv_frac.sign_p,
+    "ab.qwen.higher": test(Q, "fleet").hv_frac.pos,
+    "ab.qwen.p": test(Q, "fleet").hv_frac.sign_p,
+    "ab.qwen2.higher": test(Q, "fleet_v2").hv_frac.pos,
+    "ab.qwen2.hv_p": test(Q, "fleet_v2").hv_frac.sign_p,
+    "ab.fix.higher": test(Q, "fix_effect").hv_frac.pos,
+    "ab.fix.lower": test(Q, "fix_effect").hv_frac.neg,
+    "ab.qwen1.better": test(Q, "fleet").select_regret.neg,
+    "ab.qwen1.untied":
+      test(Q, "fleet").select_regret.neg + test(Q, "fleet").select_regret.pos,
+    "ab.qwen1.regret_p": test(Q, "fleet").select_regret.sign_p,
+    "ab.qwen2.better": test(Q, "fleet_v2").select_regret.neg,
+    "ab.qwen2.pairs": test(Q, "fleet_v2").select_regret.n,
+    "ab.qwen2.regret_p": test(Q, "fleet_v2").select_regret.sign_p,
+    "ab.qwen2.regret_diff": test(Q, "fleet_v2").select_regret.mean,
+    "ab.qwen.single_regret": row(Q, "single").regret.mean,
+    "ab.qwen.v2_regret": row(Q, "fleet_v2").regret.mean,
+    "ab.qwen.single_hv": row(Q, "single").hv.mean,
+    "ab.qwen.v2_hv": row(Q, "fleet_v2").hv.mean,
+    "ab.cost_ratio_qwen": m4.ab.cost_ratio.qwen!,
+    "ab.cost_ratio_deepseek": m4.ab.cost_ratio.deepseek!,
+    "ab.cost_ratio_sonnet": m4.ab.cost_ratio.sonnet!,
+    "ab.dph.qwen_single": row(Q, "single").designs_per_hour,
+    "ab.dph.qwen_v2": row(Q, "fleet_v2").designs_per_hour,
+    "ab.dph.qwen_fleet": row(Q, "fleet").designs_per_hour,
+    "ab.proj.qwen_designs": row(Q, "single").proj_designs_day,
+    "ab.proj.qwen_specs": row(Q, "single").proj_specs_day,
+    "ab.proj.qwen_cost": row(Q, "single").proj_cost_day,
+    "ab.qwen.single_cost": row(Q, "single").cost_usd.mean,
+    "ab.qwen.v2_cost": row(Q, "fleet_v2").cost_usd.mean,
+    "fb.recorded": fb.recorded[1],
+    "fb.live": fb.live[1],
+    "fb.fired": fb.fired[0],
+    "fb.searches": fb.fired[1],
+    "fb.recovered": fb.recovered[0],
+    "fb.uncorrected": fb.uncorrected[0],
+    "fb.regret": fb.regret[0],
+    "fb.bound": fb.l1_bound_feasible,
+    "fb.sim": fb.sim_feasible,
+    "fb.v1_fired": fb.v1.fired[0],
+    "spend.key": sp.key_usd,
+    "spend.first": sp.key_first_pass_usd,
+    "spend.rerun": sp.key_rerun_usd,
+    "spend.cap": sp.cap_usd,
+    "spend.ledger": sp.ledger_total_usd,
+    "spend.entries": sp.ledger_entries,
+    "spend.trace_runs": sp.trace_runs,
+    "spend.trace_calls": sp.trace_calls,
+    "fleet.selected_regret": fr.regret,
+    "replay.m2": m4.untouched.m2_replays,
+    "replay.m3": m4.untouched.m3_structured_runs,
+    "writeup.words": m4.writeup.words,
+  };
+  return Object.fromEntries(
+    Object.entries(out).map(([k, v]) => [`m4.${k}`, v]),
+  );
+}
+
 export const VALUES: Record<string, number | string> = {
   commit: site.vendored.commit.slice(0, 7),
   designs: gt.dds_250msps!.n_designs,
@@ -333,6 +485,7 @@ export const VALUES: Record<string, number | string> = {
   ...msValues("m1"),
   ...msValues("m2"),
   ...m3Values(),
+  ...m4Values(),
   // M1 → M2 (results.md's "at a glance", checked against it at export)
   "glance.hv_ratio_min": glance.hv_ratio_m2[0],
   "glance.hv_ratio_max": glance.hv_ratio_m2[1],
@@ -471,6 +624,9 @@ export function formatValue(v: number | string, fmt: Fmt = "num"): string {
       return v.toFixed(2);
     case "f3":
       return v.toFixed(3);
+    case "p":
+      // a p-value: four decimals below 0.001, three below 0.1, else two
+      return v.toFixed(v < 0.001 ? 4 : v < 0.1 ? 3 : 2);
     default:
       return sig(v);
   }
