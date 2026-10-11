@@ -27,6 +27,10 @@ Inputs, all under vendor/hw_dse/ (copied byte for byte at a pinned commit by
                        check, the ASIC specs' ground truth and baselines, the ASIC structured
                        runs, the fleet A/B (single, before_fix, after fix), the L2 -> L1
                        feedback, the ledger, the key usage, the M4 traces and the write-up.
+- the local Vivado runs after M4 (scripts/export_vivado_m4.py -> src/data/vivado_m4.json):
+                       high_precision at its own 20 ns clock, the first measured FPGA power
+                       (report_power, vectorless), the vivado-2025.2-m4 refit, the class path
+                       factor's rule and outcome, the per-family power fit, post-route ratios.
 
 The Python reference (`hw_dse`, installed from git at the same commit, pinned in
 reference/requirements.txt) computes everything else: the hill-climb on the real grid
@@ -68,6 +72,7 @@ from hw_dse.spec import Spec, load_spec
 import export_ladder
 import export_m3
 import export_m4
+import export_vivado_m4
 
 ROOT = Path(__file__).resolve().parent.parent
 V = ROOT / "vendor/hw_dse"
@@ -1280,6 +1285,7 @@ def build() -> dict[Path, str]:
     lad = export_ladder.build(readme, specs)
     m3 = export_m3.build(readme)
     m4 = export_m4.build(readme)
+    viv4 = export_vivado_m4.build(readme)
     runs = all_runs(specs, gts_raw, tr)
     check_cost_table()
     evals = {}
@@ -1318,6 +1324,7 @@ def build() -> dict[Path, str]:
         DATA / "ladder.json": compact(lad),
         DATA / "m3.json": compact(m3),
         DATA / "m4.json": compact(m4),
+        DATA / "vivado_m4.json": compact(viv4),
         DATA / "why.json": dump(why),
         DATA / "calibration.json": dump(calibration()),
         DATA / "race.json": compact({m: race(m, specs, gts_raw, runs) for m in MS}),

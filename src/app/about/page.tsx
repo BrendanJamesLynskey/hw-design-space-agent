@@ -254,7 +254,12 @@ export default function AboutPage(): JSX.Element {
             final write-up
           </Link>{" "}
           is the repository&apos;s own closing report on all four milestones,
-          every number in it bound to the committed data.
+          every number in it bound to the committed data, and{" "}
+          <Link href="/adoption" className={A}>
+            For a hardware team
+          </Link>{" "}
+          sets out, even-handedly, where it would help a hardware company and
+          where it would not.
         </p>
       </section>
 

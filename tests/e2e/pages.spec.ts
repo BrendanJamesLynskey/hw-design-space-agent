@@ -164,7 +164,7 @@ test("about: personal projects only, no interview repos, the education list", as
   ]);
 });
 
-test("the record: eleven sections (7b, 7c: M3's and M4's reviews), the decision log as a timeline, linked from nav and About", async ({
+test("the record: twelve sections (7b, 7c, 7d: the M3, M4 and PR #7 reviews), the decision log as a timeline, linked from nav and About", async ({
   page,
 }) => {
   await page.goto("/record");
@@ -173,7 +173,7 @@ test("the record: eleven sections (7b, 7c: M3's and M4's reviews), the decision 
   );
   await expect(
     page.locator("main section[id], article section[id]"),
-  ).toHaveCount(11);
+  ).toHaveCount(12);
   const tl = page.getByTestId("decision-timeline");
   await expect(tl.locator("[data-decision]")).not.toHaveCount(0);
   const dates = await tl
@@ -225,26 +225,63 @@ test("the roadmap: M1–M4 done with their pull requests, then the after-M4 plan
     "href",
     "https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent/pull/6",
   );
+  await expect(m4.getByRole("link", { name: /#7/ })).toHaveAttribute(
+    "href",
+    "https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent/pull/7",
+  );
+  // the local Vivado run is done, with its outcome; nothing lists it as pending
+  const done = page.getByTestId("after-m4-done");
+  await expect(done.locator("[data-badge]")).toHaveAttribute(
+    "data-badge",
+    "live",
+  );
+  await expect(done).toContainText("m=8 misses 50 MSPS in both views");
+  await expect(done).toContainText("rejected by its pre-set rule");
   const after = page.getByTestId("after-m4");
   await expect(after.locator("[data-badge]")).toHaveAttribute(
     "data-badge",
     "planned",
   );
   await expect(after).toContainText("no results");
-  await expect(after.locator("ol li")).toHaveCount(4);
+  await expect(after.locator("ol li")).toHaveCount(2);
+  await expect(after.locator("ol")).not.toContainText(
+    /Vivado|20 ns|path factor/,
+  );
   await expect(after).toContainText("OpenROAD");
   await expect(after).toContainText("measure-and-re-explore");
   await expect(after).not.toContainText(/refit/i);
 });
 
-test("results lead with M4 (losses first), then M3, then M1 → M2; results.md at the vendored commit", async ({
+test("results lead with the local Vivado runs and M4 (losses first), then M3, then M1 → M2; results.md at the vendored commit", async ({
   page,
 }) => {
   await page.goto("/results");
   const h2 = await page.locator("article h2").allTextContents();
-  expect(h2[0]).toBe("Milestone 4 at a glance");
-  expect(h2[1]).toBe("The fleet A/B: one graph against a fleet of graphs");
-  const glance = page.locator("article ul").first();
+  expect(h2[0]).toBe("After M4: the local Vivado runs (2026-10-11)");
+  expect(h2[1]).toBe("Milestone 4 at a glance");
+  expect(h2[2]).toBe("The fleet A/B: one graph against a fleet of graphs");
+  const viv = page.locator("article ul").first();
+  await expect(viv.locator("li").first()).toContainText(
+    "The better-fitting timing model got the one boundary wrong",
+  );
+  for (const id of [
+    "hp20-table",
+    "class-factor-table",
+    "refit-m4-table",
+    "route-chart",
+    "power-chart",
+    "power-fit-table",
+  ])
+    await expect(page.getByTestId(id)).toBeVisible();
+  await expect(
+    page.locator(
+      '[data-testid="hp20-table"] tr[data-m="8"][data-meets="true"]',
+    ),
+  ).toHaveCount(0);
+  await expect(page.getByTestId("class-factor-table")).toContainText(
+    "rejected",
+  );
+  const glance = page.locator("article ul").nth(2);
   await expect(glance.locator("li").first()).toContainText(
     "The fleet mapped the trade-off curve worse than one graph",
   );
@@ -311,4 +348,76 @@ test("the write-up: rendered from the vendored file, linked to it at the commit,
     await page.goto(p);
     await expect(page.locator('main a[href="/writeup"]').first()).toBeVisible();
   }
+});
+
+test("for a hardware team: pros, cons, the comparison, the deployment (proposals marked), the improvements; in the nav after Write-up", async ({
+  page,
+}) => {
+  await page.goto("/adoption");
+  const art = page.locator("article");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+    "For a hardware team",
+  );
+  for (const h of [
+    "The short answer",
+    "Where it helps",
+    "Where it does not, and its limits",
+    "Against a general-purpose agent",
+    "How it would be deployed",
+    "How it could be improved",
+  ])
+    await expect(
+      art.getByRole("heading", { name: h, exact: false }).first(),
+    ).toBeVisible();
+  // every claim about the agent carries its evidence; the repo links are at the vendored commit
+  expect(
+    await page.getByTestId("pros").locator("[data-evidence]").count(),
+  ).toBeGreaterThanOrEqual(6);
+  expect(
+    await page.getByTestId("cons").locator("[data-evidence]").count(),
+  ).toBeGreaterThanOrEqual(5);
+  for (const a of await art
+    .locator('a[data-evidence$=".py"], a[data-evidence^="README.md"]')
+    .all())
+    await expect(a).toHaveAttribute("href", /\/blob\/[0-9a-f]{40}\//);
+  await expect(
+    page.getByTestId("compare-table").locator("tbody tr"),
+  ).toHaveCount(7);
+  await expect(
+    page.getByTestId("deploy-table").locator("tbody tr"),
+  ).toHaveCount(8);
+  await expect(
+    page.getByTestId("improve").locator('[data-lane="repo"] li'),
+  ).toHaveCount(5);
+  expect(await art.locator("[data-proposal]").count()).toBeGreaterThanOrEqual(
+    3,
+  );
+  await expect(art).toContainText("projection");
+  await expect(art).toContainText("no recorded run used it");
+  const nav = page.getByRole("navigation", { name: "Site" });
+  const labels = await nav.getByRole("link").allTextContents();
+  expect(labels.indexOf("For a hardware team")).toBe(
+    labels.indexOf("Write-up") + 1,
+  );
+});
+
+test("the write-up's tables keep spec names whole at 390 px (they scroll instead)", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/writeup");
+  const cell = page
+    .locator(".writeup-table td:first-child code", { hasText: "asic_low_area" })
+    .first();
+  await expect(cell).toBeVisible();
+  const box = (await cell.boundingBox())!;
+  const lh = await cell.evaluate((el) =>
+    parseFloat(getComputedStyle(el).lineHeight || "20"),
+  );
+  // one line, not one character per line
+  expect(box.height).toBeLessThan(1.6 * (Number.isFinite(lh) ? lh : 20));
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - window.innerWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
 });

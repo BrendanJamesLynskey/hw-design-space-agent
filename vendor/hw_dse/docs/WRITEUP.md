@@ -430,6 +430,7 @@ comparisons are therefore made only between arms run in the same session.
 ## Limitations
 
 <!-- facts: fpga.fmax_err_vs_vivado_max asic.loo_rms.fmax asic.ho.fmax_err_max asic.clock_ns
+     vivado_designs fpga_power.spearman_synth fpga_power.rms_synth_pct fpga_power.activity_loo_pct
      infeasible.rate_msps -->
 
 * **Every ground truth is a model's.** The FPGA one is the two-anchor M1 model, kept fixed so
@@ -444,9 +445,12 @@ comparisons are therefore made only between arms run in the same session.
   power (there is no clock tree to power), so the power numbers miss the clock network. A
   commercial flow would change the absolute numbers and could change the within-family
   optimum again.
-* **Power is a toggle-rate model everywhere.** On the FPGA nothing was measured (the
-  `report_power` export is ready); on the ASIC the index reproduces OpenSTA's vectorless power,
-  which assumes uniform activity.
+* **Power is a toggle-rate model everywhere.** On the FPGA the index is now checked against
+  Vivado's `report_power` on 14 designs, itself vectorless: it ranks them well (Spearman
+  0.982) but is off by 20.6% RMS post-synthesis, and a per-family activity factor (13.9%
+  leave-one-out) is kept as a separate, non-default calibration. On the ASIC the index
+  reproduces OpenSTA's vectorless power. Both assume uniform activity; neither has seen real
+  switching.
 * **Small samples.** Five seeds per model and spec, two or three models, a handful of specs.
   Day-to-day provider drift is visible in the data (above), so arms are compared only within
   one session.
@@ -456,11 +460,18 @@ comparisons are therefore made only between arms run in the same session.
 
 ## What I would do next
 
-<!-- facts: hp.vivado_constraint_ns hp.m infeasible.rate_msps -->
+<!-- facts: hp.need_msps hp.vivado_constraint_ns hp.m hp.m8_20ns_synth_msps hp.m8_20ns_route_msps
+     class_factor.m8_msps class_factor.vivado_fmax_loo_without class_factor.vivado_fmax_loo_with
+     hp.m_control hp.m6_20ns_route_loss_pct hp.m6_20ns_synth_msps hp.m6_20ns_route_msps
+     infeasible.rate_msps -->
 
-1. Run the two Vivado exports locally: `high_precision` at a 20 ns constraint settles the
-   post-synthesis view of m=8 and with it the deferred per-family-class path factor; the
-   `report_power` run is the first measured FPGA power.
+1. A routed timing scale and real switching activity on the FPGA. The local Vivado runs are
+   done: `high_precision` misses 50 MSPS at its own 20 ns clock with m=8 (49.88 MSPS
+   post-synthesis, 48.31 post-route), so the per-family-class path factor, which predicted
+   it feasible (52.5), was rejected by its pre-set rule even though it cut Vivado Fmax
+   leave-one-out from 12.5% to 7.4%. The winner m=6 loses 17% to routing (65.39 → 53.96
+   MSPS), which no model here sees, and the measured power is vectorless. Next: a
+   post-route timing calibration of its own, and power from simulated switching activity.
 2. Place and route on sky130 (OpenROAD, from its prebuilt release packages pinned by URL and
    SHA-256, or a container image pinned by digest) for the held-out designs, to see whether the ASIC
    model's Fmax error is the wire-load model or the structure.

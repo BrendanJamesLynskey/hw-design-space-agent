@@ -105,6 +105,12 @@ const CLIPS: Clip[] = [
     fps: 1.5,
   },
   { name: "fleet", path: "/how-it-works", widget: "fleet-widget", fps: 1.5 },
+  {
+    name: "deployment",
+    path: "/adoption",
+    widget: "deploy-widget",
+    fps: 0.75,
+  },
 ];
 
 async function main(): Promise<void> {

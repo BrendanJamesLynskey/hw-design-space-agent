@@ -52,6 +52,17 @@
   overflow-wrap: anywhere;
 }
 
+/* …but not inside the write-up's tables, where an identifier in a narrow cell would break
+ * one character at a time: keep it whole and let the table scroll in its region. */
+.mdx-content .writeup-table code {
+  overflow-wrap: normal;
+  white-space: nowrap;
+}
+.mdx-content .writeup-table th:first-child,
+.mdx-content .writeup-table td:first-child {
+  white-space: nowrap;
+}
+
 @layer components {
   /* The default focus ring used by every interactive widget — keyboard users
    * always get a visible focus indicator (SPEC §11). */

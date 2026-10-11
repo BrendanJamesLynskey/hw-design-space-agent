@@ -6,6 +6,7 @@ export const PAGES = [
   "/case-study",
   "/results",
   "/writeup",
+  "/adoption",
   "/roadmap",
   "/record",
   "/about",
@@ -29,6 +30,7 @@ export const ANIMATIONS = [
   ["/how-it-works", "held-widget"],
   ["/how-it-works", "deadline-widget"],
   ["/how-it-works", "fleet-widget"],
+  ["/adoption", "deploy-widget"],
 ] as const;
 
 /** Widgets load after the page: allow for a slow runner. */

@@ -165,7 +165,12 @@ export default function HomePage(): JSX.Element {
           <Link href="/writeup" className={LINK}>
             final write-up
           </Link>{" "}
-          tells the whole project in one place.
+          tells the whole project in one place.{" "}
+          <Link href="/adoption" className={LINK}>
+            For a hardware team
+          </Link>{" "}
+          weighs what it would and would not do for a company that builds its
+          own hardware.
         </p>
         <HeadlineTable />
         <p className="mt-4 max-w-3xl text-neutral-700 dark:text-neutral-300">
@@ -285,6 +290,9 @@ export default function HomePage(): JSX.Element {
         </Link>
         <Link href="/writeup" className={BTN}>
           The write-up
+        </Link>
+        <Link href="/adoption" className={BTN}>
+          For a hardware team
         </Link>
         <Link href="/how-it-works" className={BTN}>
           How it works

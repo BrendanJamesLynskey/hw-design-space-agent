@@ -12,6 +12,7 @@ import { fleetSpan, maxConcurrent } from "./fleet";
 import { ladder, vivadoDesigns } from "./ladder";
 import { m3, sysSpec } from "./m3";
 import { asicSpec, m4 } from "./m4";
+import { viv4Values } from "./vivado4";
 
 export type Fmt =
   | "num"
@@ -487,6 +488,7 @@ export const VALUES: Record<string, number | string> = {
   ...msValues("m2"),
   ...m3Values(),
   ...m4Values(),
+  ...viv4Values(),
   // M1 → M2 (results.md's "at a glance", checked against it at export)
   "glance.hv_ratio_min": glance.hv_ratio_m2[0],
   "glance.hv_ratio_max": glance.hv_ratio_m2[1],

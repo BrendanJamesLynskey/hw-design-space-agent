@@ -1,0 +1,27 @@
+# Per-family activity factor for the FPGA power index -- NOT the default.
+# Written by scripts/vivado_m4.py compare. The default index (calibration_artix7.yaml) keeps
+# one activity for every family. Fitted to Vivado's vectorless power estimate, not to real
+# switching activity: a calibration to the tool's power model, not to silicon.
+id: artix7-xc7a35t-power-activity-vivado-2025.2-m4
+default: false
+fitted_to: eval/data/vivado_power.csv, post-synthesis core power at 100 MHz (1 ns resolution rows), Vivado 2025.2
+  report_power, vectorless (12.5% default toggle, confidence Low)
+model: measured core mW at 100 MHz = mw_per_index_unit[family] x power index at 100 MHz
+default_activity: 0.125
+mw_per_index_unit:
+  iterative: 5.6712
+  pipelined: 5.0185
+  pipelined_m: 5.8268
+  unrolled_k: 7.4084
+implied_activity:
+  iterative: 0.1244
+  pipelined: 0.1101
+  pipelined_m: 0.1278
+  unrolled_k: 0.1625
+rms_log_pct:
+  default_index_reference_normalised: 20.61
+  global_scale_in: 18.85
+  global_scale_loo: 20.44
+  per_family_in: 10.16
+  per_family_loo: 13.93
+n_designs: 14

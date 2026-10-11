@@ -350,23 +350,31 @@ export function scatterCaption(
 const HP_VIEW_NAME: Record<HpView, string> = {
   m1: "M1 estimate",
   refit: "vivado-2025.2 refit",
-  post_synth: "Vivado post-synthesis",
-  post_route: "Vivado post-route",
+  class_factor: "Class-factor refit (a candidate)",
+  post_synth: "Vivado post-synthesis at 10 ns",
+  post_route: "Vivado post-route at 10 ns",
+  post_synth_20: "Vivado post-synthesis at its own 20 ns clock",
+  post_route_20: "Vivado post-route at its own 20 ns clock",
 };
 
 export function hpCaption(f: HpFrame, hp: HighPrecision): string {
   const [a, b] = hp.candidates;
   const line = (v: HpView) =>
     `m=${a.m} ${trim(hpMsps(hp, a.m, v), 4)} (${signedPct(hp.margin[v][String(a.m)]!)}), m=${b.m} ${trim(hpMsps(hp, b.m, v), 4)} MSPS (${signedPct(hp.margin[v][String(b.m)]!, 2)})`;
+  const meets = (m: number, v: HpView) =>
+    hpMeets(hp, m, v) ? "meets" : "misses";
   switch (f.phase) {
     case "spec":
       return `${hp.spec}: ≥ ${trim(hp.min_msps)} MSPS at max error ≤ 2^-20, smallest LUT+FF wins. Two candidates, pipelined_m W=26 N=22: m=${a.m} (the exhaustive grid's winner) and m=${b.m}, ${trim((1 - (b.post_synth.luts + b.post_synth.ffs) / (a.post_synth.luts + a.post_synth.ffs)) * 100, 2)}% smaller in Vivado.`;
+    case "refit":
+      return `${HP_VIEW_NAME.refit}: ${line("refit")}. m=${a.m} ${meets(a.m, "refit")}, m=${b.m} ${meets(b.m, "refit")} the constraint. The vivado-2025.2-m4 refit is the same fit: its 20 ns rows duplicate the 10 ns ones and are counted once.`;
+    case "class_factor":
+      return `${HP_VIEW_NAME.class_factor}: ${line("class_factor")}. It calls m=${b.m} feasible. Its rule, fixed before the fit, required m=${b.m} infeasible and m=${a.m} feasible as measured, so it was rejected, although it cut the Vivado Fmax leave-one-out error.`;
     case "verdict":
-      return `Verdict: m=${a.m} stays the winner; m=${b.m} misses ${trim(hp.min_msps)} MSPS after routing. The post-synthesis margin (${signedPct(hp.margin.post_synth[String(b.m)]!, 2)}) is thinner than any model's error, and both were synthesised at 10 ns, not the 20 ns the spec needs: only the routed figure settles it.`;
+      return `Verdict, measured: at its own 20 ns clock m=${b.m} misses ${trim(hp.min_msps)} MSPS in both views (${trim(b.post_synth_20.msps, 4)} post-synthesis, ${trim(b.post_route_20.msps, 4)} post-route) and m=${a.m} meets in both (${trim(a.post_synth_20.msps, 4)}, ${trim(a.post_route_20.msps, 4)}). Relaxing the clock did not move the post-synthesis figure. m=${a.m} stays the winner, with a routed margin of ${signedPct(hp.margin.post_route_20[String(a.m)]!)}, not the models' ${signedPct(hp.margin.m1[String(a.m)]!)}.`;
     default: {
       const v = f.phase;
-      const meets = (m: number) => (hpMeets(hp, m, v) ? "meets" : "misses");
-      return `${HP_VIEW_NAME[v]}: ${line(v)}. m=${a.m} ${meets(a.m)}, m=${b.m} ${meets(b.m)} the constraint.`;
+      return `${HP_VIEW_NAME[v]}: ${line(v)}. m=${a.m} ${meets(a.m, v)}, m=${b.m} ${meets(b.m, v)} the constraint.`;
     }
   }
 }

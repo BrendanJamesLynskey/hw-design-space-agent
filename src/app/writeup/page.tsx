@@ -11,6 +11,7 @@ import path from "node:path";
 
 import Link from "next/link";
 import { MDXRemote } from "next-mdx-remote/rsc";
+import type { ComponentProps } from "react";
 import remarkGfm from "remark-gfm";
 
 import { MdxTable } from "@/components/ui/MdxTable";
@@ -29,12 +30,21 @@ const A =
 
 const V = path.join(process.cwd(), "vendor", "hw_dse", "docs");
 
+/**
+ * The write-up's tables keep identifiers whole: a spec name such as asic_low_area in the first
+ * column would otherwise break one character at a time at 390 px (inline code may break
+ * anywhere in prose). The table scrolls sideways in its focusable region instead.
+ */
+function WriteupTable(props: ComponentProps<"table">): JSX.Element {
+  return <MdxTable {...props} className="writeup-table" />;
+}
+
 function Markdown({ source }: { source: string }): JSX.Element {
   return (
     <div className="mdx-content">
       <MDXRemote
         source={source}
-        components={{ table: MdxTable }}
+        components={{ table: WriteupTable }}
         options={{ mdxOptions: { format: "md", remarkPlugins: [remarkGfm] } }}
       />
     </div>

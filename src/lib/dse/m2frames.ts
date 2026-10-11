@@ -149,8 +149,32 @@ export function scatterExtent(
 // high_precision: m=6 against m=8
 // ---------------------------------------------------------------------------
 
-export type HpView = "m1" | "refit" | "post_synth" | "post_route";
-export const HP_VIEWS: HpView[] = ["m1", "refit", "post_synth", "post_route"];
+export type HpView =
+  | "m1"
+  | "refit"
+  | "class_factor"
+  | "post_synth"
+  | "post_route"
+  | "post_synth_20"
+  | "post_route_20";
+/** The models first (the rejected class-factor candidate last of them), then Vivado at the
+ * anchors' 10 ns clock, then Vivado at the spec's own 20 ns clock (after M4). */
+export const HP_VIEWS: HpView[] = [
+  "m1",
+  "refit",
+  "class_factor",
+  "post_synth",
+  "post_route",
+  "post_synth_20",
+  "post_route_20",
+];
+/** Which views are measurements (the rest are model estimates). */
+export const HP_MEASURED: HpView[] = [
+  "post_synth",
+  "post_route",
+  "post_synth_20",
+  "post_route_20",
+];
 
 export type HpFrame = { phase: "spec" | HpView | "verdict"; views: HpView[] };
 

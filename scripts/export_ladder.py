@@ -346,6 +346,9 @@ def worked(l3d: dict[str, Any], l4d: dict[str, Any]) -> dict[str, Any]:
 def high_precision(spec: Spec, viv: dict[str, Any], refit: dict[str, Any], readme: str) -> dict[str, Any]:
     min_msps = spec.min_throughput_msps
     cm = FpgaCostModel(str(REFIT_VIVADO))
+    # the per-family-class path factor's candidate refit, rejected by its pre-set rule (after M4)
+    cf = json.loads((D / "l5_class_path_factor_m4.json").read_text())
+    assert cf["adopt"] is False
     out = []
     for m in (6, 8):
         key = f"pipelined_m:data_width=26,n_iter=22,angle_guard=0,frac_guard=0,rounding=round,m={m}"
@@ -357,25 +360,45 @@ def high_precision(spec: Spec, viv: dict[str, Any], refit: dict[str, Any], readm
         assert math.isclose(after["fmax_model"], r.fmax_mhz, abs_tol=0.051)
         ps = next(x for x in viv["rows"] if x["key"] == key and x["kind"] == "post-synthesis")
         pr = next(x for x in viv["rows"] if x["key"] == key and x["kind"] == "post-route")
+        # after M4: both synthesised again at their own 20 ns clock (eval/data/vivado_measured_20ns.csv)
+        tw = {("route" if x["fmax_kind"].startswith("post-route") else "synth"): x
+              for x in read_csv("vivado_measured_20ns.csv") if int(x["m"]) == m}
+        assert sorted(tw) == ["route", "synth"]
         out.append({
             "m": m, "key": key, "params": arch.params(),
             "m1": {"luts_plus_ffs": ev["luts_plus_ffs"], "msps": ev["throughput_msps"], "feasible": bool(ev["feasible"])},
             "refit": {"luts_plus_ffs": r.area["luts"] + r.area["ffs"], "msps": r.fmax_mhz},
             "post_synth": {"luts": ps["luts"], "ffs": ps["ffs"], "msps": ps["fmax_mhz"], "wns_ns": ps["wns_ns"]},
             "post_route": {"luts": pr["luts"], "ffs": pr["ffs"], "msps": pr["fmax_mhz"], "wns_ns": pr["wns_ns"]},
+            **{f"{st}_20": {"luts": int(float(x["luts"])), "ffs": int(float(x["ffs"])), "msps": float(x["fmax_mhz"]),
+                            "wns_ns": float(re.search(r"WNS (-?[\d.]+) ns at 20 ns", x["fmax_kind"]).group(1))}
+               for st, x in (("post_synth", tw["synth"]), ("post_route", tw["route"]))},
+            "class_factor": {"msps": cf["msps_with"][f"m={m}"]},
             "accuracy_bits": ev["accuracy_bits"], "max_abs_err": ev["max_abs_err"],
         })
     m6, m8 = out
-    margin = {k: {str(o["m"]): (o[k]["msps"] / min_msps - 1) for o in out} for k in ("m1", "refit", "post_synth", "post_route")}
+    views = ("m1", "refit", "class_factor", "post_synth", "post_route", "post_synth_20", "post_route_20")
+    margin = {k: {str(o["m"]): (o[k]["msps"] / min_msps - 1) for o in out} for k in views}
     # the README's statement of the verdict, checked against the numbers
     assert f"**{m6['post_route']['msps']:.2f} MHz (+{margin['post_route']['6'] * 100:.1f}%)**" in readme
     # (the README prints a negative margin with a typographic minus)
     assert f"**{m8['post_route']['msps']:.2f} MHz (−{-margin['post_route']['8'] * 100:.1f}%)**" in readme
-    assert f"**{m8['post_synth']['msps']:.2f} MSPS, {-margin['post_synth']['8'] * 100:.2f}% short**" in readme
+    flat = re.sub(r"\s+", " ", readme)
+    assert (f"{m8['post_synth_20']['msps']:.2f} MSPS post-synthesis (WNS −{-m8['post_synth_20']['wns_ns']:.3f} ns, "
+            f"{-margin['post_synth_20']['8'] * 100:.2f}% short; relaxing the constraint did not move it) and "
+            f"{m8['post_route_20']['msps']:.2f} MSPS post-route ({-margin['post_route_20']['8'] * 100:.1f}% short)") in flat
+    assert (f"**m=6 meets it in both** ({m6['post_synth_20']['msps']:.2f} post-synthesis, "
+            f"{m6['post_route_20']['msps']:.2f} post-route, +{margin['post_route_20']['6'] * 100:.1f}%)") in flat
+    # relaxing the constraint did not move the post-synthesis figures
+    for o in out:
+        assert o["post_synth_20"]["msps"] == o["post_synth"]["msps"]
+    # the rejected class factor would have made m=8 feasible: the reason for its rejection
+    assert margin["class_factor"]["8"] > 0 and margin["post_synth_20"]["8"] < 0
     area = {str(o["m"]): o["post_synth"]["luts"] + o["post_synth"]["ffs"] for o in out}
     assert f"({area['8']:,.0f} vs {area['6']:,.0f} LUT+FF" in readme
     return {"spec": spec.name, "min_msps": min_msps, "candidates": out, "margin": margin,
-            "constraint_note": "Vivado synthesised both at the anchors' 10 ns clock, not the 20 ns that 50 MSPS needs."}
+            "constraint_note": "The 10 ns rows are the anchors' constraint; the 20 ns rows are the spec's own clock "
+                               "(both designs synthesised and routed again after M4)."}
 
 
 def build(readme: str, specs: dict[str, Spec]) -> dict[str, Any]:
