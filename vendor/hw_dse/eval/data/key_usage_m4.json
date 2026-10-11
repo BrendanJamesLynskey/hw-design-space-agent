@@ -1,0 +1,66 @@
+{
+ "note": "OpenRouter GET /api/v1/key (free), read with the key from the environment; the key itself is never recorded.",
+ "m4_spend_cap_usd": 5.0,
+ "snapshots": {
+  "session_start_before_any_m4_call": {
+   "ts": "2026-10-10T16:23:17Z",
+   "usage_usd": 7.816263971,
+   "limit_usd": 15,
+   "limit_remaining_usd": 7.183736029
+  },
+  "after_pilot_structured": {
+   "ts": "2026-10-10T16:25:37Z",
+   "usage_usd": 7.818462641,
+   "limit_usd": 15,
+   "limit_remaining_usd": 7.181537359
+  },
+  "after_pilot_fleet": {
+   "ts": "2026-10-10T16:27:23Z",
+   "usage_usd": 7.836303491,
+   "limit_usd": 15,
+   "limit_remaining_usd": 7.163696509
+  },
+  "after_qwen": {
+   "ts": "2026-10-10T18:03:43Z",
+   "usage_usd": 8.57194088,
+   "limit_usd": 15,
+   "limit_remaining_usd": 6.42805912
+  },
+  "after_deepseek": {
+   "ts": "2026-10-10T20:44:12Z",
+   "usage_usd": 9.751381575,
+   "limit_usd": 15,
+   "limit_remaining_usd": 5.248618425
+  },
+  "after_sonnet_structured": {
+   "ts": "2026-10-10T20:52:32Z",
+   "usage_usd": 10.858407149,
+   "limit_usd": 15,
+   "limit_remaining_usd": 4.141592851
+  },
+  "after_sonnet_fleet_subset": {
+   "ts": "2026-10-10T20:57:21Z",
+   "usage_usd": 11.583059149,
+   "limit_usd": 15,
+   "limit_remaining_usd": 3.4169408509999997
+  },
+  "after_eval_final": {
+   "ts": "2026-10-10T20:59:36Z",
+   "usage_usd": 11.645907149,
+   "limit_usd": 15,
+   "limit_remaining_usd": 3.3540928510000008
+  },
+  "before_fleet_v2_qwen": {
+   "ts": "2026-10-10T22:29:38Z",
+   "usage_usd": 11.645907149,
+   "limit_usd": 15,
+   "limit_remaining_usd": 3.3540928510000008
+  },
+  "after_fleet_v2_qwen": {
+   "ts": "2026-10-10T23:07:37Z",
+   "usage_usd": 11.964544457,
+   "limit_usd": 15,
+   "limit_remaining_usd": 3.0354555429999994
+  }
+ }
+}

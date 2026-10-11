@@ -10,6 +10,7 @@ import { describe, expect, it } from "vitest";
 import { ev, site } from "@/lib/dse/data";
 import { ladder } from "@/lib/dse/ladder";
 import { m3, sysSpec } from "@/lib/dse/m3";
+import { asicSpec, m4 } from "@/lib/dse/m4";
 import { cells, deciders, decisions, parseRecord } from "@/lib/record";
 
 const MD = readFileSync("content/record/project_record.md", "utf-8");
@@ -17,7 +18,7 @@ const rec = parseRecord(MD);
 const flat = MD.replace(/\s+/g, " ");
 
 describe("the record parses", () => {
-  it("into its sections (7b: M3's review) and its decision log", () => {
+  it("into its sections (7b, 7c: M3's and M4's reviews) and its decision log", () => {
     expect(rec.title).toBe("HW Design-Space Agent: project record");
     expect(rec.sections.map((s) => s.n)).toEqual([
       "1",
@@ -28,6 +29,7 @@ describe("the record parses", () => {
       "6",
       "7",
       "7b",
+      "7c",
       "8",
       "9",
     ]);
@@ -208,8 +210,6 @@ describe("every M3 number in the record matches the vendored data", () => {
 
   it("summary", () => {
     has("merged (a92fe65)");
-    has("re-vendored at a92fe65");
-    expect(site.vendored.commit.slice(0, 7)).toBe("a92fe65");
     has(`${m3.cycle.passed}/${m3.cycle.traces} traces identical to RTL`);
     const r = ab.costs.map((c) => c.cost_ratio);
     has(
@@ -319,5 +319,127 @@ describe("every M3 number in the record matches the vendored data", () => {
     has("L2 did re-select in 4/65 campaign runs");
     const m5 = sysSpec("multiaxis_control").bound.simulated.sys_p99_batch_us!;
     has(`by a ${((m5 / 0.44 - 1) * 100).toFixed(1)}% margin`);
+  });
+});
+
+describe("every M4 number in the record matches the vendored data", () => {
+  const has = (x: string) => expect(flat, x).toContain(x);
+  const pc = (x: number) => `${x >= 0 ? "+" : ""}${(x * 100).toFixed(1)}%`;
+  const Q = "qwen/qwen3.8-27b, reasoning off";
+  const row = (m: string, arm: string) =>
+    m4.ab.rows.find((r) => r.model === m && r.arm === arm)!;
+  const test = (m: string, arm: string) =>
+    m4.ab.tests.find((t) => t.model === m && t.arm === arm)!;
+
+  it("summary", () => {
+    has("merged (b119c8a)");
+    has("re-vendored at b119c8a");
+    expect(site.vendored.commit.slice(0, 7)).toBe("b119c8a");
+    const c = m4.calibration;
+    const h = m4.held_out;
+    has(`${c.n_points} measured points + ${h.rows.length} held out`);
+    const q2 = test(Q, "fleet_v2").select_regret;
+    has(`regret lower in ${q2.neg}/${q2.n} pairs`);
+  });
+
+  it("results (M4)", () => {
+    const c = m4.calibration;
+    const all = c.rows[0]!;
+    has(
+      `${c.tool.replace("yosys", "Yosys")} on \`sky130_fd_sc_hd\` (TT, 25 °C, 1.80 V, ${c.clock_ns} ns), ${c.n_points} fitted`,
+    );
+    expect(Object.values(c.per_family).every((n) => n > 0)).toBe(true);
+    has(
+      `leave-one-out error ${all.loo.area_um2!.toFixed(1)}% area, ${all.loo.ffs!.toFixed(1)}% FFs, ${all.loo.fmax_mhz!.toFixed(1)}% Fmax, ${all.loo.power_mw!.toFixed(1)}% power index`,
+    );
+    const h = m4.held_out;
+    has(
+      `within 5% on ${h.area_within_5}/${h.rows.length}, Fmax −${Math.abs(h.fmax_err_min * 100).toFixed(1)}% to +${(h.fmax_err_max * 100).toFixed(1)}% (optimistic by more than 1% on ${h.optimistic_over_1pct} of 9)`,
+    );
+    const pw = asicSpec("asic_power_50msps");
+    const mx = asicSpec("asic_multiaxis_control");
+    has(
+      `(m=${pw.winner_m} vs m=${pw.twin_m}; m=${mx.winner_m} vs m=${mx.twin_m})`,
+    );
+    expect(m4.ground_truth.specs.every((s) => !s.ranking_differs)).toBe(true);
+    const [, meas] = m4.deadline.designs;
+    has(
+      `misses its deadline at its measured ${meas!.fmax_mhz.toFixed(1)} MHz** (p99 ${meas!.p99_us.toFixed(3)} µs against ${m4.deadline.limit_us})`,
+    );
+    has("(m=2 W17 N16)");
+    expect(mx.winner).toContain("data_width=17,n_iter=16");
+    const cell = (spec: string, k: string) =>
+      m4.asic_eval.cells.select_regret![spec]![k]!.mean!;
+    const S = "anthropic/claude-sonnet-5.5";
+    const specs = [
+      "asic_low_area",
+      "asic_power_50msps",
+      "asic_multiaxis_control",
+    ];
+    has(
+      `Sonnet ${specs
+        .map((x) => pc(cell(x, S)))
+        .join(" / ")
+        .replace(/%(?= \/)/g, "")}; NSGA-II ${specs
+        .map((x) => pc(cell(x, "nsga2")))
+        .join(" / ")
+        .replace(/%(?= \/)/g, "")}`,
+    );
+    has(`${m4.asic_eval.meets}/${m4.asic_eval.runs} selections meet spec`);
+    const pooled = test("pooled", "fleet").hv_frac;
+    has(`sign test p = ${pooled.sign_p.toFixed(3)}`);
+    const q2 = test(Q, "fleet_v2").select_regret;
+    has(
+      `regret ${pc(row(Q, "fleet_v2").regret.mean)} against ${pc(row(Q, "single").regret.mean)}, lower in ${q2.neg} of ${q2.n} pairs (p = ${q2.sign_p.toFixed(4)})`,
+    );
+    has(
+      `${Math.round(row(Q, "fleet_v2").designs_per_hour).toLocaleString("en-GB")} designs/hour for the fixed Qwen fleet against ${Math.round(row(Q, "single").designs_per_hour).toLocaleString("en-GB")} for one graph`,
+    );
+    const fb = m4.feedback;
+    has(
+      `(${fb.recorded[0]}/${fb.recorded[1]} recorded, ${fb.live[0]}/${fb.live[1]} live)`,
+    );
+    has(
+      `fires in ${fb.fired[0]} of ${fb.fired[1]} searches and recovers ${fb.recovered[0]} of ${fb.recovered[1]}, against ${fb.uncorrected[0]} of ${fb.uncorrected[1]} without it`,
+    );
+    has(
+      `all ${m4.untouched.m2_replays} M2 and ${m4.untouched.m3_structured_runs} M3 runs replay identically`,
+    );
+    const sp = m4.spend;
+    has(
+      `$${sp.key_usd.toFixed(2)} by the key ($${sp.key_first_pass_usd.toFixed(2)} first pass + $${sp.key_rerun_usd.toFixed(2)} fleet re-run), under the $${sp.cap_usd.toFixed(0)} cap`,
+    );
+    // the run counts in the M4 heading
+    expect(m4.asic_eval.runs).toBe(45);
+    const single = m4.ab.rows.filter((r) => r.arm === "single");
+    const fleet = m4.ab.rows.filter((r) => r.arm === "fleet");
+    const n = (rs: typeof single) => rs.reduce((a, r) => a + r.runs, 0);
+    has(
+      `ASIC eval ${m4.asic_eval.runs} runs, fleet A/B ${n(single)} + ${n(fleet)} paired runs + ${row(Q, "fleet_v2").runs} re-run`,
+    );
+  });
+
+  it("limitations and the review (M4)", () => {
+    expect(m4.ab.sonnet_specs).toEqual(["asic_multiaxis_control"]);
+    has("fleet arm (M4) each cover one spec");
+    const h = m4.held_out;
+    has(
+      `optimistic by more than 1% on ${h.optimistic_over_1pct} of 9 held-out points (by ${(Math.min(...h.rows.filter((r) => r.fmax_err > 0).map((r) => r.fmax_err)) * 100).toFixed(1)}% on a sixth)`,
+    );
+    const v1 = m4.feedback.v1;
+    has(`used a ${v1.floor_msps} MS/s floor against a`);
+    has(`${m4.feedback.rate_msps} MS/s stream`);
+    const readme = readFileSync("vendor/hw_dse/README.md", "utf-8").replace(
+      /\s+/g,
+      " ",
+    );
+    expect(readme).toContain(
+      "OpenROAD's prebuilt release `.deb` packages pinned by URL and SHA-256",
+    );
+    has("OpenROAD place and route from pinned binaries");
+    // the plan never lists a refit on the held-out points (the owner ruled it out)
+    const next = rec.sections.find((x) => x.n === "9")!.body;
+    expect(next).not.toMatch(/refit[^.;]*held|held[^.;]*refit|ASIC refit/i);
+    has("no refit on the held-out points");
   });
 });

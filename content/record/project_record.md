@@ -4,7 +4,7 @@ _A living record of what has been built, how, and why, published here as an engi
 updates it after every verified milestone; this copy is checked against the agent's repository at the commit this site
 vendors, and where they differed the repository won._
 
-**Last updated:** 2026-10-10 (M3 merged). **Repos:** `BrendanJamesLynskey/HW_Design_Space_Agent` (the agent),
+**Last updated:** 2026-10-11 (M4 merged). **Repos:** `BrendanJamesLynskey/HW_Design_Space_Agent` (the agent),
 `BrendanJamesLynskey/hw-design-space-agent` (the site), `BrendanJamesLynskey/CORDIC` (the reference RTL). All MIT.
 
 ---
@@ -19,16 +19,16 @@ simulation → RTL and verification → synthesis → back-annotation.
 The first design space is a **CORDIC sin/cos unit on an Artix-7 FPGA**, chosen because it's small enough to search
 exhaustively. That gives a true answer to score the agent against, which most agent demos lack.
 
-Where it stands on 2026-10-10:
+Where it stands on 2026-10-11:
 
 | milestone | status | headline |
 |---|---|---|
 | M1: spec intake + analytical exploration + eval | merged (0082ccd) | The agent picks the right design better than NSGA-II and random search, but maps the trade-off front worse. |
-| Site, parts A–C2 | A–C1 live (ad6101a, 2026-10-09); C2 (this version) re-vendored at a92fe65 | 8 pages incl. this record at /record; L2 animated from real data; the A/B on the results page; every number traced to the vendored repo commit. |
+| Site, parts A–C3 | A–C2 live (d195189, 2026-10-10); C3 (this version) re-vendored at b119c8a | 9 pages incl. this record at /record and the write-up at /writeup; the ASIC target, the fleet and its A/B animated from real data; every number traced to the vendored repo commit. |
 | M2: RTL, verification, synthesis, gate level, back-annotation, whole-curve agent | merged (9060f8f) | The front-mapping gap is closed (0.96–1.09× NSGA-II hypervolume) and the agent still selects better in 8 of 9 model/spec cells. All 47 RTL configurations match the golden model in 2 simulators. |
 | Vivado calibration anchors + L5 refit | merged (bbbf71e), verified before merge in three review rounds | 14 generated designs measured in Vivado 2025.2; no spec's winning design changes; M1 stays the default cost model, because the refit does no better out of sample. |
 | M3: cycle-level and system-level simulation, campaign agent | merged (a92fe65), verified before merge in two review rounds | L2 (SimPy system + cycle-accurate models, 48/48 traces identical to RTL) finds a different winner on a system-constrained spec; the Deep Agents campaign layer gained nothing over the structured graph at 1.4–2.25× the cost, so it stays experimental. |
-| M4: ASIC cost model, fleet, write-up | planned | |
+| M4: ASIC cost model, fleet, write-up | merged (b119c8a), verified before merge in two review rounds | A second target (sky130 via Yosys + OpenSTA, 57 measured points + 9 held out) gives the same family ranking with shallower pipelining; a code-orchestrated fleet picks better designs than one graph for Qwen (regret lower in 22/25 pairs) but maps the front no better; `docs/WRITEUP.md` is the final report, every number test-bound to the data. |
 
 ## 2. Why this project
 
@@ -111,6 +111,11 @@ The project itself is built with AI coding agents (Claude Code), under a deliber
 | 2026-10-10 | M3 review B1: L2 checks every L1-feasible design, not just the front's top k; live runs re-scored offline rather than re-run. | planner review found it; executor fixed | extend the shortlist to 20 | On `multiaxis_control` the true winner (m=4) is dominated at L1 by m=5, so a front-only shortlist could never reach it. Simulation is cached, so checking all is cheap; L1 evaluations were unchanged, so no new spend. |
 | 2026-10-10 | M3: numbers in the campaign LLM's free-text memory notes are masked before storage and before reaching the inner architect. | planner review found it; executor fixed | drop notes altogether | One note carried a mis-scaled error figure (~19% where the data implied +36%); the LLM must not originate numbers. |
 | 2026-10-10 | Keep the campaign agent experimental (optional, off by default); rework only if the M4 fleet design needs it. | owner | invest in it in M4; drop it | No gain on HV or regret, higher cost, Qwen loops in 4/30 campaigns, memory showed no benefit. |
+| 2026-10-10 | M4 ASIC target: `sky130_fd_sc_hd` at TT 25 °C 1.80 V, Yosys 0.33 + OpenSTA 3.1.0, post-synthesis with a wire-load model; 9 measured points never fitted, kept as a validation set. | cloud executor; owner kept the hold-out | other PDKs/corners; fold the held-out points into the fit | An open, pinned flow anyone can rerun; held-out points are the only honest check on the ASIC ground truth. |
+| 2026-10-10 | M4 fleet: code coordinates several structured graphs (split by contract class, two phases, phase 2 by merged-front share); no LLM coordinator. | cloud executor | one member per family; an LLM coordinator from the campaign layer | The coordinator's decisions are arithmetic over numbers code already has, and M3 showed what an LLM layer costs. |
+| 2026-10-11 | M4 review: fix the fleet's write-only shared store and unspendable small budgets, then re-run the Qwen fleet (~$0.32) rather than run the full Sonnet arm (~$3.7). | owner, on the planner review's evidence | full Sonnet arm; fix without re-running | A cheap re-run tests whether the cold restart caused the fleet's loss (it did not); Sonnet would only repeat a result two models already show. |
+| 2026-10-11 | OpenROAD only via its own pinned release binaries or digest-pinned image, never Anaconda's commercial channel; kept planned for now. | owner | install from the commercial channel | Its terms have no open-source exemption, which would pass an obligation to anyone following the repo's recipe. |
+| 2026-10-11 | Keep the ASIC calibration as scored; no refit on the held-out points; state the `asic_multiaxis_control` winner's measured deadline miss plainly. | owner, on review evidence | refit on all 66 points, with an `unrolled_k` term | No winner moves under any refit, none fixes the miss, and refitting would end the validation set. A measure-and-re-explore loop is the real fix. |
 
 ## 6. Results
 
@@ -157,6 +162,28 @@ The project itself is built with AI coding agents (Claude Code), under a deliber
 - **Memory on vs off (Qwen, 3 seeds):** no benefit; the run-to-run noise is as large as any effect.
 - **Spend:** $3.58 by the key's usage (ledger $3.49), under the $5 cap; the before reading preceded the first run.
 
+### M4 (merged b119c8a; ASIC eval 45 runs, fleet A/B 55 + 55 paired runs + 25 re-run, 5 seeds)
+
+- **ASIC flow (measured):** Yosys 0.33 + OpenSTA 3.1.0 on `sky130_fd_sc_hd` (TT, 25 °C, 1.80 V, 10 ns), 57 fitted
+  points across all four families plus 9 held out; CI re-measures all 57 identically.
+- **ASIC model (estimate):** leave-one-out error 8.7% area, 4.6% FFs, 10.6% Fmax, 5.8% power index. Held out: area
+  within 5% on 9/9, Fmax −14.9% to +39.6% (optimistic by more than 1% on 5 of 9).
+- **ASIC specs (exhaustive ground truth):** the family ranking matches the FPGA's on all three, but pipelining is
+  shallower (m=3 vs m=7; m=2 vs m=5). On `asic_multiaxis_control` L2 changes the winner (m=2 W17 N16) — and that
+  winner **misses its deadline at its measured 72.2 MHz** (p99 0.567 µs against 0.5), which the model did not predict.
+- **ASIC eval (regret, low area / power / multiaxis):** Sonnet +0.8 / +3.5 / +17.9%; NSGA-II +6.1 / +54.0 / +23.4%;
+  45/45 selections meet spec.
+- **Fleet vs single graph (same specs, seeds, 400 evaluations; runs not overlapping):** the fleet maps the front
+  worse (pooled HV loss, sign test p = 0.014; significant for DeepSeek). After the store and budget fixes, Qwen's
+  fleet picks better designs: regret +6.3% against +14.8%, lower in 22 of 25 pairs (p = 0.0002), with HV still no
+  better, so the cold restart did not explain the HV loss. Caveat: the re-run was hours after the single arm.
+- **Throughput (measured; 24 h figures labelled projections):** 16,094 designs/hour for the fixed Qwen fleet against
+  25,212 for one graph.
+- **L2→L1 feedback:** never fires on the committed specs (0/92 recorded, 0/60 live); on a constructed spec it fires in
+  3 of 15 searches and recovers 3 of 3, against 1 of 3 without it.
+- **FPGA path untouched:** all 60 M2 and 30 M3 runs replay identically.
+- **Spend:** $4.15 by the key ($3.83 first pass + $0.32 fleet re-run), under the $5 cap.
+
 ## 7. What review found (M2)
 
 An independent review (no high-severity bugs; 3 medium, 5 low; [posted on the PR](https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent/pull/3#pullrequestreview-5468926172)) found:
@@ -190,9 +217,24 @@ Round 1: 1 blocking, 6 should-fix, 12 nits.
 
 Round 2 found everything fixed and 2 optional nits, which the executor also fixed before merge.
 
+## 7c. What review found (M4)
+
+Two planner review rounds before merge, both posted on the PR
+([round 1](https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent/pull/6#pullrequestreview-5481013249),
+[round 2](https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent/pull/6#pullrequestreview-5481303433)).
+Round 1: no blocking, 7 should-fix, 15 nits; every data claim reproduced.
+- The write-up's number test let 59% of deliberately altered numbers pass; it now binds every number in order to a
+  named fact, and all 658 mutants fail. The tighter test found two real errors, both fixed.
+- The A/B wording overclaimed the HV loss and called Qwen's regret gain "mixed"; paired sign and t tests now set it.
+- The fleet's shared store was never read and a 10-evaluation member budget could not be spent; fixed and re-run.
+- The Vivado power parser double-counted core power; the constructed feedback spec used a 1 MS/s floor against a
+  130 MS/s stream; three doc slips. All fixed.
+
+Round 2: one doc fix (a ruled-out refit still listed as planned), fixed before merge.
+
 ## 8. Known limitations
 
-- One design space so far (CORDIC); one FPGA family.
+- One design space (CORDIC); one FPGA family and one ASIC library (sky130, typical corner, post-synthesis only — no place and route).
 - The default cost model is still M1 (two Vivado anchors), by choice: the Vivado-weighted refit on 14 measured points
   did not predict unseen points better, so it is reported, not adopted. Its error is about 15% RMS on LUTs and 12% on
   Fmax.
@@ -201,8 +243,10 @@ Round 2 found everything fixed and 2 optional nits, which the executor also fixe
 - The power figure is a relative index, not watts.
 - Natural-language spec intake has only been tested with a scripted model.
 - 5 seeds is still a small sample; some cells overlap within one standard deviation.
-- The A/B is incomplete for the frontier model: Sonnet's campaign arm covers one spec.
-- Wall-clock figures for the A/B were measured with 3–4 runs in parallel.
+- The A/Bs are incomplete for the frontier model: Sonnet's campaign arm (M3) and fleet arm (M4) each cover one spec.
+- The ASIC model's Fmax is optimistic by more than 1% on 5 of 9 held-out points (by 0.7% on a sixth), and the `asic_multiaxis_control` winner fails its deadline at its measured clock.
+- The fixed fleet ran hours after the single-graph arm it is compared with, so provider drift is not ruled out.
+- M3's wall-clock figures were measured with 3–4 runs in parallel (M4's were not).
 - System-level metrics come from a SimPy model, not from hardware: its interface contract is checked against the RTL
   cycle by cycle, but it runs each design at its estimated Fmax, and it aligns requests to the next clock edge with no
   synchroniser (a real clock-domain crossing would add about two cycles).
@@ -215,5 +259,11 @@ Round 2 found everything fixed and 2 optional nits, which the executor also fixe
    2025.2, no spec's winner changes, M1 stays the default cost model.
 2. ~~Site part C1~~ live 2026-10-09 (ad6101a): L3, L4, gate level and L5 animated from real data; this record.
 3. ~~M3~~ done (a92fe65): SimPy system-level and cycle-level simulation; the campaign agent and its A/B; cross-run memory.
-4. Site part C2 (this version): L2 and the A/B on the showcase site; this record synced. Deploy pending.
-5. M4: ASIC cost model (open PDK), a fleet of agents, L2→L1 feedback, more measured data (m=8 at 20 ns), the write-up.
+4. ~~Site part C2~~ live 2026-10-10 (d195189): L2 and the A/B on the showcase site; this record synced.
+5. ~~M4~~ done (b119c8a): ASIC cost model on sky130, a code-orchestrated fleet and its A/B, L2→L1 feedback, the
+   write-up (`docs/WRITEUP.md`).
+6. Site part C3 (this version, deploy pending): the ASIC target, the fleet A/B and the write-up on the showcase site;
+   this record synced.
+7. Local Vivado run: `high_precision` m=8/m=6 at 20 ns and `report_power` on the 14 measured designs (exports ready).
+8. After M4: an ASIC measure-and-re-explore loop; OpenROAD place and route from pinned binaries; the class path factor
+   once the 20 ns data is in.

@@ -106,3 +106,18 @@ Part C2 (M3, 2026-10-10) added:
   into `status` and `note`, and only `status` drives the badges.
 - the record may have lettered sections ("7b"); the parser accepts `## 7b. Title`.
 - `pnpm animations <name> …` records only the clips named (the full set takes a while).
+
+Part C3 (M4, 2026-10-11) added:
+
+- `scripts/export_m4.py` writes `src/data/m4.json` and asserts every M4 row of results.md verbatim,
+  plus the write-up's and README's sentences the site repeats. It re-runs the sky130 calibration, the
+  held-out evaluation, the depth sweeps of both targets, the `asic_multiaxis_control` replay at the
+  estimated and the measured clock, one fleet run rebuilt from its members' `evaluations.csv.gz`, and
+  the paired tests (its own sign test and t tail). It also checks that results.md and the ledger before
+  M4 are byte for byte what a92fe65 had (an M4 commit may only append to them).
+- `/writeup` renders `vendor/hw_dse/docs/WRITEUP.md` as plain Markdown (MDX `format: "md"`, no
+  remark-math, so `$` amounts stay text). Its `<!-- facts: … -->` comments become the per-section fact
+  lists (values from `docs/writeup_facts.json`); its Mermaid flowchart is drawn by `src/lib/writeup.ts`.
+  Never edit the vendored text to make it render: change the renderer.
+- The ladder has an `ASIC` rung (README L4, ASIC target); the hero marks it "not used by this run".
+- The record has a `7c` section; `pnpm smoke` checks the M4 headings, PR #6, "After M4" and /writeup.

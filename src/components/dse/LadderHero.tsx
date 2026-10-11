@@ -147,8 +147,8 @@ export default function LadderHero({
           spec (seed {hero.seed}). Each cell is one evaluated design; filled
           cells met the spec. The design it selected then goes down the live
           levels it needs (the repository&apos;s worked example of that design,
-          and the run&apos;s own back-annotation). This spec has no system, so
-          the system and cycle levels are not used.
+          and the run&apos;s own back-annotation). This spec has no system and
+          targets the FPGA, so the system, cycle and ASIC levels are not used.
         </>
       }
       stepper={stepper}

@@ -1,0 +1,48 @@
+{
+ "milestone": "m4",
+ "arm": "structured",
+ "pilot": false,
+ "spec": "asic_low_area",
+ "target": "asic-sky130hd",
+ "seed": 1,
+ "provider": "openrouter",
+ "model_requested": "deepseek/deepseek-v4.1-flash",
+ "models_served": [
+  "deepseek/deepseek-v4.1-flash"
+ ],
+ "reasoning": "provider default",
+ "status": "stopped",
+ "llm_calls": 4.0,
+ "llm_failures": 0.0,
+ "input_tokens": 11736.0,
+ "output_tokens": 20966.0,
+ "cost_usd": 0.014624747999999998,
+ "wall_s": 135.1,
+ "decisions": [
+  "refine",
+  "refine",
+  "stop"
+ ],
+ "l1_selected_key": "iterative:data_width=15,n_iter=14,angle_guard=3,frac_guard=0,rounding=round",
+ "l2_winner_changed": false,
+ "l2_feedback": null,
+ "back_annotation_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 420650.9321283793,
+ "hv_frac": 0.9219494834046061,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=15,n_iter=14,angle_guard=3,frac_guard=0,rounding=round",
+ "select_regret": 0.03793489531019019,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "rounds": 4,
+ "coverage_rounds": 1,
+ "structured_method": "json_schema",
+ "run_dir": "runs/eval_m4/structured/asic_low_area/20261010-180949-c3ce",
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 160 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ]
+}

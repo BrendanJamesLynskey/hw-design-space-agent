@@ -7,8 +7,11 @@
  * then all 400 ticks of the run, with the L1 bound and the simulated p99. Every time and count
  * comes from src/data/m3.json (scripts/export_m3.py: simulated with hw_dse.l2.system at the
  * vendored commit and checked against the committed ground truth).
+ *
+ * Milestone 4 reuses it for the deadline miss (`config`): the asic_multiaxis_control winner at
+ * its estimated and at its measured sky130 clock (src/data/m4.json, scripts/export_m4.py).
  */
-import { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 
 import { AnimationPanel } from "@/components/anim/AnimationPanel";
 import { useStepper } from "@/components/anim/useStepper";
@@ -18,7 +21,10 @@ import {
   laneAt,
   sysCaption,
   sysFrames,
+  type ReplayDesign,
+  type SysFrame,
   type SystemReplay as Replay,
+  type View,
 } from "@/lib/dse/m3";
 import { fmtInt, trim } from "@/lib/format";
 import { OKABE_ITO } from "@/lib/viz/palette";
@@ -28,43 +34,87 @@ import { Prov } from "./Badges";
 const W = 600;
 const COLOUR = [OKABE_ITO.sky, OKABE_ITO.orange, OKABE_ITO.blue];
 
-export default function SystemReplay({ rep }: { rep: Replay }): JSX.Element {
+/** What differs between the M3 replay (three designs, three views) and M4's (one design, two clocks). */
+export type ReplayConfig = {
+  title: string;
+  summary: ReactNode;
+  testId: string;
+  caption: (f: SysFrame) => string;
+  /** A lane's bold label and its second line (wide screens). */
+  name: (d: ReplayDesign) => string;
+  sub: (d: ReplayDesign) => string;
+  /** The design column of the table under the chart. */
+  row: (d: ReplayDesign) => string;
+  /** The strip's range and gridlines (ns after the tick). */
+  strip: [number, number];
+  stripTicks: number[];
+  stripAria: string;
+  /** The note under the chart on what clock each lane runs at. */
+  clockNote: ReactNode;
+};
+
+export default function SystemReplay({
+  rep,
+  config,
+}: {
+  rep: Replay;
+  config?: Partial<ReplayConfig>;
+}): JSX.Element {
   const frames = useMemo(() => sysFrames(rep), [rep]);
   const stepper = useStepper(frames.length, { stepMs: 1300 });
   const f = frames[stepper.step]!;
   const font = useSvgFont(W);
   const narrow = font.narrow;
   const strip = f.phase === "ticks" || f.phase === "verdict";
-  const M = { l: narrow ? 10 : 190, r: 16, t: 26, b: 34 };
+  const M = { l: narrow ? 10 : 190, r: 16, t: 26, b: narrow ? 44 : 34 };
   const label = narrow ? 30 : 0;
   const laneH = narrow ? 52 : 46;
   const H = M.t + M.b + rep.designs.length * (laneH + label);
   const limit = rep.limit_us * 1000;
-  const [lo, hi] = strip ? [340, 620] : [0, 640];
+  const cfg: ReplayConfig = {
+    title: "multiaxis_control: why m=4",
+    summary: (
+      <>
+        A 1 µs control tick issues {rep.requests} requests at once; all{" "}
+        {rep.requests} results must be back within {rep.limit_us} µs (p99 over{" "}
+        {rep.n_ticks} ticks). The repository&apos;s SimPy model{" "}
+        <Prov kind="simulated" />, run for the design each view of the spec
+        picks.
+      </>
+    ),
+    testId: "system-widget",
+    caption: (fr) => sysCaption(fr, rep),
+    name: (d) =>
+      `m=${d.m} · ${fmtInt(d.luts_plus_ffs)} LUT+FF · ${trim(d.fmax_mhz, 3)} MHz`,
+    sub: (d) => `${VIEW_LABEL[d.view as View]} winner`,
+    row: (d) => `pipelined_m m=${d.m}`,
+    strip: [340, 620],
+    stripTicks: [360, 400, 440, 480, 520, 560, 600],
+    stripAria: `Batch latency of every tick for m=7, m=5 and m=4 against the ${rep.limit_us} µs limit`,
+    clockNote: (
+      <>
+        Clocks are each design&apos;s estimated Fmax <Prov kind="estimate" />.
+      </>
+    ),
+    ...config,
+  };
+  const [lo, hi] = strip ? cfg.strip : [0, 640];
   const sx = (ns: number) =>
     M.l + ((Math.min(Math.max(ns, lo), hi) - lo) / (hi - lo)) * (W - M.l - M.r);
   const ticks = strip
-    ? [360, 400, 440, 480, 520, 560, 600]
+    ? cfg.stripTicks
     : narrow
       ? [0, 200, 400, 600]
       : [0, 100, 200, 300, 400, 500, 600];
 
   return (
     <AnimationPanel
-      title="multiaxis_control: why m=4"
-      summary={
-        <>
-          A 1 µs control tick issues {rep.requests} requests at once; all{" "}
-          {rep.requests} results must be back within {rep.limit_us} µs (p99 over{" "}
-          {rep.n_ticks} ticks). The repository&apos;s SimPy model{" "}
-          <Prov kind="simulated" />, run for the design each view of the spec
-          picks.
-        </>
-      }
+      title={cfg.title}
+      summary={cfg.summary}
       stepper={stepper}
       stepLabel="step"
-      caption={sysCaption(f, rep)}
-      testId="system-widget"
+      caption={cfg.caption(f)}
+      testId={cfg.testId}
       visual={
         <div className="min-w-0">
           <svg
@@ -75,7 +125,7 @@ export default function SystemReplay({ rep }: { rep: Replay }): JSX.Element {
             data-phase={f.phase}
             aria-label={
               strip
-                ? `Batch latency of every tick for m=7, m=5 and m=4 against the ${rep.limit_us} µs limit`
+                ? cfg.stripAria
                 : `One tick, ${trim(f.t, 4)} ns in: results out per design against the ${rep.limit_us} µs limit`
             }
           >
@@ -141,13 +191,14 @@ export default function SystemReplay({ rep }: { rep: Replay }): JSX.Element {
             )}
             {rep.designs.map((d, i) => {
               const top = M.t + i * (laneH + label);
+              const lk = `${d.view}-${i}`;
               const y0 = top + label;
               const c = COLOUR[i]!;
               const lane = laneAt(d, f.t);
-              const name = `m=${d.m} · ${fmtInt(d.luts_plus_ffs)} LUT+FF · ${trim(d.fmax_mhz, 3)} MHz`;
+              const name = cfg.name(d);
               return (
                 <g
-                  key={d.view}
+                  key={lk}
                   data-m={d.m}
                   data-view={d.view}
                   data-done={lane.done}
@@ -172,7 +223,7 @@ export default function SystemReplay({ rep }: { rep: Replay }): JSX.Element {
                       fontSize={font.fs(10)}
                       fill="currentColor"
                     >
-                      {VIEW_LABEL[d.view]} winner
+                      {cfg.sub(d)}
                     </text>
                   )}
                   <rect
@@ -282,8 +333,7 @@ export default function SystemReplay({ rep }: { rep: Replay }): JSX.Element {
             {strip
               ? "Dashed line: the L1 analytic bound (estimate); thick line: the simulated p99 over all ticks."
               : "Thin marks: an accept at a clock edge; bars: a result out. Each design's p99 tick is shown."}{" "}
-            Clocks are each design&apos;s estimated Fmax{" "}
-            <Prov kind="estimate" />.
+            {cfg.clockNote}
           </p>
           <table className="mt-2 w-full text-xs" data-testid="system-table">
             <thead>
@@ -294,9 +344,9 @@ export default function SystemReplay({ rep }: { rep: Replay }): JSX.Element {
               </tr>
             </thead>
             <tbody>
-              {rep.designs.map((d) => (
-                <tr key={d.view}>
-                  <td className="font-mono">pipelined_m m={d.m}</td>
+              {rep.designs.map((d, i) => (
+                <tr key={`${d.view}-${i}`}>
+                  <td className="font-mono">{cfg.row(d)}</td>
                   <td>
                     {trim(d.bound_us, 4)} µs {d.bound_meets ? "✓" : "✗"}
                   </td>

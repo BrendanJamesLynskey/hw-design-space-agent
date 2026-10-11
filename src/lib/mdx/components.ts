@@ -5,7 +5,7 @@
  */
 import type { MDXRemoteProps } from "next-mdx-remote/rsc";
 
-import { Prov } from "@/components/dse/Badges";
+import { LevelBadge, Prov } from "@/components/dse/Badges";
 import { KnuthQuote } from "@/components/dse/Knuth";
 import {
   DivisionOfLabour,
@@ -29,8 +29,12 @@ import {
   CaseHighPrecision,
   CasePareto,
   CaseScatter,
+  HowAsic,
   HowCycle,
+  HowDeadline,
   HowDescent,
+  HowFleet,
+  HowHeldOut,
   HowSystem,
   HowTrace,
   ResultsCalculator,
@@ -49,6 +53,16 @@ import {
   MemoryTable,
   SystemSpecsTable,
 } from "@/components/dse/M3Tables";
+import {
+  AsicCalibrationTable,
+  AsicEvalTable,
+  AsicSpecsTable,
+  FeedbackTable,
+  FleetAbTable,
+  FleetThroughputTable,
+  M4SpendTable,
+  PairedTestsTable,
+} from "@/components/dse/M4Tables";
 import { CostTable, HeadlineTable } from "@/components/dse/Tables";
 import { Eq } from "@/components/mdx/Eq";
 import { RepoFile } from "@/components/mdx/RepoFile";
@@ -64,6 +78,7 @@ export const mdxComponents: NonNullable<MDXRemoteProps["components"]> = {
   V,
   RepoFile,
   Prov,
+  LevelBadge,
   KnuthQuote,
   WhyClimb,
   CaseCordic,
@@ -99,4 +114,16 @@ export const mdxComponents: NonNullable<MDXRemoteProps["components"]> = {
   MemoryTable,
   LeversTable,
   M3SpendTable,
+  HowAsic,
+  HowHeldOut,
+  HowDeadline,
+  HowFleet,
+  AsicCalibrationTable,
+  AsicSpecsTable,
+  AsicEvalTable,
+  FleetAbTable,
+  PairedTestsTable,
+  FleetThroughputTable,
+  FeedbackTable,
+  M4SpendTable,
 };

@@ -23,8 +23,14 @@
  *   memory-on run summary (and the pilots), the memory store, the key usage, and the M3
  *   traces (llm_trace.jsonl and INDEX.md for every run; report.md and evaluations.csv.gz for
  *   the structured runs, not the campaigns' inner dse/ directories); the M3 worked example;
- * - the example specs (system specs included), the cost model's calibration file and the two
- *   refit calibrations.
+ * - M4's data: the final write-up (docs/WRITEUP.md) and its facts, the ASIC specs' ground truth
+ *   and baselines, the sky130 calibration (fit, leave-one-out report, the 57 synthesised points
+ *   and the 9 held-out ones), the L2 -> L1 feedback results (both spec versions), the key usage
+ *   and model check, every structured, single, fleet (before_fix and after fix) and pilot run
+ *   summary, and the M4 traces (llm_trace.jsonl, evaluations.csv.gz and INDEX.md for every run
+ *   and fleet member; report.md for the structured runs only);
+ * - the example specs (system and ASIC specs included), the cost model's calibration files (the
+ *   sky130 one too) and the two refit calibrations.
  *
  * `vendor/hw_dse/VENDORED.json` records the repository, the full commit hash and each file's
  * SHA-256; the commit must already be on the repository's `origin`. tests/unit/vendor.test.ts
@@ -102,10 +108,28 @@ const paths = [
   ...tree("eval/data/campaign_m3").filter((p) => p.endsWith(".json")),
   ...tree("eval/data/campaign_m3_memory").filter((p) => p.endsWith(".json")),
   ...tree("eval/data/m3_pilot").filter((p) => p.endsWith(".json")),
+  "docs/WRITEUP.md",
+  "docs/writeup_facts.json",
+  "eval/data/ground_truth_m4.json",
+  "eval/data/baselines_m4.json",
+  "eval/data/asic_calibration.json",
+  "eval/data/asic_calibration.md",
+  "eval/data/asic_synthesis.csv",
+  "eval/data/asic_validation.csv",
+  "eval/data/l2_feedback_m4.json",
+  "eval/data/l2_feedback_m4_v1_floor1.json",
+  "eval/data/key_usage_m4.json",
+  "eval/data/models_check_m4.json",
+  "src/hw_dse/models/calibration_sky130hd.yaml",
+  ...tree("eval/data/agent_m4").filter((p) => p.endsWith(".json")),
+  ...tree("eval/data/fleet_m4").filter((p) => p.endsWith(".json")),
+  ...tree("eval/data/m4_pilot").filter((p) => p.endsWith(".json")),
   ...tree("eval/data/traces").filter(
     (p) =>
       /(INDEX\.md|llm_trace\.jsonl|evaluations\.csv\.gz|report\.md)$/.test(p) &&
-      !/^eval\/data\/traces\/m3\/[^/]+\/[^/]+\/[^/]+\/dse\//.test(p),
+      !/^eval\/data\/traces\/m3\/[^/]+\/[^/]+\/[^/]+\/dse\//.test(p) &&
+      // M4: every run's calls and evaluations; the reports of the structured runs only
+      !/^eval\/data\/traces\/m4\/(?!structured\/).*report\.md$/.test(p),
   ),
   ...tree("specs").filter((p) => p.endsWith(".yaml")),
 ];

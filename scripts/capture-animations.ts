@@ -86,6 +86,25 @@ const CLIPS: Clip[] = [
     widget: "cycle-widget",
     fps: 1,
   },
+  {
+    name: "fpga-or-asic",
+    path: "/how-it-works",
+    widget: "asic-widget",
+    fps: 1,
+  },
+  {
+    name: "held-out",
+    path: "/how-it-works",
+    widget: "held-widget",
+    fps: 1,
+  },
+  {
+    name: "deadline-miss",
+    path: "/how-it-works",
+    widget: "deadline-widget",
+    fps: 1.5,
+  },
+  { name: "fleet", path: "/how-it-works", widget: "fleet-widget", fps: 1.5 },
 ];
 
 async function main(): Promise<void> {

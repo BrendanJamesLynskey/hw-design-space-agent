@@ -1,0 +1,47 @@
+# Calibration of hw_dse.models.cost_asic: fitted by `python -m hw_dse.models.cost_asic`
+# to every point of eval/data/asic_synthesis.csv. tests/test_asic.py fails if these
+# constants drift from what the fit produces. Residuals: eval/data/asic_calibration.md.
+id: sky130hd-tt_025C_1v80-yosys0.33-opensta-v1
+target: asic
+library: sky130_fd_sc_hd
+corner: tt_025C_1v80
+tool: yosys 0.33 + OpenSTA 3.1.0; liberty sky130_fd_sc_hd__tt_025C_1v80.lib (OpenROAD-flow-scripts
+  5a76f84ed, sha256 ec0e1067a35c...) minus lpflow_*/probe_* cells; 10 ns clock; post-synthesis
+  STA, wire-load model
+n_points: 57
+source: eval/data/asic_synthesis.csv
+activity_factor: 0.125
+fitted:
+  a_add_pipe: 25.554093258
+  a_add_fsm: 41.572532594
+  a_fsm: 695.401579049
+  a_mux: 6.066032498
+  a_ff: 21.824304406
+  t_0: 1.273744916
+  t_fsm_stage: 0.653529897
+  t_bit: 0.285499736
+  t_mux: 0.0
+  c_ff_fsm: 1.094264264
+  c_ff_pipe: 0.983132904
+  w_ff: 0.003583363
+  w_area: 3.8024e-05
+power_reference:
+  family: iterative
+  f_mhz: 100.0
+  params:
+    data_width: 16
+    n_iter: 14
+    angle_guard: 0
+    frac_guard: 0
+    rounding: trunc
+residuals_rms_pct:
+  in_sample:
+    area_um2: 7.75
+    ffs: 4.45
+    fmax_mhz: 9.99
+    power_mw: 5.28
+  leave_one_out:
+    area_um2: 8.66
+    ffs: 4.61
+    fmax_mhz: 10.55
+    power_mw: 5.79

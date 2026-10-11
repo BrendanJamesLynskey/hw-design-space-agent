@@ -34,9 +34,10 @@ export default function HomePage(): JSX.Element {
         models, and the agent reads the results, decides what to try next, and
         picks the design. That one spec then goes down the fidelity ladder: the
         design inside a SimPy model of its system and a cycle-accurate model of
-        its interface, RTL generated and simulated in two simulators, synthesis
-        and place and route, gate-level simulation of the netlist, and
-        back-annotation of the measurements into the cost model, each level
+        its interface, RTL generated and simulated in two simulators, FPGA
+        synthesis and place and route, gate-level simulation of the netlist,
+        synthesis on a second target (standard cells on the open sky130 PDK),
+        and back-annotation of the measurements into the cost model, each level
         offering its own power, performance and area view, with regression tests
         against the golden model at every level.
       </p>
@@ -135,10 +136,36 @@ export default function HomePage(): JSX.Element {
           <V of="m3.ab.cost_ratio_min" fmt="f2" />–
           <V of="m3.ab.cost_ratio_max" fmt="f2" />× the cost, so it stays
           experimental.{" "}
-          <Link href="/results" className={LINK}>
+          <Link href="/results#m3" className={LINK}>
             Milestone 3&apos;s results
           </Link>{" "}
-          come first on the results page.
+          are on the results page.
+        </p>
+        <p className="mt-4 max-w-3xl text-neutral-700 dark:text-neutral-300">
+          <strong>Milestone 4</strong>, the last, took the same RTL to standard
+          cells on the open sky130 PDK (post-synthesis, no place and route) and
+          ran several structured graphs on one spec as a fleet, orchestrated by
+          code. The family ranking is the same on both targets, but the ASIC
+          wants shallower pipelining. Its losses come first: the fleet mapped
+          the trade-off curve worse than one graph (higher hypervolume in only{" "}
+          <V of="m4.ab.pooled.higher" fmt="int" /> of{" "}
+          <V of="m4.ab.pooled.pairs" fmt="int" /> paired runs), and the ASIC
+          model&apos;s winner for a control-loop spec{" "}
+          <strong>misses its deadline when measured</strong> (
+          <V of="m4.dl.meas_mhz" fmt="f1" /> MHz against an estimated{" "}
+          <V of="m4.dl.est_mhz" fmt="f1" />
+          ). With Qwen the fixed fleet did pick better designs (lower regret in{" "}
+          <V of="m4.ab.qwen2.better" fmt="int" /> of{" "}
+          <V of="m4.ab.qwen2.pairs" fmt="int" /> pairs), on one model and with a
+          timing caveat.{" "}
+          <Link href="/results" className={LINK}>
+            Milestone 4&apos;s results
+          </Link>{" "}
+          come first on the results page, and the{" "}
+          <Link href="/writeup" className={LINK}>
+            final write-up
+          </Link>{" "}
+          tells the whole project in one place.
         </p>
         <HeadlineTable />
         <p className="mt-4 max-w-3xl text-neutral-700 dark:text-neutral-300">
@@ -236,13 +263,16 @@ export default function HomePage(): JSX.Element {
             .filter((m) => m.status === "done")
             .map((m) => m.id)
             .join(", ")}{" "}
-          are done and{" "}
-          {site.milestones
-            .filter((m) => m.status !== "done")
-            .map((m) => m.id)
-            .join(", ")}{" "}
-          is planned. The README&apos;s L2 covers both the cycle-accurate model
-          and the SimPy system models, shown here as two rungs.
+          are done
+          {site.milestones.some((m) => m.status !== "done")
+            ? ` and ${site.milestones
+                .filter((m) => m.status !== "done")
+                .map((m) => m.id)
+                .join(", ")} planned`
+            : ": every planned milestone"}
+          . The README&apos;s L2 covers both the cycle-accurate model and the
+          SimPy system models, shown here as two rungs; its L4 has an ASIC row
+          (sky130, post-synthesis only: an open-PDK estimate, not silicon).
         </p>
       </section>
 
@@ -252,6 +282,9 @@ export default function HomePage(): JSX.Element {
         </a>
         <Link href="/results" className={BTN}>
           Full results
+        </Link>
+        <Link href="/writeup" className={BTN}>
+          The write-up
         </Link>
         <Link href="/how-it-works" className={BTN}>
           How it works

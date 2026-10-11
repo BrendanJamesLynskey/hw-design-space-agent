@@ -1,0 +1,21 @@
+# Milestone 4, ASIC target with a system scenario (L2): the shared sin/cos unit
+# of specs/system/multiaxis_control.yaml on sky130, with a 0.5 us batch
+# deadline. On this target the L1 bound's winner misses the deadline in the
+# simulation (clock-edge alignment), so L2 changes the winner.
+name: asic_multiaxis_control
+description: >
+  Shared sin/cos unit in sky130 standard cells for a 16-axis motor-control loop:
+  a 1 MHz control tick issues 32 requests at once; all 32 results must be back
+  within 0.5 us of the tick (p99 over ticks). Max error <= 2^-12. Minimise area.
+target: asic-sky130hd
+constraints:
+  - {metric: throughput_msps, op: ">=", value: 32}
+  - {metric: max_abs_err, op: "<=", value: "2^-12"}
+  - {metric: sys_p99_batch_us, op: "<=", value: 0.5}
+objectives:
+  - {metric: area_um2, direction: min, ref: 100000}
+  - {metric: accuracy_bits, direction: max, ref: 12}
+select_by: area_um2
+select_direction: min
+budget: {total_evals: 400, evals_per_round: 100, max_rounds: 4, hv_epsilon: 0.01}
+system: {kind: control_loop, loop_rate_mhz: 1.0, requests_per_tick: 32, n_ticks: 400}

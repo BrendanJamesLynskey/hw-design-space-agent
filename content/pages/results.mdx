@@ -2,7 +2,77 @@ The eval asks one question: on the same budget of evaluations, does an LLM steer
 
 Milestone 1 found a split: the agent picked better designs than NSGA-II and random search, but mapped the trade-off curve far worse, because it dived at the spec's corner and stopped early. Milestone 2 set out to close that gap without losing the selection lead: a `map_front` decision, a 40% front-mapping reserve that code spends before a run stops, and five seeds instead of three. It ran three models through OpenRouter, Sonnet 5.5, DeepSeek V4.1 Flash and Qwen3.8-27B with reasoning off: <V of="m2.runs" fmt="int" /> runs, <V of="m2.calls.total" fmt="int" /> LLM calls, <V of="m2.total_usd" fmt="usd" /> of provider-reported usage. Every table below is mean ± population standard deviation over the seeds.
 
-Milestone 3 then put the design inside its system and tried a free-form agent on top of the structured one. Its results come first; milestone 2's and milestone 1's follow, as they were.
+Milestone 3 then put the design inside its system and tried a free-form agent on top of the structured one. Milestone 4, the last, added a second target (an ASIC on the open sky130 PDK, post-synthesis), a fleet of structured graphs orchestrated by code, and feedback from L2 to L1, and closed the project with a [write-up](/writeup). Milestone 4's results come first, losses first; milestones 3, 2 and 1 follow, as they were.
+
+<div id="m4" />
+
+## Milestone 4 at a glance
+
+**Where it lost.**
+
+- **The fleet mapped the trade-off curve worse than one graph, at a higher cost.** On the same five specs, seeds and 400 evaluations, the fleet had the higher hypervolume in only <V of="m4.ab.pooled.higher" fmt="int" /> of <V of="m4.ab.pooled.pairs" fmt="int" /> pairs (sign test p = <V of="m4.ab.pooled.p" fmt="p" />); significant for DeepSeek alone (<V of="m4.ab.ds.higher" fmt="int" /> of <V of="m4.ab.ds.pairs" fmt="int" />, p = <V of="m4.ab.ds.p" fmt="p" />), not for Qwen or Sonnet. It cost <V of="m4.ab.cost_ratio_qwen" fmt="f2" />–<V of="m4.ab.cost_ratio_sonnet" fmt="f2" />× as much per spec. The review found the fleet's shared Store was never read back and phase 2 started cold; the fix (warm starts from the Store) did **not** change the loss: the fixed Qwen fleet was higher in <V of="m4.ab.qwen2.higher" fmt="int" /> of 25 (p = <V of="m4.ab.qwen2.hv_p" fmt="p" />).
+- **The ASIC model's winner misses its deadline when measured.** On `asic_multiaxis_control` the ground truth's winner meets the 0.5 µs batch deadline at its estimated <V of="m4.dl.est_mhz" fmt="f1" /> MHz; synthesised on sky130 it runs at <V of="m4.dl.meas_mhz" fmt="f1" /> MHz, and its simulated p99 is then <V of="m4.dl.meas_p99" fmt="f3" /> µs, <V of="m4.dl.miss" fmt="pct" /> over.
+- **The ASIC model's Fmax is optimistic.** On the <V of="m4.ho.n" fmt="int" /> held-out designs it never saw, area is within 5% on all of them, but Fmax is off by <V of="m4.ho.fmax_min" fmt="spct" /> to <V of="m4.ho.fmax_max" fmt="spct" /> and optimistic on <V of="m4.ho.optimistic" fmt="int" /> of 9 (by <V of="m4.ho.optimistic_min" fmt="spct" /> or more).
+
+**What held.**
+
+- **The structured graph carries to the ASIC target.** Every selected design met its spec (<V of="m4.eval.meets" fmt="int" />/<V of="m4.eval.runs" fmt="int" />), and on the power-driven spec every model's regret was a fraction of NSGA-II's (<V of="m4.eval.power.sonnet" fmt="spct" /> to <V of="m4.eval.power.deepseek" fmt="spct" /> against <V of="m4.eval.power.nsga2" fmt="spct" />).
+- **With Qwen, the fixed fleet picked better designs:** regret <V of="m4.ab.qwen.v2_regret" fmt="spct" /> against the single graph's <V of="m4.ab.qwen.single_regret" fmt="spct" />, lower in <V of="m4.ab.qwen2.better" fmt="int" /> of <V of="m4.ab.qwen2.pairs" fmt="int" /> pairs (p = <V of="m4.ab.qwen2.regret_p" fmt="p" />). The fixed fleet ran hours after the single arm, so provider drift is not ruled out; it is one model, and DeepSeek and Sonnet show no regret difference.
+- **The family ranking is the same on both targets**; the ASIC wants shallower pipelining (m=<V of="m4.gt.power.m" fmt="int" /> where the FPGA wants m=<V of="m4.gt.power.twin_m" fmt="int" />; m=<V of="m4.gt.multi.m" fmt="int" /> where it wants m=<V of="m4.gt.multi.twin_m" fmt="int" />).
+- **L2 → L1 feedback works where it is needed, which on the committed specs is never:** it fired in 0 of <V of="m4.fb.recorded" fmt="int" /> recorded and 0 of <V of="m4.fb.live" fmt="int" /> live searches; on a constructed spec it recovered <V of="m4.fb.recovered" fmt="int" /> of <V of="m4.fb.fired" fmt="int" /> against <V of="m4.fb.uncorrected" fmt="int" /> of <V of="m4.fb.fired" fmt="int" /> without the correction.
+- **Milestone 4 cost <V of="m4.spend.key" fmt="usd" />** by the key, under the <V of="m4.spend.cap" fmt="usd" /> cap, and left the FPGA path's record untouched: the <V of="m4.replay.m2" fmt="int" /> M2 and <V of="m4.replay.m3" fmt="int" /> M3 structured runs still replay identically.
+
+<div id="fleet" />
+
+## The fleet A/B: one graph against a fleet of graphs
+
+Five specs (the three ASIC specs, `low_area_control` and `multiaxis_control`), seeds 0–4, the same 400 L1 evaluations for every arm, and every run started only after the previous one finished, so its wall-clock is its own. **Sonnet's fleet arm covers one spec, `asic_multiaxis_control`, by the owner's choice** (the spend cap); a full Sonnet arm would mostly have repeated a result two models already show. The first fleet is kept as _before the fix_; the fixed fleet was re-run for Qwen only, on the same specs and seeds.
+
+<FleetAbTable />
+
+The arms are paired (same spec and seed), so the tests are paired: the exact sign test and the paired t-test, both two-sided, recomputed by this site from the run summaries and checked against the repository's table.
+
+<PairedTestsTable />
+
+**Hypervolume: the single graph maps more of the front.** Pooled over the first fleets the loss is significant (p = <V of="m4.ab.pooled.p" fmt="p" />), and for DeepSeek alone; for Qwen (<V of="m4.ab.qwen.higher" fmt="int" /> of 25, p = <V of="m4.ab.qwen.p" fmt="p" />) and Sonnet (5 pairs) it is not. The fixed fleet against the first: <V of="m4.ab.fix.higher" fmt="int" /> higher, <V of="m4.ab.fix.lower" fmt="int" /> lower. The cold restart did not explain the loss. The repository's reading of the records, not a tested cause: a fixed split by contract class allocates worse than the architect's own early choice of families, and smaller per-member studies cost front coverage.
+
+**Regret: a gain with Qwen.** The first Qwen fleet picked the better design in <V of="m4.ab.qwen1.better" fmt="int" /> of <V of="m4.ab.qwen1.untied" fmt="int" /> untied pairs (p = <V of="m4.ab.qwen1.regret_p" fmt="p" />), the fixed one in <V of="m4.ab.qwen2.better" fmt="int" /> of <V of="m4.ab.qwen2.pairs" fmt="int" /> (p = <V of="m4.ab.qwen2.regret_p" fmt="p" />, mean <V of="m4.ab.qwen2.regret_pts" fmt="f1" /> points). **Caveat:** the fixed fleet ran hours after the single arm it is paired with, and the repository measured large provider drift for Qwen elsewhere, so drift is not ruled out; its regret is lower on all five specs, which a uniform drift would not explain on its own.
+
+**Throughput, measured, and what it projects to.** Designs evaluated per hour of wall-clock, one run at a time; the three 24-hour columns are **projections**: the measured rates multiplied by 24 hours of back-to-back runs on one machine, assuming nothing changes (provider latency, rate limits, the spec mix). They were not run.
+
+<FleetThroughputTable />
+
+## ASIC specs: the structured graph against the baselines
+
+Five seeds per model on the three ASIC specs, against NSGA-II and random search with the same budget, all scored on the ASIC ground truth (the system spec on simulated feasibility):
+
+<AsicEvalTable />
+
+**Loss:** on `asic_multiaxis_control` nobody gets close: NSGA-II and the three models all land <V of="m4.eval.multi.min" fmt="spct" /> to <V of="m4.eval.multi.max" fmt="spct" /> above the true winner, whose trick (two more iterations for a narrower angle path and a faster clock) sits in a corner the L1 bound hides. Hypervolume on the power spec is below NSGA-II's for every model (<V of="m4.eval.power.hv_min" fmt="f3" />–<V of="m4.eval.power.hv_max" fmt="f3" /> against <V of="m4.eval.power.hv_nsga2" fmt="f3" />). And these winners are scored on the model's estimates: [the held-out check](/how-it-works) shows the multiaxis winner itself misses the deadline when measured.
+
+## The ASIC target: ground truth on both targets
+
+<AsicSpecsTable />
+
+On `asic_low_area` all four families are feasible and rank the same on both targets; `pipelined` costs <V of="m4.gt.low_area.pipelined_ratio" fmt="f2" />× the winner's area on sky130 and <V of="m4.gt.low_area.pipelined_ratio_fpga" fmt="f2" />× its LUT+FF on the FPGA. The [FPGA-or-ASIC animation](/how-it-works) steps through the depth sweeps, and the calibration, the held-out check and the deadline miss are there too.
+
+<div id="feedback" />
+
+## L2 → L1 feedback
+
+The constructed spec `l2_feedback_bursty`: bursts of 32 requests at 130 MS/s, a sustained throughput floor of 130 MS/s, p99 latency within 0.4 µs. <V of="m4.fb.bound" fmt="int" /> designs pass the L1 bound and <V of="m4.fb.sim" fmt="int" /> the simulation. Fifteen searches of 400 evaluations:
+
+<FeedbackTable />
+
+The correction recovered a passing design in <V of="m4.fb.recovered" fmt="int" /> of <V of="m4.fb.fired" fmt="int" /> (regret <V of="m4.fb.regret" fmt="spct" /> against the true winner); the same re-exploration budget screened with the uncorrected bound recovered <V of="m4.fb.uncorrected" fmt="int" />. Three cases is thin evidence. The first version of this spec had a 1 MS/s throughput floor, a strawman against a 130 MS/s stream; with it the feedback fired in <V of="m4.fb.v1_fired" fmt="int" /> of 15. The review caught it and the repository kept both results.
+
+## What M4 cost
+
+The key's usage rose by <V of="m4.spend.key" fmt="usd" /> over milestone 4 (<V of="m4.spend.first" fmt="usd" /> for the first pass and <V of="m4.spend.rerun" fmt="usd" /> for the fixed-fleet re-run), under the <V of="m4.spend.cap" fmt="usd" /> cap <Prov kind="measured" />. That reading is the authoritative one: calls that fail inside the client report no usage. The provider-reported ledger has <V of="m4.spend.entries" fmt="int" /> entries, <V of="m4.spend.ledger" fmt="usd" />; the archived traces hold <V of="m4.spend.trace_calls" fmt="int" /> calls in <V of="m4.spend.trace_runs" fmt="int" /> run directories (one per structured run and one per fleet member's run). The models were checked as listed, with tools and structured outputs and no substitution, before the first call.
+
+<M4SpendTable />
+
+<div id="m3" />
 
 ## Milestone 3 at a glance
 

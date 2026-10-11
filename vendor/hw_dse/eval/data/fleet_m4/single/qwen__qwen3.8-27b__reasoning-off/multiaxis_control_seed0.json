@@ -1,0 +1,48 @@
+{
+ "milestone": "m4",
+ "arm": "single",
+ "pilot": false,
+ "spec": "multiaxis_control",
+ "target": "fpga-artix7",
+ "seed": 0,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "status": "stopped",
+ "llm_calls": 5.0,
+ "llm_failures": 1.0,
+ "input_tokens": 12507.0,
+ "output_tokens": 4004.0,
+ "cost_usd": 0.011011706000000001,
+ "wall_s": 279.3,
+ "decisions": [
+  "refine",
+  "refine",
+  "stop"
+ ],
+ "l1_selected_key": "pipelined_m:data_width=17,n_iter=14,angle_guard=2,frac_guard=1,rounding=trunc,m=4",
+ "l2_winner_changed": false,
+ "l2_feedback": null,
+ "back_annotation_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 19766.550734125136,
+ "hv_frac": 0.87707675366375,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined_m:data_width=17,n_iter=14,angle_guard=2,frac_guard=1,rounding=trunc,m=4",
+ "select_regret": 0.047738483731892274,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "rounds": 4,
+ "coverage_rounds": 1,
+ "structured_method": "json_schema",
+ "run_dir": "runs/eval_m4/single/multiaxis_control/20261010-164106-ecb6",
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 160 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ]
+}

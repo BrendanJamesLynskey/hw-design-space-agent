@@ -1,0 +1,48 @@
+{
+ "milestone": "m4",
+ "arm": "single",
+ "pilot": false,
+ "spec": "low_area_control",
+ "target": "fpga-artix7",
+ "seed": 3,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "status": "stopped",
+ "llm_calls": 4.0,
+ "llm_failures": 0.0,
+ "input_tokens": 10761.0,
+ "output_tokens": 3093.0,
+ "cost_usd": 0.008941727,
+ "wall_s": 42.9,
+ "decisions": [
+  "add_family",
+  "refine",
+  "stop"
+ ],
+ "l1_selected_key": "iterative:data_width=14,n_iter=15,angle_guard=1,frac_guard=2,rounding=trunc",
+ "l2_winner_changed": false,
+ "l2_feedback": null,
+ "back_annotation_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 15140.833996405872,
+ "hv_frac": 0.9085280193051362,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "iterative:data_width=14,n_iter=15,angle_guard=1,frac_guard=2,rounding=trunc",
+ "select_regret": 0.03327325150211721,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "rounds": 4,
+ "coverage_rounds": 1,
+ "structured_method": "json_schema",
+ "run_dir": "runs/eval_m4/single/low_area_control/20261010-164904-99eb",
+ "overrides": [
+  "code: before stopping (stopped), one front-mapping round with the remaining 160 evaluations",
+  "code: front-mapping round complete; stopping as decided before it"
+ ]
+}

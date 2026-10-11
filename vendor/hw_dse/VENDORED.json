@@ -1,13 +1,13 @@
 {
   "repository": "https://github.com/BrendanJamesLynskey/HW_Design_Space_Agent",
-  "commit": "a92fe650163d769da96f38727023855e2265871d",
-  "committed": "2026-10-10T09:36:38+01:00",
+  "commit": "b119c8a7bab4105a2fe1858d26dcedbd573c6fe7",
+  "committed": "2026-10-11T08:34:25+01:00",
   "files": {
     "README.md": {
-      "sha256": "b8d825267f53ad63250518d6f81a914f238787957ef2edd1fe3c83c44ca87593"
+      "sha256": "c0394dc7effb6eddc6cac48b6f2e128abc2d80437f5e5df962c462590c19c11e"
     },
     "eval/results.md": {
-      "sha256": "1f6dfd65a0e262d00475c7fe6044ed1beb86a3a9f9d927ee31d2a3d314129984"
+      "sha256": "5bdbb114fbfa0c31f23dcbfbcf4b28b41e8030cf28638dfdcd1da72dd0b1c050"
     },
     "eval/data/ground_truth.json": {
       "sha256": "dfca4e18299d61ebbbf49b79552093cd9a3a906a17738b2cb896806bdf1780ed"
@@ -31,7 +31,7 @@
       "sha256": "bb26f54a9fc55df5436b22faf164f48e4504441815148ef194f12c9ccb63c13c"
     },
     "eval/data/README.md": {
-      "sha256": "b2437456854d3d857688ae6c1a58b579f748f3595664a3231b72ddacd02e8892"
+      "sha256": "4ddfda5f538b0442de9a35d266c311910e5d376bb794517e4312c291837961ee"
     },
     "eval/data/baselines_m2.json": {
       "sha256": "20fff50cad06f269fcac291e22d5f90412b29d7314bba754b137fe09cf1b555f"
@@ -40,7 +40,7 @@
       "sha256": "57316c0e67cde8f6030a8985393a1890f4dcf37b98401adc7de3671ef09eaef2"
     },
     "eval/data/spend_ledger.jsonl": {
-      "sha256": "295c63d009ab440cbb704bacda9031820c56717f9bfff6ceedeb71155c0f5341"
+      "sha256": "dcf129461a9ebd14a910e6d1f625cac5d24b8522eb307e1f4bc5aaf3baf94285"
     },
     "eval/data/l3_verification.csv": {
       "sha256": "55be62e0650d065f11b546832fecc2fc83a1fc64e51dc92b74f95253aa9d182d"
@@ -755,6 +755,486 @@
     },
     "eval/data/m3_pilot/structured/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed0.json": {
       "sha256": "10b68b319f9c63c653af83e9840074a19ff264f32a89d6491162920b486b50bf"
+    },
+    "docs/WRITEUP.md": {
+      "sha256": "cee2280fffe9756fe240f7f82c93a4737758a5ef8ba4ab6b072a6e716b027d52"
+    },
+    "docs/writeup_facts.json": {
+      "sha256": "c928f15805b0133be92a628dba0925b38c6993924eef000a449b31c3fb2f3f54"
+    },
+    "eval/data/ground_truth_m4.json": {
+      "sha256": "090519bcee0967328e3e9ce0645ec0d5d64b0c678b6b8fa1ed4e6ec7cb03a837"
+    },
+    "eval/data/baselines_m4.json": {
+      "sha256": "25f24b22f4b21efabf7d90a6030b6a4c341d8d980c3d670344ff11b589fddf3b"
+    },
+    "eval/data/asic_calibration.json": {
+      "sha256": "41696a6c0f2be6ad117ea21336def845610f8248a0759f69d040b87606d74e48"
+    },
+    "eval/data/asic_calibration.md": {
+      "sha256": "1d5df4cc44b4f6a3e39b48bb6c51ae427b011dd047835ef96797b5333da3a958"
+    },
+    "eval/data/asic_synthesis.csv": {
+      "sha256": "288a7c19e5c908badabbf4e48a9b4dbd801e40c0b848a27dd65e26f2f12d23b4"
+    },
+    "eval/data/asic_validation.csv": {
+      "sha256": "c00213e1ab36e396eace0b2e45a3f86c78a43d83d7e88c6fa489414a8f5d9409"
+    },
+    "eval/data/l2_feedback_m4.json": {
+      "sha256": "7ad23bb009c883d930aad75a3947b4f8abc570dca2e413a56c4df996dfcfc0be"
+    },
+    "eval/data/l2_feedback_m4_v1_floor1.json": {
+      "sha256": "ba82da3bc52ad9162e81d339495da4972dca3b1111631c9f7159ace32be0c4d7"
+    },
+    "eval/data/key_usage_m4.json": {
+      "sha256": "5da682296ce913fdf3bc1c47e2b1479f3cdac8b7abc824679809490b72cda83e"
+    },
+    "eval/data/models_check_m4.json": {
+      "sha256": "f256f68124045f864a3f888ec67053947938a7a07c53eef04554d1d594af5066"
+    },
+    "src/hw_dse/models/calibration_sky130hd.yaml": {
+      "sha256": "94d05e8863810b46232e4c003e2d578eb7e988ada3bcd1bedf0b65f76f9275b9"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_low_area_seed0.json": {
+      "sha256": "3a84149fd79092a8e0dfd65cdb955d3a993e727d080a835e561a6292903fac40"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_low_area_seed1.json": {
+      "sha256": "3600b82b4c7476fa511dfb708c3261ec0b26da1146e13bd48ce1b19ceb175dd0"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_low_area_seed2.json": {
+      "sha256": "2840e4559f01961b8989db16397031f304b6d5fa9843ddcd24165e36005aa19e"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_low_area_seed3.json": {
+      "sha256": "33946f59ad0b06922fedcb02843df0500b6b7febeb2ad7c0d5018e4c7e4cf490"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_low_area_seed4.json": {
+      "sha256": "fd03250b2a9b8dd0a7312cb2f992b187664ed737af555818258693a6f6005631"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_multiaxis_control_seed0.json": {
+      "sha256": "8360d4bcaf54fb710143fce23d1fda6169525aa0dcb628975f207d764d3afcf6"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_multiaxis_control_seed1.json": {
+      "sha256": "6cf900606a611cfed464d7cb196b1caaa80cf41b2d0a2d06307718e0405073b1"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_multiaxis_control_seed2.json": {
+      "sha256": "3a0b23a969c33712b1b99a66f243860791785981da4646ef9835c4aea7237bd1"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_multiaxis_control_seed3.json": {
+      "sha256": "7e8c13dc39c13bd91d439737c1a2c8baab65af00239c866f2ccdcdf26583c000"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_multiaxis_control_seed4.json": {
+      "sha256": "6628650d532318440855d3dc32d423e4ba99e6505cc3fe18e232e083e9d073f2"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_power_50msps_seed0.json": {
+      "sha256": "14ca77722aa31e76cc47e91c03e301eb91939aeabfa212a99352dc11f4738f23"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_power_50msps_seed1.json": {
+      "sha256": "3be2aed190512b7665efefbfeac3f9d5ba6e7674bcdb5e43c0aeb2789f4d9801"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_power_50msps_seed2.json": {
+      "sha256": "5a048883af1251212489d854c6a600000bd8503073d7ae21061fb16a1bd9c540"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_power_50msps_seed3.json": {
+      "sha256": "0c57c47814cf10322f1a0d84064680aea2f8572a0008a7a4fb8e29779c1c445d"
+    },
+    "eval/data/agent_m4/anthropic__claude-sonnet-5.5/asic_power_50msps_seed4.json": {
+      "sha256": "45dde3dd1419c1b33d7ebda873be04c169f44af2b992c061216d877f0824d547"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_low_area_seed0.json": {
+      "sha256": "a2bebf79c5877e9a467390d8d428b298db5dc8e785081969797769b5db73d499"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_low_area_seed1.json": {
+      "sha256": "37f6a4afad31d3f45c3c4a791e6b50bdca7e5d74ca400524742ad33eaf4977e6"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_low_area_seed2.json": {
+      "sha256": "3b229b39f1d6c3eb4228562188c39605d5a778145e3fecae61e2701cb760b4f0"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_low_area_seed3.json": {
+      "sha256": "ee942c623ab8615c3a63f2be95a0de522101951d72f68d67e1a078ee1c207aed"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_low_area_seed4.json": {
+      "sha256": "30e05225d3ab766611ad28319e0fdba964a5304cb3e59685f35c0859adfc05aa"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_multiaxis_control_seed0.json": {
+      "sha256": "b2ab517a930b1dac561f0af244395314d6a4ea4c8e82895eab1c12ff763b5cb0"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_multiaxis_control_seed1.json": {
+      "sha256": "6de15ce24e34562e58037a4d1eebf4026bba2a51b73618227b0369007bda1160"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_multiaxis_control_seed2.json": {
+      "sha256": "0eaa0a4f19b0025edb04ddb89b893b54f0adf737ef12647f576c554a4fce6dd6"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_multiaxis_control_seed3.json": {
+      "sha256": "9dac0a3ff45cc93a3cb256e80a34f51237dbbc170188b9a43193277f6858c4aa"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_multiaxis_control_seed4.json": {
+      "sha256": "6a27edc89f34dd28eecae5da218930ba9b94678f2f6c4a05358f9cd2f634226b"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_power_50msps_seed0.json": {
+      "sha256": "7cb35ff0ecd7f285aba49917e9bde421b52616b857f8bb9497e7a3b80aa8950d"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_power_50msps_seed1.json": {
+      "sha256": "7b569ecbc0d34166b5cf841553ccbcdefc7084edf4bf408c67a0281f3c8ffb20"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_power_50msps_seed2.json": {
+      "sha256": "4e6ccb873cb5bab11434602f0879dd64be8f7c2e21b698d1c45f74c8924f135c"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_power_50msps_seed3.json": {
+      "sha256": "0f9627f3fb45201c7b095b7930c222922b0ba3784e8e9d70415fc822537642d3"
+    },
+    "eval/data/agent_m4/deepseek__deepseek-v4.1-flash/asic_power_50msps_seed4.json": {
+      "sha256": "61241d01a750bd978fabacd423ba2a8ef677305eced3f9e15a8aac0ce1974a55"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed0.json": {
+      "sha256": "fc4cfb5a8f5511b97f18f6e905b0a68311948eb6b574f6a449b296249116293e"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed1.json": {
+      "sha256": "f3890fb65930bf95ba247f64af09f2a5e80df6a026011fc65ac9cb7aabb84d80"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed2.json": {
+      "sha256": "d3bf0b553bc6a143bd870baa8054378fd2cc30a5e3388e6317a3a299ec3b8507"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed3.json": {
+      "sha256": "1b355933d53c4bdfb32d0fde4882c77e6eca8733dbf544f5210367cc0c504896"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed4.json": {
+      "sha256": "e3bbde2ecdc5a8239ef871546f55d81c454310465bc28f6a8f1c5ea8fbb56632"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed0.json": {
+      "sha256": "7153ec112f41cbc1dfc557303e385930954d4a844b9709c08b3bd6503ea7ac09"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed1.json": {
+      "sha256": "7372f01a29eb5f4f04dda9fd8686cd3be14b7edb52c2ee4ce0977255910a0366"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed2.json": {
+      "sha256": "579fa571b58c1b00afdb138ac768079a2b2e806382fef49cba9a7f106a71636e"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed3.json": {
+      "sha256": "f73ae69b5c6ce7cc7b1d2315e9387c897b2dfb36f8ba56f10d6deda6dc530952"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed4.json": {
+      "sha256": "ba6c83868f511e781bd417ff51d42b13a4295f2e0b86115dab06fac762fa1d89"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed0.json": {
+      "sha256": "c527e92eb13cc2232c71f22688da03e0d3da36aab6603d6b093e932cb574bbc7"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed1.json": {
+      "sha256": "98368871a0719778f0dd04dfbb4b39eadd297b6bb469b2e2d1d684d6ccf1c72a"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed2.json": {
+      "sha256": "89c56c62c0e97ecf27b61321b06d1bd3523ebc72689c09f31b9592bba0eab2d8"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed3.json": {
+      "sha256": "6058bdd730c0463f3b85288663ee60c285d81b045351629dc259e566cd357941"
+    },
+    "eval/data/agent_m4/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed4.json": {
+      "sha256": "ce8042040516441dd8660384228eeb6ae9a17c230bd34b5f047146b68e3084ae"
+    },
+    "eval/data/fleet_m4/fleet/anthropic__claude-sonnet-5.5/asic_multiaxis_control_seed0.json": {
+      "sha256": "775c762fd75c87b9886f979d4fbd4093d8e83867391e766a5ea1894677f0f55f"
+    },
+    "eval/data/fleet_m4/fleet/anthropic__claude-sonnet-5.5/asic_multiaxis_control_seed1.json": {
+      "sha256": "b7299dee936fa6aee6f458a7a41731cace8a2968605bc979e4b509754c0158c1"
+    },
+    "eval/data/fleet_m4/fleet/anthropic__claude-sonnet-5.5/asic_multiaxis_control_seed2.json": {
+      "sha256": "11a707c0c2d5980aba0f04df8e31fbed361b7795242333cf17c023d0288e5094"
+    },
+    "eval/data/fleet_m4/fleet/anthropic__claude-sonnet-5.5/asic_multiaxis_control_seed3.json": {
+      "sha256": "3fc4a9ce0b7bafb3c4e0fc6d28f36403e1d02f2fe26e99d2a23f15dbbf588eb7"
+    },
+    "eval/data/fleet_m4/fleet/anthropic__claude-sonnet-5.5/asic_multiaxis_control_seed4.json": {
+      "sha256": "ab82111e7c481cb1fa12c8ca78aa95a99c06d3107202107498a5e4c6e816b77c"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_low_area_seed0.json": {
+      "sha256": "a1417f2c87438e73a8700107d71a50ab76de2d86c61c86751385e646d39b0a22"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_low_area_seed1.json": {
+      "sha256": "f591e8e5a66cab0f650970beefb8be23dce9fd618d4a104dce36c40748a6da00"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_low_area_seed2.json": {
+      "sha256": "6ba7126d25abee51024db60258272d4f6b0c0fd261cff5be77163bb1f4691641"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_low_area_seed3.json": {
+      "sha256": "dbd4b10eb4faf040b096eb349bec37c0629c49f36f7349974de8c3cfbe102501"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_low_area_seed4.json": {
+      "sha256": "8c1a79e043425d91e586d4a36c526ea3b90c223506a7902297730217c2c4c92a"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_multiaxis_control_seed0.json": {
+      "sha256": "8fa500b6a8da01f7f73676fd70eef824d64bde05a2bce837d86e4f3d97bc2a75"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_multiaxis_control_seed1.json": {
+      "sha256": "cd9942b8fbbb42d1882a5503a75677ba29c971cfe356a5662e9293d7b793634d"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_multiaxis_control_seed2.json": {
+      "sha256": "cbd676e6bb364744c0d27c145e7b45e2ac083ba281a733d70ddd280ff8627b99"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_multiaxis_control_seed3.json": {
+      "sha256": "f512a60a23e1c8418c149df3bd25784476364ef7e1e60476686e10d38bd6087a"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_multiaxis_control_seed4.json": {
+      "sha256": "4661d287b1ea65b19f11d6b2e53fef3157b087ffc60f45acdfcf83c139d01bd0"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_power_50msps_seed0.json": {
+      "sha256": "a1d54d45a509e79eb4b4ab40a3b5b83f1b6f1b9e50c62a25d3866d1ac0bc2d5c"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_power_50msps_seed1.json": {
+      "sha256": "16841f01eb743e496840496ab12aa65e0f1f5a131cccbb6da34504b6decd54ac"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_power_50msps_seed2.json": {
+      "sha256": "3225b8fd329358a63dcaac44850db03f32e27f92aa4c6e3b34e574c923c25399"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_power_50msps_seed3.json": {
+      "sha256": "2564ff9009ce7cd0f760d8d56dcc00dc35ceeacb8dbbeb2fe9c17dbcb1afc173"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/asic_power_50msps_seed4.json": {
+      "sha256": "f4d3d4023bf507fb1a911f7615fd50fa8dbd2d32b3fd99ebb1b3dc7d0718d0d8"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/low_area_control_seed0.json": {
+      "sha256": "9492400e9c3105d2fae847b1e04e8c53b7167c43be2e61c31828e524848138b0"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/low_area_control_seed1.json": {
+      "sha256": "f1793cd079fa79d514b3b0d3068e011a0973fdf4fb23bf1ae53c936fe42d239c"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/low_area_control_seed2.json": {
+      "sha256": "e5e655d8c17157d7b15baa5970699d03be97503c2485b3a273bcf2a7e9a83f53"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/low_area_control_seed3.json": {
+      "sha256": "48c29c6f5e7a3ace2215c903640c0d42daf74103b6bc668ba30e46886bd3d71c"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/low_area_control_seed4.json": {
+      "sha256": "9c8e8118e040cf958cf8495cfa48d67ba47ca25a1b0d039a1282303ed09058cc"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/multiaxis_control_seed0.json": {
+      "sha256": "f64abd47743e7904c7d8d7919caf9c32c6b6fe51f991de12f96c66b57d396f26"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/multiaxis_control_seed1.json": {
+      "sha256": "43ca8b4957733a627aba1964c3a5cc610da6fdc95fa6abb82468aaaad6eb3646"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/multiaxis_control_seed2.json": {
+      "sha256": "cba1237875cef180af824570b3c9924d43ee8a18ee5d9a1de6ab979f7edd1688"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/multiaxis_control_seed3.json": {
+      "sha256": "80f9d9e4ac9bd1215b102262d9563fcfd381ffca88118e88d8b1fdc230798804"
+    },
+    "eval/data/fleet_m4/fleet/deepseek__deepseek-v4.1-flash/multiaxis_control_seed4.json": {
+      "sha256": "d1529101aa0cd9072d7425fa38a23edd70298e9172b8a8626faa12ca8cdccf93"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed0.json": {
+      "sha256": "b2fb62e3937d3b5bb0eb91a9eac0724cca9cf5d0b6c206e9f017e3e54bbeba84"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed1.json": {
+      "sha256": "54df2505315cb2980ba1ef43eeefb82d68757f0a86e555707280b58a8dfff555"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed2.json": {
+      "sha256": "e13f7b40a2b4e129e938af78ff47dd8d6815f3b98e5c7e951d8fb5d205d8ce0f"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed3.json": {
+      "sha256": "5e0088e4d792cc447f3f26d64d6303f0c133431cb3ec850eb0ca9176702dff63"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed4.json": {
+      "sha256": "ca43f381769bf2eadf99decd921a91ef322205822d889d152a9f29cd604bd3df"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed0.json": {
+      "sha256": "c98d2b9e1218d297eff27c93c7050734fa0d34134afd04d9bcd58c9e74f8fdad"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed1.json": {
+      "sha256": "eb56350428ebc4635e2ba3eab43c643d3b4753731213d740861ccc3258346fcb"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed2.json": {
+      "sha256": "2dc82556876233a3ae1c4c0a27d1d27e0a149b563c36ea5c5c98a6c448a69554"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed3.json": {
+      "sha256": "02b288ed93279853d8d85906dfa681232280674023d755d145e7188db53f185d"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed4.json": {
+      "sha256": "b45f26ed77443d0900472dfd38836d50b75a2a4e942f05f80891c03db4de3dbd"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed0.json": {
+      "sha256": "e8878d0303645f9b825d9d682c6f5255a072140ff809c18006f203ef11ab07d3"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed1.json": {
+      "sha256": "78a5dbb8dd017622df3686d36449daaabd76dada9ddca677c7d0ebd6ede47c1a"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed2.json": {
+      "sha256": "00a0d918aebfc7c8ba1c9978d4e3d2a0346df32c227a7a48b09a3874c9668b69"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed3.json": {
+      "sha256": "8a4ec76ead1aaf44a3d63497a309501ec0fdf9572e95ac3e1697f7d60b14d0e5"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed4.json": {
+      "sha256": "ee013fcb00fd5ea0b9eb3f7e515427065d349b1955688d1120b11e211fb80910"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed0.json": {
+      "sha256": "c02aaddd3435ae7159f06ebdfdb0969d0a8ae905ef7f436999a8bf869bbd7d18"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed1.json": {
+      "sha256": "df80cd885235a85837c0407b69c3c19a2253c31d21117ef445d09b5a0f7e74ea"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed2.json": {
+      "sha256": "bffd5c69e2bc60d2bf8dd33c290b3c07804ce97870ea4dd359e7d765e3eb48be"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed3.json": {
+      "sha256": "2ccb4fae67b6d59af5be02da80ff4d8c7009c6b5758dc2889b1ef5ce1c447203"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed4.json": {
+      "sha256": "525e54ecb87294cb2dc40b18541180d846f9133f7203cc5d62d0055ad7e7acf1"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed0.json": {
+      "sha256": "c06e746922ba3ff807fce46e9a29e1e429f9d58ea0c2c93c4eae3f4e3b7b339e"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed1.json": {
+      "sha256": "43dd540e87cf257aa1f682cfb66feaf534b193470b1afbda9f96000b16265f8b"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed2.json": {
+      "sha256": "1a4e814b8e508ea0507ddf73d0b7fb2668274c66bf429f80756e88d2a437bf5f"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed3.json": {
+      "sha256": "2027ba551ebf187c9598a24eac96d2141a165ee1dd39d2cb3b80d688d2a86915"
+    },
+    "eval/data/fleet_m4/fleet/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed4.json": {
+      "sha256": "cf2b47c9289cf2174b99c658eb64cef1cdf57041bc90a8d1ca1c7ba1d923db81"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed0.json": {
+      "sha256": "35ff49324b7293f3bf3a5c6c113ca5ea425d0652a87911161e41023d2407372f"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed1.json": {
+      "sha256": "0c6d767cae4a42cbad1c6144841230bd1d7f3285b8a00c5d72059811cfaf6b7f"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed2.json": {
+      "sha256": "6ae78ef2c165a18408dd12b53f8b9d1a31661f151f1949ece077587645812a39"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed3.json": {
+      "sha256": "870e8cf5f2ad0cedc348194a86584209f8dde07a7b196047c7cba54c288aa6c4"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_low_area_seed4.json": {
+      "sha256": "eb11713038c92c84d168fcf8804107d5470c4f986c2fa4dcbafe3d7c95b057de"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed0.json": {
+      "sha256": "ad8201a512adf22f66d4c462671a184406a9ec6f94bcb94284429f48bc800775"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed1.json": {
+      "sha256": "3fac514a079373809eb034b4a3b1e4f739f19dad425d293234889884baecf946"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed2.json": {
+      "sha256": "70b9133e03328a480bc6cfda25597f41f20892c5a214d39ba38d3eaba800e8de"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed3.json": {
+      "sha256": "74965d592fce56e140346d7346938631409fe674e759f2b1f14c0f293cbdcdc3"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed4.json": {
+      "sha256": "14e1042eaccd664b818a0f307e7029d964141a3885cc57e76c0aead31088a4f6"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed0.json": {
+      "sha256": "7f94e4160f2df2dca9aedee2c22e60ddff67ba42f548f9e414661d5aa5c5ca6d"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed1.json": {
+      "sha256": "3c96c57ec518116fc2349110795bbead3c2d2c02eefe4a6cbd189875d1a201c1"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed2.json": {
+      "sha256": "5a964b487dfbaf47aed8ed7be892056ec4a625d165bd18612cfb5db3089cdaba"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed3.json": {
+      "sha256": "9baa74cad93cb38f9678eda08b24b0d988e12a65653904f68711eec9f5b72541"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/asic_power_50msps_seed4.json": {
+      "sha256": "5f5f8c3c8a0e482dc2b07bfc48b3367d5a136274b08c59de6c0f224328bc2df6"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed0.json": {
+      "sha256": "305ef57a37a31b8d348b2f311514a6a972418730b3a43759b007040ffcd25fb2"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed1.json": {
+      "sha256": "8bb448bf4ec4608060a49f424762dff99af8299d126a3b70caccb22943ee4e87"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed2.json": {
+      "sha256": "aa52e7251592e957203ca3bbcec0c8ec16746e9d137860f1d66d3b4e50c45458"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed3.json": {
+      "sha256": "e32ecdfc65eebc987cc4ae7af56fe61a209dcbac73544835158ecad7f8d8619e"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed4.json": {
+      "sha256": "48bd2e909ffdab536a124b6a0a839e5e3a70abb69adbb389772d77efb38d3497"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed0.json": {
+      "sha256": "5a76f103d1cdb1bdc425421864c26c6c18dc7f96b8d20080dfc1c55359a703ce"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed1.json": {
+      "sha256": "676d995695aa1301291cc02b450265cdbe7d22f03cdfa561ee192769d48a6d98"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed2.json": {
+      "sha256": "a72a0373432363fb938b80a0403a779651bd708b8cf732b94b324f3d2a4e17b3"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed3.json": {
+      "sha256": "ce4bfa934a26596bb1eb40b0a2475087616396fcc1f22a4cfa609c876b2852c6"
+    },
+    "eval/data/fleet_m4/fleet_v2/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed4.json": {
+      "sha256": "8a2f4396fa0ce8e4d9903680810680e77d981e369ef9dcfe455f3d4c3632c78a"
+    },
+    "eval/data/fleet_m4/single/deepseek__deepseek-v4.1-flash/low_area_control_seed0.json": {
+      "sha256": "31fe795e361e6a15e11c0bee35ea69e813237a8d9495472dbc84b91deefa0f85"
+    },
+    "eval/data/fleet_m4/single/deepseek__deepseek-v4.1-flash/low_area_control_seed1.json": {
+      "sha256": "1c9d220bc0b7b18e7e1d6741cdf9d5d258d5e7ce04cd2270213a87bae9185410"
+    },
+    "eval/data/fleet_m4/single/deepseek__deepseek-v4.1-flash/low_area_control_seed2.json": {
+      "sha256": "c4d4af026981b10b0f72f1e5fda622d4aecc0cfbdc05f19a4523dc0c02895c90"
+    },
+    "eval/data/fleet_m4/single/deepseek__deepseek-v4.1-flash/low_area_control_seed3.json": {
+      "sha256": "66daff584301bf8f92b3e1cf86d08dd4cdd6d31728f2d096e3f4b6c58b0bc0fb"
+    },
+    "eval/data/fleet_m4/single/deepseek__deepseek-v4.1-flash/low_area_control_seed4.json": {
+      "sha256": "e90ed3ab36493701881668d66999ab0e25e3c74b05282a70586b72f3a9b302d9"
+    },
+    "eval/data/fleet_m4/single/deepseek__deepseek-v4.1-flash/multiaxis_control_seed0.json": {
+      "sha256": "7c9bc3b0c9233bbb86428353e5c732a81d92a7b49624361d1c7ef037e0e9eaa1"
+    },
+    "eval/data/fleet_m4/single/deepseek__deepseek-v4.1-flash/multiaxis_control_seed1.json": {
+      "sha256": "7108c9a63e61c2615c19c1f78c79ac199e0716642d36579280b4c5c7be5a5848"
+    },
+    "eval/data/fleet_m4/single/deepseek__deepseek-v4.1-flash/multiaxis_control_seed2.json": {
+      "sha256": "3e2e9dbabe67859bb022b8bc4abe9313794b397c27889062323353478e660a21"
+    },
+    "eval/data/fleet_m4/single/deepseek__deepseek-v4.1-flash/multiaxis_control_seed3.json": {
+      "sha256": "04404a18afb2e4d15a38df17b0c74fc256026c706232f5fd752b2b5fc6b5520b"
+    },
+    "eval/data/fleet_m4/single/deepseek__deepseek-v4.1-flash/multiaxis_control_seed4.json": {
+      "sha256": "a275f5c059e4b9c2218e46550265020e8b650a55fed013e1fdfb9353aa37fc74"
+    },
+    "eval/data/fleet_m4/single/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed0.json": {
+      "sha256": "c83559256f77cf496efba4578dd7a6a314dfb1ce0f7defbcd801f5a5c940b7a2"
+    },
+    "eval/data/fleet_m4/single/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed1.json": {
+      "sha256": "a2a0c11e58260f3ed5a561bf0db5be64af974e60c9f25d96b48199d1d5558658"
+    },
+    "eval/data/fleet_m4/single/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed2.json": {
+      "sha256": "80358288324e76a7229fcd02ef3000fcd3b175131f0e8ce1212392f14a891b92"
+    },
+    "eval/data/fleet_m4/single/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed3.json": {
+      "sha256": "0344378f185d4a693b0777bb516605ed89065e3a73e35c1e72bfb1d864d74748"
+    },
+    "eval/data/fleet_m4/single/qwen__qwen3.8-27b__reasoning-off/low_area_control_seed4.json": {
+      "sha256": "c6f762c06d4e3a8c5a8cb8b9a9218ea72cc5700834f9263ecec4d48ccb24d937"
+    },
+    "eval/data/fleet_m4/single/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed0.json": {
+      "sha256": "eaf1fb7e85458ad15566c522901b3ad0b269168eed4e7bdd715b50c3686e8c70"
+    },
+    "eval/data/fleet_m4/single/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed1.json": {
+      "sha256": "f77e60bc1aea4094cc5efb448c9d4b05466c8fbc3da5400c630d237765ddaa4d"
+    },
+    "eval/data/fleet_m4/single/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed2.json": {
+      "sha256": "d16493486ed176c4c035db6c807c13e7771dff005014abe4fd2ffaea1c2d504c"
+    },
+    "eval/data/fleet_m4/single/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed3.json": {
+      "sha256": "e53e3b6c6861bf88a54ac4b5e5cd865a6fd85b60155f938dbb9f24494daef475"
+    },
+    "eval/data/fleet_m4/single/qwen__qwen3.8-27b__reasoning-off/multiaxis_control_seed4.json": {
+      "sha256": "aeb4b4157c70a225ed286a6b81b047531a92493294e8e96be9343e3233911254"
+    },
+    "eval/data/m4_pilot/fleet/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed0.json": {
+      "sha256": "60d999580ae2e173e0a3e64b0662984f8fc59100af2304474ed6c2934b86180f"
+    },
+    "eval/data/m4_pilot/qwen__qwen3.8-27b__reasoning-off/asic_multiaxis_control_seed0.json": {
+      "sha256": "0ff229a01758bfa4b15889bbe3c6b2ae05864055e334ee755ce65bdfcf8f29b9"
     },
     "eval/data/traces/INDEX.md": {
       "sha256": "5ac370c025977cc96803a23d15ca6933983ebd8c4598641d5b87e571a05619c3"
@@ -2274,6 +2754,2037 @@
     "eval/data/traces/m3/structured/multiaxis_control/20261009-174907-9186/report.md": {
       "sha256": "14f2315899cefc2c45b42136c8f4b5a533ec6028809e7fd18920bb7a8f3ae357"
     },
+    "eval/data/traces/m4/INDEX.md": {
+      "sha256": "3d719dfce7556f2f6abbc135d60e8707196d27a67156a8f17a65eb42de8ff0f1"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-165147/fsm-p1/evaluations.csv.gz": {
+      "sha256": "d92aac861a0ff4bb7e45295821965a7e76bbfd64e45d9cee809767369e5cf181"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-165147/fsm-p1/llm_trace.jsonl": {
+      "sha256": "e58bfdbc4bbdc93b9005643aa8c002ff3eaaba37aebfae8d12e4afad59257546"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-165147/fsm-p2/evaluations.csv.gz": {
+      "sha256": "16b2fbcc770f29fc4d0d0bcf0f60c8a294614f323f88ff457b276bdcff588c8a"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-165147/fsm-p2/llm_trace.jsonl": {
+      "sha256": "346ea0ddee8670ab0125e8be488543d6044a4f65624493a5701e8431f3e75896"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-165147/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "ef899230ffe189953c131d900c84e45c98c1174d0dc52dedc5e32123de3893fd"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-165147/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "32954e745104a31dec9085c98765db0e3dd8426aa698c06faae9bafe1c23006d"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-190806/fsm-p1/evaluations.csv.gz": {
+      "sha256": "150fef1d3acbb33063b8aab7d532cd4a1d3a36f280f75a65c1b27340cb1ba863"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-190806/fsm-p1/llm_trace.jsonl": {
+      "sha256": "e399581bf7e477b7ad87a815ce723fbec337f85b18402ee958deda6964e95849"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-190806/fsm-p2/evaluations.csv.gz": {
+      "sha256": "b67487345b136a46569fe71b9fd4d34a102fa4bc7cba86f3a78e7cc0cc22bd7b"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-190806/fsm-p2/llm_trace.jsonl": {
+      "sha256": "7d72b0689864d29b11258e1387089689fe87a35de675a3199c61f38e1d622e7e"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-190806/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "e4b12f32949c1d091af4e93259d21de87309ba9b5c09a5fad4a8ed9e1c1c3035"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed0-20261010-190806/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "719ed067f1ace2be0dd57b035a4ac26db86c21736d04138ce5d593b3e02794b6"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-170025/fsm-p1/evaluations.csv.gz": {
+      "sha256": "ce837aa14c603e02e6d53e5571668679cc987a67ba86928e664c4df1a6439327"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-170025/fsm-p1/llm_trace.jsonl": {
+      "sha256": "be010523f49ef89e15f4cee9e32947b03bb56fc0d1a294f32c73e72d91dbf5ef"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-170025/fsm-p2/evaluations.csv.gz": {
+      "sha256": "46d43fede064c5a2140d6ffa8735003291fb07e5c881888ad523f99f353e4742"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-170025/fsm-p2/llm_trace.jsonl": {
+      "sha256": "ba328afc6d82580e661ad91da6d0730d96ba2d64ead08e2079559607cf12f93f"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-170025/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "06f5d6af7693e346a7de41f43f515e62b35cf8422afaa4631f144070c46313ef"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-170025/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "2edc411646204f959a6e35e4b25bf2aebbb59eac9c962889133ef0f966267ab3"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-170025/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "8848b0313d975d94332e1df0d8e947a8dec4ccd6a30affbf685b424b077faf28"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-170025/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "bc742eec8293c453703bd09e75d313fed41cf81304e5b01f5f49ad47bbc9430a"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-191909/fsm-p1/evaluations.csv.gz": {
+      "sha256": "ed73e37180fed444a048cc9089852a7964868f132b8774c53acb210fc1d5b044"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-191909/fsm-p1/llm_trace.jsonl": {
+      "sha256": "91c802b189460af459f01457412ecd014cda7192f97c163aa3099855da788276"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-191909/fsm-p2/evaluations.csv.gz": {
+      "sha256": "deae3ec6d06cca69e86b7696a42c47902aa80aad86cec491a9f2a77c17d93066"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-191909/fsm-p2/llm_trace.jsonl": {
+      "sha256": "54a50657164ccb0ebb621b7fb8dc53a4e592b58f6b5d35ca04443e2bd943aa22"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-191909/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "f2f15c8fc23cd4b47ea3e94790e2061751da9c1847e08f720894d76f379995f3"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed1-20261010-191909/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "012a8e07031e4c584e5dd62004e24bdcb80dea2b53c567fb7b473118a94fe9fd"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-171706/fsm-p1/evaluations.csv.gz": {
+      "sha256": "f2d9e0356661fa51faa3fb48f73194ea0ef6a3ae9e3dca683085167358a8d01b"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-171706/fsm-p1/llm_trace.jsonl": {
+      "sha256": "9cb646ff8b8dd131d4b407887d8d57559a89dcf14b07562e017eb3522170f159"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-171706/fsm-p2/evaluations.csv.gz": {
+      "sha256": "e9f5a0cbbdf6e806fbce9c11b728b2dce30827eae68371b9ad25dc4c621eba0e"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-171706/fsm-p2/llm_trace.jsonl": {
+      "sha256": "51b30a3d988f1c2b7eb810fc274af3b7364ce7105870214fd3a87d9ff1f67739"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-171706/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "65ca0875114559a8112f96b652534a5f246c80a7b3f00ae075ee2821dfb4efdb"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-171706/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "67c4f1d1e7844850b2d3710b1103356d7187e995571677229a52f3d4f3fe0fd1"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-193152/fsm-p1/evaluations.csv.gz": {
+      "sha256": "53c18e8d39c62e3d36d8b7dc7d711bcfcea1055326df3512c6ee949ca1bb2805"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-193152/fsm-p1/llm_trace.jsonl": {
+      "sha256": "de59b76ad6faf917648f1c2b719fd85244c70c0d266a1768f2f4dc3aa66b18fd"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-193152/fsm-p2/evaluations.csv.gz": {
+      "sha256": "caaed54dc9f74a0bd0dfd5f44a310f90d08346d8ad322e982bbe553094ed865e"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-193152/fsm-p2/llm_trace.jsonl": {
+      "sha256": "e50e2c6c2ae33938f54f06236ddd55c46fd384ff879363ddcfdafc4f43dd2e00"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-193152/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "a0c361f5680ac25a2b02869bc55761658784e279674f33cf7515e49a10694e55"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed2-20261010-193152/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "3be3bb7dd4c58ad344d6b1a6e0e1b809b45c8f471076d18314f90575daf2cc61"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-172418/fsm-p1/evaluations.csv.gz": {
+      "sha256": "2f61bce9c5f385f79997c1faa2337a378171f6b50176a6976fbf69f25a1b5454"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-172418/fsm-p1/llm_trace.jsonl": {
+      "sha256": "e5e1223e42c3306b6a545f0af1773f594de24cc4109117e401d0b8a12d7229d8"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-172418/fsm-p2/evaluations.csv.gz": {
+      "sha256": "00dad2656985a817e7271488214c406c8851a1938ef351f46453d3bce4712780"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-172418/fsm-p2/llm_trace.jsonl": {
+      "sha256": "d5f18b26c0a1cb895139374bea237dacd3a0ec3e67091f87c622de3aa3af465f"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-172418/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "0c25bcf6089547cb8dd8d2bbdfa832bfd969695dbb1eef203c32c76d5704e799"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-172418/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "fc8c686fee8776b8ee4c799c94c9dc803896be5443eb696404be8c6bac830e0e"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-194351/fsm-p1/evaluations.csv.gz": {
+      "sha256": "fb8352dc49579a21a8af323fd12f710e90648bfe3ce617d3e43014b236cd39e3"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-194351/fsm-p1/llm_trace.jsonl": {
+      "sha256": "8ad5e72453db3872b805318b05712f610531bb667a04e3ea06f93c48cf1fbbe8"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-194351/fsm-p2/evaluations.csv.gz": {
+      "sha256": "cc009aa012d369bcd6ca1b8949ba94f7e0265be9c4b82871cdfa60cb4efc1be4"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-194351/fsm-p2/llm_trace.jsonl": {
+      "sha256": "2ab9e34a9211c156c81895d82b634b7711fd16a66dfe35e4003b32155b2b6e66"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-194351/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "14b11c52f8cbe4fcd8d2d131ba6caa7014465e2895f67da4b475da5441252149"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed3-20261010-194351/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "d93908ae040db65ea28bf54ed7489e12ed63e370d78e5bed4278370cff84c01a"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-174900/fsm-p1/evaluations.csv.gz": {
+      "sha256": "a8d800b5b3dfc94a44d976b006025eb0cad34da5e17fb908b3af026c0233d398"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-174900/fsm-p1/llm_trace.jsonl": {
+      "sha256": "ee4a7badc62fed75cfc9f45f6524af9aa8ffd9f37fb86d58cf1d0a839eef5cb1"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-174900/fsm-p2/evaluations.csv.gz": {
+      "sha256": "68606639277e2ce81bc42cdc3023d50ca218fd4673ea42edf543fc52f27e5407"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-174900/fsm-p2/llm_trace.jsonl": {
+      "sha256": "cf65503d74ab7ed3eab09c74665116a5bde553a58e9a7226e7c83a23dacf7f26"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-174900/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "1c3168e7c5e92fe3ae7124ca31f248c0bdd0c5e2ae028cefd0b06c82e3cef17f"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-174900/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "61e2a0aa89f4f9da52f99369cc12c2ce63de8a18907f95615c19efd3ff6ae04d"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-174900/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "6f9454e1d0f8b823f7da82b3ea2827d8cc81d7a9ed0c65dad1e33634ac532677"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-174900/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "7590fcce9a94e9940f6a36446d2ced313c7047a85d927161ae9304fad2b520ca"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-201442/fsm-p1/evaluations.csv.gz": {
+      "sha256": "34985e994b0fb21532c17ba6c4ba8ee9e6c67fdfa688d2d7b55fcbf8c493827d"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-201442/fsm-p1/llm_trace.jsonl": {
+      "sha256": "348f14c1f3d0d3a606e6486865761f55007315a392b77ccab3624791509234e7"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-201442/fsm-p2/evaluations.csv.gz": {
+      "sha256": "4fb8196ba2ac435931f73b38150bda4264428c3590658948d80b7ac1b6c50538"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-201442/fsm-p2/llm_trace.jsonl": {
+      "sha256": "117ffefc285287acc483dd3f75a75967fc74a05fa709ce37f47967e193fb4984"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-201442/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "77f73ea571d4e625f64758270e444a7902576c14801f450c75a7a100f5960178"
+    },
+    "eval/data/traces/m4/fleet/asic_low_area/seed4-20261010-201442/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "01dd384d0439064d2048feb247fa66ee0bbc3ba80791c8d6cb2af51cd99c9445"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-165424/fsm-p1/evaluations.csv.gz": {
+      "sha256": "4ea2e51055bfa4b7a78c461943b3ea21cada2ef85bab40f911d4c6381794bcd8"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-165424/fsm-p1/llm_trace.jsonl": {
+      "sha256": "c5aeeb958402ee6ed71ee534b814c222ee313fe4d63cafb4db090aed077e58c3"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-165424/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "bb6ec48dbc0d671ef69be586e580838340ad154580974378c076ad9992a08569"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-165424/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "cc3902fb61994806ba9429079f3fb3d2e9ba08e662585b19ca52b62a56a5fd56"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-165424/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "a560b00e01be1867f2c37402856f970033c7215f9fb96b164ff0c79230cd20f0"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-165424/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "edb2bdd48ad58757a0fc7dcaf8032f07b3f1deec4da4697b05a7fe82bfbd05d4"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-191303/fsm-p1/evaluations.csv.gz": {
+      "sha256": "d137d46324fe9d399e992abd7a6f8be46e52f0709b44fe6750a9d937f189aad8"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-191303/fsm-p1/llm_trace.jsonl": {
+      "sha256": "985e2b2ce217f08d2770fad0fa5179bfa3f1a0ad3a1c17f134f7d97050375751"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-191303/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "ac93a6447ac34114e85e2c74b7afaab945c25f7e90d31301bd9795890d376645"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-191303/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "873290f90e6427796022d653588bd5f6404b703df6e60f63d42eafee9f0570be"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-191303/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "2789e071665b9b094c3a25a7bb618573621f26d2a8413d3922657d7eac73dd50"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-191303/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "766ce118a727b794a7f9299c42f66e8e50f9fe6a48747f82f27d43280c463609"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-205254/fsm-p1/evaluations.csv.gz": {
+      "sha256": "fe1bb5eb5f5e246e4bcedaa6c1bf493d44b58b92b534b30487d6a274f248451b"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-205254/fsm-p1/llm_trace.jsonl": {
+      "sha256": "3d860cc9974122130b3efadf59a97e2109ca096f2b3362dac89efb78cef0205d"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-205254/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "b8275eee6ea5fdabdfc046de92e56b8a78f033020eef3c5ad1a91440ac19958b"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-205254/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "38bd2618447d284b850fb1777b000de27f822a814f54f2a4d097de95cf6400d1"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-205254/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "0cd010fbf84ae9de3fad69d17da629bfb630c1e4088c9f3b6dd9c396acb88bc9"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed0-20261010-205254/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "c7ad00ecec7db396bfb63a72b0820301f0b9e097abd873541c512fbed51ad198"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-170206/fsm-p1/evaluations.csv.gz": {
+      "sha256": "ee7c3a946292276a582bb123bc168bc9bf0132d43216515dd3536e3f7539ab07"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-170206/fsm-p1/llm_trace.jsonl": {
+      "sha256": "b4dfcaab0279451f41f30e3444d459a522f85ac7c67a8e30c737d79efc2a6f42"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-170206/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "3eec5a6ccec297777264761d169276638cc2163ce21b31ce847fbd2357be6e93"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-170206/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "931dee3663cfe27eec5150abcf3698329b0cd5c5c472fcc607720ccad5685311"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-170206/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "01d3835e0bfdaf865427973c16a0aa7e1c4e9bec137cd185f6a65b5c83a84fe2"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-170206/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "aa921963b4936fa17b3bf6b16b04573959a2d15148bfcc7ac9a388124bbfc886"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-192311/fsm-p1/evaluations.csv.gz": {
+      "sha256": "e6a3e1da3d304939c24b925f744e98b084c1f669dcbde17e81e4972ebe50e189"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-192311/fsm-p1/llm_trace.jsonl": {
+      "sha256": "00d15eea5cb5ed104bdbaa4ae62e75292507e6ace6378a040aa27160e0ff3d53"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-192311/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "e3ebcef7e8932b5dfc9fbaaff25dd5647bbb780cdaec4b821acf771f78f4f182"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-192311/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "56cb6168aad8bd9e5ab86bd65ea369e03d1d38170c7394c51be006571eb43f14"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-192311/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "d88f1fc3aae674f54b04e9b8a10cf92e479c57e68916a5640faf1f883e9cd7ec"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-192311/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "cc5a73f6455e56980dd6db4567225071be688ad5100a46635f7bd9a2c873364e"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-205347/fsm-p1/evaluations.csv.gz": {
+      "sha256": "7e22d50cd35684f845978ea018e28586b4324fe53330be42c5f07b9d37ee3999"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-205347/fsm-p1/llm_trace.jsonl": {
+      "sha256": "0182b70a2923d8636361d6b9067a54bb5ff480dad2225aae051694f55ac1443a"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-205347/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "01d5d0be69f8babbd297cbdd017dc40cd7f27e19ecb7720a179353d5c43b5a0c"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-205347/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "f8f253ffe14fc5e0c1ef2f74da307df0694a0bf0a66c671234f83a4d9b15691a"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-205347/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "80df56f9a20e63524ebf1b09e4363cff3903d430b31283d89046f3df5a38c360"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed1-20261010-205347/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "ecc1a04ae5dd756bf03184d849c38b0d089c136b7cf2df58f474ea1ccf2e8a7c"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-171944/fsm-p1/evaluations.csv.gz": {
+      "sha256": "0f403ecbebc344f412081e2f633943f98d8a22ad8cd5c07249f097a280bca646"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-171944/fsm-p1/llm_trace.jsonl": {
+      "sha256": "deee8ca939a55802b81d9b52e3df203f980d98ac8060e3ca4c8f4f43414a796a"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-171944/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "fae976c086c2d3a4da3c07ef931a5f61641fd48e37539f061acf75de2674b9e0"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-171944/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "db53e7b3af28340ddeab44488add38f38447fff2689248cc55d3bf516c8cafd0"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-171944/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "56c0ce3017efa6973a3ed77ede227d399a0568e1599b4dd115b526525521e6a8"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-171944/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "9db88cd0abe514001493ea898678c253445b6f0d35533a520b3aa3d57846aa6d"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-193605/fsm-p1/evaluations.csv.gz": {
+      "sha256": "082dfd861bceefe9b494ebe624d6db5d12f3a895bda70220902c4948c0c43941"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-193605/fsm-p1/llm_trace.jsonl": {
+      "sha256": "3047cb3906c9ebfd8edd725f9527e20d33e50b2a8d1198cf2373ff2785b77291"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-193605/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "0cd89772b1e0d01f91fcf6a35be46ebadd2403523e4b0bd67e639809a0b1805a"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-193605/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "69b902a36d98332521da38ea89189a21cca7c793d17d10cddfc0d6146118e5cf"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-193605/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "985f470e33697e791ab1a31e413e01088c43aea9be526430648834c8a12e7c7f"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-193605/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "da3ca798875c918c705e88003d1577f456bf24f834207745acb44e2986858136"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-205443/fsm-p1/evaluations.csv.gz": {
+      "sha256": "e4f988f0a1303a668cd219b435fbb2dcbb9fa629025b535773542cd8fd1e4ba0"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-205443/fsm-p1/llm_trace.jsonl": {
+      "sha256": "8f6284a74fa0f32552381e104257bc8b804fb0e42e3c2838c57dbd074fb1a70e"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-205443/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "bb314c8659614fc518fd942c279584edcea382adb3123acc0edd3d742654868f"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-205443/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "f780efd461e5d6f718faedf64157931a3199bda9695c94517bef30d7edf4e554"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-205443/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "7a3dda4ee52392afcb49cb8e0627d00b9992dcc6c26d22dd01eb84e84f4206e4"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed2-20261010-205443/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "4b335ca1f84608bf582c20265aef670793a71738cd8fade1034dcf85d1865274"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-173258/fsm-p1/evaluations.csv.gz": {
+      "sha256": "e8f8c77379d0b02c023d2ea702f9d975f9bfb74f57270db3e1ff00cfc24c8bbf"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-173258/fsm-p1/llm_trace.jsonl": {
+      "sha256": "94d5452d0b89061ff604072cdd5fd8594319d1bfdb2075df1581d5ce635b4eac"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-173258/fsm-p2/evaluations.csv.gz": {
+      "sha256": "b26cd42b29416a7f8035fa66f306e2c5ef9add54befd30be67223ad44881c67c"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-173258/fsm-p2/llm_trace.jsonl": {
+      "sha256": "8b640c75a7ff4d4f26272719c072befc4d1ba1ca5474768267a7e3b5153a332e"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-173258/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "a5f941d149ef2130c4a775ae39669282b2906923573e40696e4e69825599e5e7"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-173258/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "3abd910230a39417c812d82e39841da3964a2503c481b1440216b183235c9380"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-173258/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "c1183d22aa3e04995e525bad85faff4cc128137909b0884dc06ad687ecf87038"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-173258/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "aec2e5b61c2459d8ae49d19bb14d839fd8706a94633088efd79d0bf52ea6f1c2"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-195059/fsm-p1/evaluations.csv.gz": {
+      "sha256": "9370a60beaab102694e201bc378d02b8cfbd32c8622e3544c5b5a85b43bb0349"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-195059/fsm-p1/llm_trace.jsonl": {
+      "sha256": "eddaf14725930753404b995f9b3135e02c99a4d0e644b7cc7a5a341714574cf7"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-195059/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "f619d588419d03cad3e95545daf73abd2fbbd2276a51f42421ec393e5b783f4e"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-195059/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "b76739c340649df72abea5578d266816dfabfbca1473dfe48f884a1388fe21a0"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-195059/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "ea6edbad1b0b98848884883f03563c3eebefda666d4cdc7ae9bff6e5bf42fcc1"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-195059/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "6c15a49b3e878c73e348ca1a058d5cbb8e721e59a3f50ca31df34542a3c1be61"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-205536/fsm-p1/evaluations.csv.gz": {
+      "sha256": "4d9b6bd569a90e949e0daaddf1222ee4f8818ab0a3391bc673725a7f1599e4b9"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-205536/fsm-p1/llm_trace.jsonl": {
+      "sha256": "d0358dabed8c8eb46713d0cbb78c4a081d00ad4ae9a9651ca83e71ba6a14c727"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-205536/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "ea4c23d3878f9392df22a79587721ea328947196f070e1d937810287135f91d2"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-205536/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "163ed52fef4790c178da45e3eda0bdc0ea40cb5835dbf0065ac9bfbae5500288"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-205536/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "b6f5cf0d60cb1099e565bd1879371e2243ab7c377c119f8dd2e7f1484b1f03b0"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed3-20261010-205536/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "57e8d84a2a9af5db406378000f73bf147cbf49f2461061e62de81c064f1df222"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-175114/fsm-p1/evaluations.csv.gz": {
+      "sha256": "61e75617453b3b7993554d6e8a49d6e68ac0963a1f85375ba5b074cf64aef01b"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-175114/fsm-p1/llm_trace.jsonl": {
+      "sha256": "23a7eb5ce87d422eddf5ebf4e4fa619efb36959b95232a31c7d97b7743ce68d1"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-175114/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "ff8782bd4aea4a5858d3f8b9f8fdd6723e13bc1d3f10a98fe926b45710baa634"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-175114/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "ca374e0886c0f5936f7ff9b7b080c15a9f3ae9fef9d8618c0690f400809f5ca7"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-175114/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "6635bf0e388d853147f849b5c0dc740cad8fac0115d91258b33d49a53afd735b"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-175114/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "101d67c44869fcb8e4725c2c8542359a24d1348064aea5acd0bb20b435fc2883"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-203623/fsm-p1/evaluations.csv.gz": {
+      "sha256": "30ff99c1a67052618a6d07ab1e9b68e19891dc41f3e20794f9518745250cd3f1"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-203623/fsm-p1/llm_trace.jsonl": {
+      "sha256": "61be6d968a692ce3f74b7924c33923f50fdc77a18043461b0489799854adc64e"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-203623/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "f74e7cf7fc3a94796b3b499f4b226467fff17003ac7b79afe9b382d6729ec189"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-203623/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "9846a2eb2e40a5e4fa2d7cfa9d0bdb7ce7352c89f7538c8ae3298b5f7e734d7a"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-203623/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "c6b21206e5395273e40e23dbf95a7f8877f5a2378f33f7ffcfc1fe55f5de53ad"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-203623/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "8339c44486fa032fb911bf49b14c301a92e2c63733f0fab6b949026b32f86e68"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-205629/fsm-p1/evaluations.csv.gz": {
+      "sha256": "5dcccb777153e306e299fbb65924fb3d9911c6bf557dc18a3cf1db225b82b0a7"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-205629/fsm-p1/llm_trace.jsonl": {
+      "sha256": "35447961dce6b4e956283dddbdf940a71e314c610e51f4d6f3db7462d79fc89d"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-205629/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "d91ca637fa3033ca06489ae97b0a2a0c1cd1796556780a20570d0306b6cb5893"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-205629/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "d68f799de02fc60c94c20b32558db1d9acac2e8a32fc6182d5a6f475ab3ac9c8"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-205629/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "36cd8748f0e668d1f2324d5bde75d14a635e9824f234c3dfad23f155b8f8f7f5"
+    },
+    "eval/data/traces/m4/fleet/asic_multiaxis_control/seed4-20261010-205629/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "18021d2fd7235c3814237010cd1b0e719eb2d22e976efc91878143c6eba368af"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-165319/fsm-p1/evaluations.csv.gz": {
+      "sha256": "5d133a7c6ba7666b454b2ff1b2f7434460a708240afe7b0e48252befd3cce844"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-165319/fsm-p1/llm_trace.jsonl": {
+      "sha256": "7d7f8dd9d4f5269b808105c3b6200d6c9a43604dea3bd7c82bcad5a16fe891b8"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-165319/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "a7f5ecc9a6c0813457527dcc1b74f5379526f26b7a76d442a6481df509231695"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-165319/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "4f859878ae025caa8dbcda1fc1d07e2925ffb12e17d38a7258d5a9feca5c15c5"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-165319/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "9f8966cd60a45a6add0f4533394dbe8035d7aa2e0f0e3c8bf62b14d745bfa7dc"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-165319/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "39b32f046d167874a80af19b63222bec886e6b7f6c0a855483859d1a903c58f2"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-191032/fsm-p1/evaluations.csv.gz": {
+      "sha256": "32f72320d2b87ae94aac6a2f47056ad477c3283a11384387ab32cd7fd5174f21"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-191032/fsm-p1/llm_trace.jsonl": {
+      "sha256": "0db45930a04de9995b5af41c91b2206de590d92db3baa802e7d9bac81d2bd313"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-191032/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "81e59247d8f84734ec014feb466a7b8a0894e741ad807e52c5dbd5442d783b4b"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-191032/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "20fcc2b2bc2d0270b3a0dd37fd546e460bdf2bfc61ee3ea028acd32704e0104e"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-191032/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "77eece9039c400d3e8e4f8d12a6c883396335180a6282285ab1d1e94abb9a01d"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed0-20261010-191032/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "0c2f208101be2010cffc30c727a442930ff1a4bd760a74942a5c5bc1bf430126"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-170110/fsm-p1/evaluations.csv.gz": {
+      "sha256": "8ebba1c2891f0064264dbd110988e783589387dd8596334a8b32087263992d8b"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-170110/fsm-p1/llm_trace.jsonl": {
+      "sha256": "798cd9753ace9f40611aaffb84e6122a927bd19720060ad590afffd2e40c2b74"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-170110/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "33357d14d0be91f3112b4c5f9bca6ed5a4828c4132b1ac21aed464a31f677ab7"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-170110/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "59373f20904343fe4d3aac34bd78da2beb01068af726fbbb07e775be0342c092"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-170110/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "feedf4320b194a87a93321e1e640e3f673c070f86961f0df25b3df11a94bdf56"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-170110/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "48431c1dd4551b792fa7fdb8a0f46f38515f5a43035aa54d68a047de885e7112"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-192042/fsm-p1/evaluations.csv.gz": {
+      "sha256": "e9f2ea842984e72d1b67401945e4b9fe40d8283d13894aeec10a49dfa3bd10e2"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-192042/fsm-p1/llm_trace.jsonl": {
+      "sha256": "786f0f79d237b3abf87f13cb779e31f5b7dcad2f95c8e869a551f34b635af37b"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-192042/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "744341cc3653f148805028bce4940c648676a0f188d8591adaa4bbb5b510b9ab"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-192042/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "116fc1a1740a1fd79ba167c4753af284a602762b5eed309f638eb8bbf33202b7"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-192042/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "330e0333b8bb970b27a5328a1a60e0697cdf47e0f118384acde089dddc5230b5"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed1-20261010-192042/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "5729538348b559b43e7547cf24b084679974e43d015d10c9dcb9343b70652f47"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-171830/fsm-p1/evaluations.csv.gz": {
+      "sha256": "e1231b27e33deaf3e6222bab605959df5257789e7e40208f04038414ccba8425"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-171830/fsm-p1/llm_trace.jsonl": {
+      "sha256": "b88f0205aa3865cea3f00908c2960201332214f0d94fe98e6bead7fe71b742eb"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-171830/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "c191a700123769428b490a0c315ed1769fe79419ebf409032b09aa8372a89ab7"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-171830/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "3ba8e0fa18274304ad7b6d0e1c3d7254ed831e14fba3bd51a7c6fb67d03c960e"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-171830/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "6aa246abe90d2017d260e031240302f208a043aa9ae78817c872053563efccb2"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-171830/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "2a7a91553ef22ff4b063aecf461fd151e963e4f9762ad2bee0ff38a7c97986fb"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-193416/fsm-p1/evaluations.csv.gz": {
+      "sha256": "06366e699f094fd3368b52bdb7be446aa0baf6edbbc0ddcaab226736403fd5d8"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-193416/fsm-p1/llm_trace.jsonl": {
+      "sha256": "b13bdbeb6f1235eaeed36abed8d6b5413666236c4a0ff5e40014fc9e876e0af7"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-193416/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "25c717906d48f7e6d4aab412e23205f99fc935e15fa2d26cd32d698fda9de10f"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-193416/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "4ef7c21aca2dba45d38fd82db4d3a52e52485b747c9ae0504c943d3af0c8b258"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-193416/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "27fd38854f45b1afe3ba240e1984c420be976ada48b9cc2b74ac1793fe785942"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed2-20261010-193416/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "d7e920c02c92076d6d59b3f9124a2e4773d699d37eb18dee295469fc6deeb998"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-172519/fsm-p1/evaluations.csv.gz": {
+      "sha256": "f1d3bc75a055133d4b760dd304c63cc1245f8a01a9b19257e554107bd2f7f36b"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-172519/fsm-p1/llm_trace.jsonl": {
+      "sha256": "fbcf2335e4a8b9d5ea758bf0cace6e96a9e7a744a4681cb3963b92f8c6f52c6d"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-172519/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "df9ce49097234b01954dfc55568e1abe5932cc53ce6013d42cb83b2d5df46e33"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-172519/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "65df9f09d587d841fffd768725e85e7e88cec54b5832c0c0a4fdc37c60f784c3"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-172519/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "5a0a274384b31342bfae4a91af392c83fc550706eafea3773099ff3cfb681a1d"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-172519/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "9557df4edddac3d2769065fd9d4e2d5c41f7113b6af7e20f5698e678fcd04de1"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-194547/fsm-p1/evaluations.csv.gz": {
+      "sha256": "2a8729aea50a9386af7b8509c6deddf680dffcdf9cd5f17ef29dfa7c4c424bb2"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-194547/fsm-p1/llm_trace.jsonl": {
+      "sha256": "383b8cdacd762c5de8c7298e769b597528941647b631cc021f7183cb6a936675"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-194547/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "74285732902fc1f48d0ab6710ee0d72f7f9e1de05aa00b34c2696963083053ed"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-194547/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "6936e13eb222b54dc641726ccd22042890140139757087deda31e9ecc3d17466"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-194547/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "0029d6c6d321584167523f5c138490450f398f987d4224aa85d71bfa1f24f68e"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed3-20261010-194547/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "1d09dcfa7f1d55f63fd680e62bc6d5b6c73d2bd6782b1ad908ca51c6da041679"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-175012/fsm-p1/evaluations.csv.gz": {
+      "sha256": "4773ac3479942938e8e63076edc1a5cea611e5d066410bd13a26a3067974efc0"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-175012/fsm-p1/llm_trace.jsonl": {
+      "sha256": "0f8fd41ca47328f40a1c7390a41a28afacd33aa990388cc9cb0206db0f8abb83"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-175012/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "fc9a99631dc8d87583736b0e1800320387f8af3ed41f7dfad1df12c6982b97e0"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-175012/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "b5cee02114e83bc50e81bfe4cafbb61c0998889b631488dfe719c2313ad5e643"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-175012/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "63a1a05650325929d7c8fb78c6259cf7b517cdb9afa75148324281f94436588c"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-175012/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "6b08e43fa86f2659d143683bfe43fd8166c4a20df40a6078b37f38ab756862d3"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-201713/fsm-p1/evaluations.csv.gz": {
+      "sha256": "cc1adaa04de6ca09a45a38f2a2d82cab9833c3f5c4df1104ad4d10a89e3d2289"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-201713/fsm-p1/llm_trace.jsonl": {
+      "sha256": "6032c34e85613166f056c4255e75919175e3546e47e55e4541be968d01265fa9"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-201713/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "cf75ea0799aeb92b85c5f6eb3615f2bf1196a776d7e8f2bdfb67e8f07ce7258e"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-201713/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "4b928d2a5b85490ce8d12266598af085fc979c3d271438126c29e5c31271a32e"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-201713/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "823113404cf9adc5ab21c6abad7e047a03c1619c8c89487731d265f2f24873ba"
+    },
+    "eval/data/traces/m4/fleet/asic_power_50msps/seed4-20261010-201713/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "97a50ac51a5783ee4a479ef3f1d2b4ceccbacda331202cd0bd99a150b14ca566"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-165840/fsm-p1/evaluations.csv.gz": {
+      "sha256": "c3297899668134298db035fbc188cf2c3f7fb74b5533661eb6d67117e3c00ee7"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-165840/fsm-p1/llm_trace.jsonl": {
+      "sha256": "961ae6ac4a68ed4145b2332dd1e102b825f8984f61dcfc344a32dc6ffeebe9e1"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-165840/fsm-p2/evaluations.csv.gz": {
+      "sha256": "4aa587c919948ba003002996bf94d2e3c7e093c07dd5e1d27259973379e32ed7"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-165840/fsm-p2/llm_trace.jsonl": {
+      "sha256": "865312f729b00313369565e08aa753e75d82ec61a06894c393028eca5226314e"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-165840/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "4aba0f1fc2856592444797cb952dc4d7c497c4ac35d540de8716765227b8e432"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-165840/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "5fa03ab00cc6054a990e5c693fed980bad45b230140f2dd7ba2c5ca6341e30c9"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-191505/fsm-p1/evaluations.csv.gz": {
+      "sha256": "e011e190f46449a9f06d923fb69d6ee9cbae284e4c78ca8128241504373f05b3"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-191505/fsm-p1/llm_trace.jsonl": {
+      "sha256": "617217ebdb37eb981d15f59cdf28bf381a15288451446027721a7407e36c48fb"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-191505/fsm-p2/evaluations.csv.gz": {
+      "sha256": "edb6b52d6581c70d4ff5fe58eb2290022fc9a79b78e16839a4070fc54c24c80a"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-191505/fsm-p2/llm_trace.jsonl": {
+      "sha256": "2a66b7bcdae1e734bb4889bb7a0e041e7b43274cce65f58230000ef28060164a"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-191505/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "cf819a8028c152dcfc7ebfb4dff72db5254c969fa25b207ee8ac364d586dc62e"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed0-20261010-191505/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "0c65ff6c247072ae7d1aa282c6e52df7441b7c4512e5c442f2c9b80af93c72d8"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-170324/fsm-p1/evaluations.csv.gz": {
+      "sha256": "a71fa98d7520cd875c33103c55625a79bd0be1b20b88ff40198a363c4f4c891e"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-170324/fsm-p1/llm_trace.jsonl": {
+      "sha256": "66f32ad0e94fdba62c9cb8171f09688d219e07d10f35b1b3060013b92966d3b7"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-170324/fsm-p2/evaluations.csv.gz": {
+      "sha256": "cf15cec23e32ea637356be0c9fc5e2a6ee2807ad454d0960a837e88534d78574"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-170324/fsm-p2/llm_trace.jsonl": {
+      "sha256": "49684a6b4133a498561bdb5a6937f34da567bc6feb8453a7c254000cb35096be"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-170324/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "9ca313ffb8acad540d017133ebdd303e565a173047683ef75c3dbcc0c0091895"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-170324/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "8cffa5ade8deb1bd5004391786c68bbaf330b7d100ae46b353bf30ec17214318"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-170324/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "f0ea774b3639b7e8fa609886e64b1a5b7ba8ea7de38060af657ba6ba1ed53743"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-170324/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "6a639887492c70bb26f93bf1a7c244fb121db5a02218134549156a8c872ec936"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-192721/fsm-p1/evaluations.csv.gz": {
+      "sha256": "d251ebb86cba9cf222dcfc5a54e0ffdd2eaa249539724cc1944103cd970d5460"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-192721/fsm-p1/llm_trace.jsonl": {
+      "sha256": "4da455f6b98f6574d2ddb616802da3507e3f5c54711543f90e6703e8c336edfa"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-192721/fsm-p2/evaluations.csv.gz": {
+      "sha256": "2380618cfc4fdc18c98cb06326cc3f560a5d436737c4631b93484635a3d49e5d"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-192721/fsm-p2/llm_trace.jsonl": {
+      "sha256": "cdc26e1995a72d620ba2e94593450c1c09fae85e371655a39f871f924b9fb0e5"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-192721/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "17bf1e63d802f505dc955fbd2b8b374bdb67331aa17fbcffc567ea15142d9ea8"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed1-20261010-192721/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "4d88107417bb0815d594ca12ee4db920e430728e9a5389a740d501a06ff0e9e9"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-172138/fsm-p1/evaluations.csv.gz": {
+      "sha256": "7d34b8d8f56a3e95b21fe7317c5ae7b44794d5524b18e677d4061237247b0845"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-172138/fsm-p1/llm_trace.jsonl": {
+      "sha256": "d8effdfd2704428b48279b77d6e0b4d4acd4c86e9286e76319c88e489998028a"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-172138/fsm-p2/evaluations.csv.gz": {
+      "sha256": "8526cb4077d55b45bae36acba80db4e13201a871d54472a0b919db7820381cee"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-172138/fsm-p2/llm_trace.jsonl": {
+      "sha256": "8195c6efce7bedf3af7cd1d7e156d2d54f163b28e0778a7289b357f764096b17"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-172138/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "cd0277526feadcd2325106a5d9396b887cca004747885009fb4f62559eb8b67f"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-172138/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "e7c1554055ae2146be87e005a92a6377e7729fbda2ad853777932128acd038fb"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-193940/fsm-p1/evaluations.csv.gz": {
+      "sha256": "cc2e9ffc370edd0f0d0cd5216645471b16f3c6b39ba216b6c9c3581dd51d4762"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-193940/fsm-p1/llm_trace.jsonl": {
+      "sha256": "48472a7490505b54c9ed73c14e610b52a2d7f1f7f6dd27af7277efedbf5631ca"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-193940/fsm-p2/evaluations.csv.gz": {
+      "sha256": "5450e2042cb4766f8d47b836d7c39227280f84f4021d2462a43330885c582343"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-193940/fsm-p2/llm_trace.jsonl": {
+      "sha256": "b8c18c416621fdb38a50e7ad3b3b87866255aa512dd5ea804f5fef2e449251d3"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-193940/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "3fffd19c81ac206d9176ab1a37f1b1d3adc8a8dfcd7c9a0bfa5243fd61765310"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed2-20261010-193940/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "98fbb616053bc611156359da0104c0c56eb5649fb39b85f7bd800007aa78bede"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-173522/fsm-p1/evaluations.csv.gz": {
+      "sha256": "9eeed2429db355e75dfc2722f91896146d7b2b8c0e7b3c2eba031708053e3acd"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-173522/fsm-p1/llm_trace.jsonl": {
+      "sha256": "50e46cdf8f91f08317292cc54f0651a9a199dae75d801d3db80afc738ad3158e"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-173522/fsm-p2/evaluations.csv.gz": {
+      "sha256": "9cc1db7d12ed5c5f917e8ea0ead5e75701ce5fdd5de095c9bff4700b0ab6a82a"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-173522/fsm-p2/llm_trace.jsonl": {
+      "sha256": "92ac7360842e39364ceccd1a403081f359d00ed1e2afe9a9a17ad1a5f634c7c3"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-173522/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "60f82083ac51970df7ed27706f26db4da394aaffcef7fa18aa6ce880464d20a7"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-173522/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "c34020e2c0129b42afdd6524eda8c7a4aea14c123f2733097c299a6e0d74a1a2"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-195419/fsm-p1/evaluations.csv.gz": {
+      "sha256": "a69dca52d7a0538b7d009e86c3ec249494ecc9182769062e6109f114e7a6ff73"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-195419/fsm-p1/llm_trace.jsonl": {
+      "sha256": "3127d8135a8be4c79b29f575cbfa9bc30a068b3e383e98ff676d42e7afea4239"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-195419/fsm-p2/evaluations.csv.gz": {
+      "sha256": "d92e181b8b0ac4badccb9abd0772a787e0bc33e2207a1afa7a3c0ff73a3921b3"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-195419/fsm-p2/llm_trace.jsonl": {
+      "sha256": "4bfa25b4c10820fafc5bb1a0839acd6573021d26d993905daca26523efbfe412"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-195419/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "c24bb442cac710144ef486d310ee324c60cb6555068585ba2a45e0504c9a633c"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed3-20261010-195419/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "76e31a57851f827e839929d9ced0501c9248a891a76bc22f33bbbde4ce441918"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-175308/fsm-p1/evaluations.csv.gz": {
+      "sha256": "4c1d65df19e9f05c57b5555ad32a8e80be317910d180c18e480a859da4d26e2b"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-175308/fsm-p1/llm_trace.jsonl": {
+      "sha256": "2381dcba786fbc38e177b3b552e6f7c71005ec372ecb8f047f7905e8151487d3"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-175308/fsm-p2/evaluations.csv.gz": {
+      "sha256": "e0cba234ef08c190f45c89bb12a553eaa4e92f0dbee821712a451d334fb49a66"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-175308/fsm-p2/llm_trace.jsonl": {
+      "sha256": "59b8baab146aa736ce657ecae7d0d47e20ca76a95ed86c3b1baa9dce38432d8d"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-175308/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "d79e747f885e3519cda82a35b2aa8490cb4c2eb1d8d80a7c76ee96508d2ae4b6"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-175308/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "dabbf59c88e2675ea54d0f671c8e48cf7084851b4bc63317011c5e3127770f4d"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-175308/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "d91b9a72401dc97aeaeee4a35adba71835540cec49585009673d0dbf32750f3e"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-175308/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "569574076be52d2713233d0cb92e58338a2905c48408bf3de0ed4b16964e86bf"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-204002/fsm-p1/evaluations.csv.gz": {
+      "sha256": "babdde3a1a3b21a56d6bf1a615d2aff83c13f360611386765d2c119908565736"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-204002/fsm-p1/llm_trace.jsonl": {
+      "sha256": "6c2fdbf00aeed638e586887c798979c3cfd592d8adbe129e93acf250838f67f1"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-204002/fsm-p2/evaluations.csv.gz": {
+      "sha256": "b53be664031889a8ccce66838b347c205730ee5268928eba5e365bce86039d98"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-204002/fsm-p2/llm_trace.jsonl": {
+      "sha256": "a9256e38bc3b221aaa645149f1ce5483f5767bd10b882e37c374a06518724f01"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-204002/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "c80b4db8ffedbf7fca4ef208ddb584bc2490d9e6c0160ff896af474300de7c57"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-204002/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "2a31419ef013113198b7839b681ca827d88501cf7090e58faba2b96fd8b06b14"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-204002/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "8acd0298f9cbb2ca38e94ad16897fa84c92d3d0a736ff59aa6239dcecf907ae1"
+    },
+    "eval/data/traces/m4/fleet/low_area_control/seed4-20261010-204002/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "e519ef278896a511d489ef0ae614ccfc34b7e3bc27f27ba5b052e4d134b1f5d9"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-165920/fsm-p1/evaluations.csv.gz": {
+      "sha256": "9f07d4b42a2e1162308fb038c072fcd0d7ea8dc3037132fb08a4eed0a75dd621"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-165920/fsm-p1/llm_trace.jsonl": {
+      "sha256": "444b6236e5b9cffb5c9cf7accdf3a85212582ca5becf60ad2d3eb742319e5dd5"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-165920/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "9dd5a613107e012e3f1b540de6cdfe5fdd12e05fda15903ac004d9a71a3e440e"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-165920/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "aa316e424491e02989d2c4af823d7b4efc919e8a52ff96bd3eba4f22f7584b90"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-165920/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "d8b50c2cf3eca9061ae09718532e88c3e1f65196cf906d2aeae25a002c48b4bb"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-165920/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "0c19d18fb6bcf3a46be67a59c1862e6db67e638bd331c07325e1a3b71d4d31a6"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-191715/fsm-p1/evaluations.csv.gz": {
+      "sha256": "1d203e1b2c0788cdddf1d357d59fe7b35c0e083d4f2cbf239abd7667ead933fd"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-191715/fsm-p1/llm_trace.jsonl": {
+      "sha256": "bb884f593fc651cf68fdcb5e5ca2922554d50efe726543a009105c8c9c70d64b"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-191715/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "d5900d8721dae173b679d717ecd8d4ecdf59382dfeec60cee2593d39d49dc3a8"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-191715/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "7b876d2308818fd9940526f0ec2ea20ff929b2f30fefbd62cf27f7f9a5dbe819"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-191715/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "f9775a7b0e767890c0b7118832a7028344e4dbd1932564eea37e7bd98589c167"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed0-20261010-191715/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "678951e107c6486489561cc69104aa7b3048b9917a419020d6c4a2ccf9039c14"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-170858/fsm-p1/evaluations.csv.gz": {
+      "sha256": "3984ede9a23f001dcc5d34548cd08fd21b5a6858d119f1c891ef4017289f9158"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-170858/fsm-p1/llm_trace.jsonl": {
+      "sha256": "d94121064f3f06f12be8b15d2ea6b975458b737e7696cd53a35b586559c1a5b4"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-170858/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "f27a25652c967ae756d423f77b11587bb2ebdf8298ec835a95827a896c2db3a7"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-170858/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "a7a4920926902953da0787338efdcd0a696f78a5247211ef70359023a7699a61"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-170858/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "d12dbc7927fb08f98d18d50c2421d72ee1128ccffd744d78bd87619c57e50557"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-170858/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "a17c7f6370a0b39a070a1cc3e72609d3aed27a9a3e46b02ec8e4f177aaafd003"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-192858/fsm-p1/evaluations.csv.gz": {
+      "sha256": "892aa775c28258bd29a3ac3a25e126265310084351966e72f963f73ca30285fd"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-192858/fsm-p1/llm_trace.jsonl": {
+      "sha256": "d7a0cd3eafb43e749a247591746e49345390152c918fb146bb207effac8effba"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-192858/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "a2598992f8a71c7d39c3e5579317e724ee7d40d6bf68d5a3db71faea6232ae54"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-192858/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "936fd4f6004b6731c57fff6792153cab416af351777eecaa46b83b5e8a6c2379"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-192858/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "f3b533fd655039c490074c1e5730a756fcecf2401f0999ac39b406be4a217432"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed1-20261010-192858/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "128482d2ab8f6f78fd1335d0e6c44981ea0c450ab1e2c3dbd1dcb334e7c54547"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-172302/fsm-p1/evaluations.csv.gz": {
+      "sha256": "065f52cbc04b27b5c9f552d2db5313c7f3a70807f2b1b9349f67adae9235c2b0"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-172302/fsm-p1/llm_trace.jsonl": {
+      "sha256": "1cf8cf94c96c867c53e8590abfef4c91d47ee13288740ba9a8a0541b0fea52fc"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-172302/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "9a1ad3de33524c6b38680a6a5da664a0751b61bae83dcf488bbe2f61d6683f6e"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-172302/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "2274e7238dd0d7f99941c121b614c4c9508f2b9b5cd56e1911d20d6eefe0a23e"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-172302/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "ec99d932c2e5af28d065d15219be5289d4fad9857f9b7b0bf1917b57f3d15e2d"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-172302/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "ff042bd4425fa311f58850b78e96a892b1865e05e580f46ff29f91910e015157"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-194136/fsm-p1/evaluations.csv.gz": {
+      "sha256": "1471113c973db0e5ff56603fea1ea3206e5494c82e4d8121ac8ca8fe1d75472b"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-194136/fsm-p1/llm_trace.jsonl": {
+      "sha256": "9204f5ce46aec4c4d3f9e8e4b952f70b50229bea06f0df7167153dbc9eada159"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-194136/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "e3d6f3cc0c87318e940b2f335eaec784ebe9782f7067f2777f631cac054a9c6f"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-194136/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "f44a5374c2cfc4a6f71e4e2e03fa84b44b976f04881a920b0a8f3303fd7d6bd7"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-194136/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "f0530d943ff8cf53ab63299bd80fde033c83cf86a0f74deec28b9654f3050dbb"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed2-20261010-194136/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "515eb972a7e2c22b14f18f96fd4cd48f1560c0196a5ff0b435ffaacc36a3ee89"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-173620/fsm-p1/evaluations.csv.gz": {
+      "sha256": "e827fdc297e035d5dd07748b3b23c9efd1defd1942201030c8af2358649a52ab"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-173620/fsm-p1/llm_trace.jsonl": {
+      "sha256": "88ad7a6059beaf5506eb09eedeae6f7fe8724f0e35f4b09d7fb38431732840bc"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-173620/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "134d0d0a2e948e09dc4dd3968d5e5ab84cebea510f79fb7c431988978858a385"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-173620/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "fe818c1b22655903fe084675885e4d9e20c91fc28911936be05d4d8dd88d59c2"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-173620/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "eb085ae744e362e983fb97155ec3eeccd6f61d341211d31afd6bfcf579ec0a49"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-173620/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "38672fd96d7c3ed429eba2f0c7b9e9656be9d3e71e409e52b58b6b4617e934ca"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-195726/fsm-p1/evaluations.csv.gz": {
+      "sha256": "6b641ecf74882e17268d0d9abca1639358e35a72b696c4b32de71b45e32fc838"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-195726/fsm-p1/llm_trace.jsonl": {
+      "sha256": "de6943c38c4981e0eceb577b0c93dcfddec87a6369a30e69aad40866ad30829c"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-195726/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "de70b45d0d5bda18962158dc9e6d8982d9b37c5404310feacef460ea24a0c352"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-195726/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "15ed14afe877c4677b70c6bfeae4ffa38522843a6df30b96407b96d426aca948"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-195726/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "e53c6b148814e01c58f7a48d516daef546f07f9b624628063db3b92925613089"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed3-20261010-195726/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "3eec15e7d175366e9fd656e0fa49d634fd5edb4c4074950a823db66b1c7e6b8d"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-175431/fsm-p1/evaluations.csv.gz": {
+      "sha256": "3c10b8e060dfd46d3c64331cdb158001816494ebcf84f831d8f196d00336fec9"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-175431/fsm-p1/llm_trace.jsonl": {
+      "sha256": "3ee2f02db3570aeddea27fd61a68744b32bbfc0ce15b4efb5e3bf49a70fb0ea2"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-175431/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "a328e241ec2f665a8efecc394b34c596821cf3dab49e71119523d88b84a9b644"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-175431/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "b4e3694cab7a579653640f483ef920393477d169c9c033e93668e0c6a35569c0"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-175431/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "9a0554afa9e153635879b10560a418488d79bcc24e6b53c6f5859fa9966ee1f6"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-175431/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "719c40b2f1ffdf61569b09597b2b10e89ec510ee65c4512fe9c2b110ce540af5"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-204141/fsm-p1/evaluations.csv.gz": {
+      "sha256": "065ea00adbdca2228280e9546dd6762b53d02426a2b6e1c2be87d0e8f2eeafd8"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-204141/fsm-p1/llm_trace.jsonl": {
+      "sha256": "d61e21feefb058356a219733c73d5d5370a8687c49bd364e2798c3d5157d4151"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-204141/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "7d4a3eff13ce62e1ec319abef4572603ff25131f1d340b60845f3ba7577e457f"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-204141/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "a76ecd7aa4569dfb9209d8a09510cab7dbda7b2ce696cc5cac5c5e7c14cbdc03"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-204141/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "4bc8d38d30ccae30dbc5be825a7c31a04f06666aa75ae14df801f552c9368fd7"
+    },
+    "eval/data/traces/m4/fleet/multiaxis_control/seed4-20261010-204141/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "9133a4d33ca80fce51142eb55cc23a39c26a5e07c66fb66da4146c0ec9d03f8a"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed0-20261010-222943/fsm-p1/evaluations.csv.gz": {
+      "sha256": "5e2bcf12cfc39e0db38f4ab9bd648f53ed9ad58f33b088e00d1f25d61b4461bf"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed0-20261010-222943/fsm-p1/llm_trace.jsonl": {
+      "sha256": "f2445dc1a792451ada1a4076a82ddecb905e572a763737bef92cd30863b76d81"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed0-20261010-222943/fsm-p2/evaluations.csv.gz": {
+      "sha256": "f44bcfdc65c03126fff2bd9b619ff04bdcc82f259dbf5068cf0f90cffa14ad70"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed0-20261010-222943/fsm-p2/llm_trace.jsonl": {
+      "sha256": "7235896bbd39dd11d675f066cfa4ae63eabab6c69a832dd509df06dde0632624"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed0-20261010-222943/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "69741281012eacc344a0666604a5f0e4f218166e51aa54dbbdc3b18775e3508e"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed0-20261010-222943/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "a6162453d531ce1fd73f2ec6ac695d162d43acf4e81795215f895e1a644497b5"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed1-20261010-223749/fsm-p1/evaluations.csv.gz": {
+      "sha256": "c4f19b23ba132a320cfb3e74705913b3a771164ea515be1d1e02d45b240d4b07"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed1-20261010-223749/fsm-p1/llm_trace.jsonl": {
+      "sha256": "f8fd9634766f74ad06e735057107b10d96e339d7a0b64b28617ed8a7e10330ff"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed1-20261010-223749/fsm-p2/evaluations.csv.gz": {
+      "sha256": "60b4819f9e06ad3e3778229b7ea073051210a73853c5fc75642cf0e71461158f"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed1-20261010-223749/fsm-p2/llm_trace.jsonl": {
+      "sha256": "0bfbee02f201139e2ace25f84574c96f92c2086690c633762b4bb8169d6d18ff"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed1-20261010-223749/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "15defe8271476bb998e8e25f4e242d51e47ae2c2e5d828380e3cb59e1109d80f"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed1-20261010-223749/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "a9bbddaeabc37eeb997f78ff72ed8814a5b2464097cc1749e296218a67609afe"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed2-20261010-224936/fsm-p1/evaluations.csv.gz": {
+      "sha256": "3b7910f1ef400b627af9ffbf98a52567d2d5e304e96c478da1e1ec04e5670512"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed2-20261010-224936/fsm-p1/llm_trace.jsonl": {
+      "sha256": "dfdeffe815abc66fe958b64f0d642a8c519c7b2370f5dd8c48d6ae3f56779b37"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed2-20261010-224936/fsm-p2/evaluations.csv.gz": {
+      "sha256": "a9255f866c0a08959211ad798826dfb7b0bfdb44b6fb2a9943fd2896b17e0291"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed2-20261010-224936/fsm-p2/llm_trace.jsonl": {
+      "sha256": "ff6351d5d825a02ae253b3675cf8b3f04c6074ba0783b605cd3c6846d7424770"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed2-20261010-224936/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "dc49055dfe12a6e1fd881a7715c9d8dbbd7f1a298582036b2d361a29c491da08"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed2-20261010-224936/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "053b53877ae94d738703f95cac1a6c1af17231bcf8c7085f871c4ae073747e00"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed3-20261010-225548/fsm-p1/evaluations.csv.gz": {
+      "sha256": "0f3bde3b0f9ccc7e988b4655d7e661739e8d8db4aa6a3541252b531ad0c1fa77"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed3-20261010-225548/fsm-p1/llm_trace.jsonl": {
+      "sha256": "abbd35174369a2c6ce5d8b690c40492f7b5fa3329478511f99e05ac2f0f61aba"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed3-20261010-225548/fsm-p2/evaluations.csv.gz": {
+      "sha256": "a72ff7152f489aa4c3aae2f05a178603827721630e75813cb08e3a332c0419bd"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed3-20261010-225548/fsm-p2/llm_trace.jsonl": {
+      "sha256": "b3495dfb3aaf8cf6f7d3a9baac006d14cd555cbb947edffb62ee44dc8b848908"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed3-20261010-225548/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "fb0b54136cc1e77d95ceaba20b29897eaf0cc7986264e8ceb9c8e4e71b1aa2b0"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed3-20261010-225548/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "128b358bec0a14d1a05ac0366e45a3a88bac420c63e99be289d61f585185bae7"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed4-20261010-230216/fsm-p1/evaluations.csv.gz": {
+      "sha256": "acf720fdab926435faa26a2bd123eca7c138e62ea397f60ac35f48409410b7e2"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed4-20261010-230216/fsm-p1/llm_trace.jsonl": {
+      "sha256": "f71bc6a9cf388d67fe9786c6297ffca03d161d36ee2cde2341b8d8a87925e799"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed4-20261010-230216/fsm-p2/evaluations.csv.gz": {
+      "sha256": "86fd94bdff6d30a1c9dd07b2dd9413cc2015732ec9134633ec509219cc5996d5"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed4-20261010-230216/fsm-p2/llm_trace.jsonl": {
+      "sha256": "50a23b13554e2189fc720dd40274da39c59c470c37fc09703a420fce18fb97eb"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed4-20261010-230216/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "5227b37ee59ff8b995015010e1de5020ba739f75bd8cb561c56153bc6a3ddc34"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_low_area/seed4-20261010-230216/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "0f8696987c5dcc044bcc2069c5a8d70cca1f4e46395a01b2de4cb5ead55b34f7"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed0-20261010-223245/fsm-p1/evaluations.csv.gz": {
+      "sha256": "02a4b0cb45852b59c9af55ad1b08536c9e5b43ef9961ef211eecc0ea20f59a14"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed0-20261010-223245/fsm-p1/llm_trace.jsonl": {
+      "sha256": "0f68f4df4af90396ebeaea93d26f15535cadffb564510dff4c4d73f9e939c59e"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed0-20261010-223245/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "e01aaa9e289b0aaf0608e7924f922251ec8e8de693d66f89dc7c3fb9f3829fc5"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed0-20261010-223245/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "31039d0e5b9b8faca0fd53d34a73d20fb80bd7b08d84eeb856bf8c8c2d43f6b0"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed0-20261010-223245/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "64e56dae07b68db83da232573e8d057312f06d69e0a7ab92ae1343210841ce54"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed0-20261010-223245/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "8575a7916f2bb5c615de3c5c0fd9e51afb51634b0f3be707acc2e299aa8c8680"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed1-20261010-224200/fsm-p1/evaluations.csv.gz": {
+      "sha256": "78ffa6d29c08d5f7150e796bd8a5d5ed603cf19e7eb09c9b74dcdbefc42e31da"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed1-20261010-224200/fsm-p1/llm_trace.jsonl": {
+      "sha256": "a0d045459eb15101524cc808a79f79f1768590c2bce109d545857678f6fbb8b7"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed1-20261010-224200/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "0b6f397160b62e2dfffa92024757df67a77555ed7c6b24cd788c09b07c9b17a2"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed1-20261010-224200/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "9a0e7db097e45dbf646b8218fe6cc443bf06129e976d4f71590053962baedf51"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed1-20261010-224200/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "d7c546352c26d1ecf4bc2d9c8414eaa7def3bf1133d8e5773eef6fc36e3b698f"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed1-20261010-224200/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "bca9c7f4d29abdbf0cac5bb45be9aafd4e1d08d69434fc17ace0a70cff81c9b0"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed2-20261010-225150/fsm-p1/evaluations.csv.gz": {
+      "sha256": "d787bcfed508ea1f7c351e1a0aa50ff5cfdbb788a1817260315eecc3b38f53fe"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed2-20261010-225150/fsm-p1/llm_trace.jsonl": {
+      "sha256": "499b3c18ca9240d66c1ed396545f6815ff362bc5bf624a644e3d5c6f7ef63982"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed2-20261010-225150/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "d7010f3d293bd3036503d4e160bbfd5bea9cf7fcaab03d96e092c41ee7112f77"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed2-20261010-225150/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "8eebde75e6b3b45c150e37849766c5631649acdb9baf6bf0dfad6962c83843b4"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed2-20261010-225150/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "6bd93041911041ff39592d6af767df94827ef3afce3726ed00a3798fd7960be6"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed2-20261010-225150/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "3a67372f6fc1766bc3b29470f94c33d8aceb74367a67292fe2cd06c28111aa90"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed3-20261010-225837/fsm-p1/evaluations.csv.gz": {
+      "sha256": "fbb05d72d95ed6a58137e97eab8c76cb2ba79c01db1ca279b8a9a8a8871079db"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed3-20261010-225837/fsm-p1/llm_trace.jsonl": {
+      "sha256": "e41f2c26dcc3efee84f15b5767e483b06cd3b1b44efcf0a1061b25622ed6ab0b"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed3-20261010-225837/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "0bb27360fc61699ffdc3531e9874e4f2a3ffc34b808710a9e38205fe9792106a"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed3-20261010-225837/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "e2e3d938c9316db8376139b210b89abd6418e60a3a4274ab854e21d6b525aef2"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed3-20261010-225837/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "d9e6771712f34777280f99cfd51c21ac5fb407caa8f96f445f45239433c5dab1"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed3-20261010-225837/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "844b71c064781b68fcbeafc3f0e79f5564314ae4fddfcbd0eedd3d9960d22967"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed4-20261010-230442/fsm-p1/evaluations.csv.gz": {
+      "sha256": "e2160868b8939679803d0e66ddd39cecbbc5c5a7e32ea46712a6cc35a8c68477"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed4-20261010-230442/fsm-p1/llm_trace.jsonl": {
+      "sha256": "171323b5297bffbd950879bb96f22e40f06b4ab10e9903ffedb1c649e5b94737"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed4-20261010-230442/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "f6af7250801255ab517b9c985a5226fdfa6478cfc8b16c7ab5bb1ac7a4f1ea7f"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed4-20261010-230442/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "922f9245d45afcf22bd0d87a7e49fd1584fade6687c46dddecca729f8edad3e4"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed4-20261010-230442/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "88c21c48695aac19283a27af6718aad260ecd9b6242d7ba35cf8e98d7948c30f"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_multiaxis_control/seed4-20261010-230442/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "5b54a0942fb5c90c197713e56f051b705e7b99a5a6a39181b5ae7a905796a6aa"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed0-20261010-223058/fsm-p1/evaluations.csv.gz": {
+      "sha256": "53e327c5e28c8babe21d8d33abba1035970e2701976ac16401f162edd48e4fbe"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed0-20261010-223058/fsm-p1/llm_trace.jsonl": {
+      "sha256": "387178e2160ab76713f5d28e65b88faf0f0f2d602f32268922b4fcfd28e24714"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed0-20261010-223058/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "5cd5c464647069c38724d6e216b47c102b3c4fce4b3cfe8a1dc238fdac52d8c4"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed0-20261010-223058/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "2dabe5d48d86a7cda75b96e175c9aa020a80d56204855d53dc0a0cba4d9e1b5c"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed0-20261010-223058/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "9554f03d6f28815e0a668b915a98146d56b22d315e9204bc0ac31e7f28800588"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed0-20261010-223058/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "3c778c330c3ea9bf417d0dd14a35851b79532f78a777c43b13bc137bba517675"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed1-20261010-223924/fsm-p1/evaluations.csv.gz": {
+      "sha256": "937ebc236629a78e79c782b93002eae3dbcc6c27b0c80742e9ae86632ba6368b"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed1-20261010-223924/fsm-p1/llm_trace.jsonl": {
+      "sha256": "2a98209b179c439f8c79592b6b2378fe04c8884dac23416dd9cb46efa88b1a43"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed1-20261010-223924/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "c44a9404076be77f434fc018dcdb7c71cc358bf5a0081fbf030d0e1bc90c2710"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed1-20261010-223924/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "889ffd6d807e845d08ed0a3590a0cc4487ad5f376ef77e76171e8587d7c3af1e"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed1-20261010-223924/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "1e0c35dfd3b0f67e51b7b3fffd60449dd2dfba53822f3d2cf8e4a14140c9222a"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed1-20261010-223924/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "896f326613ad1f08a197bb53073c8f82c321c6fa4be03c1b7db94c49cc0661f5"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed2-20261010-225040/fsm-p1/evaluations.csv.gz": {
+      "sha256": "a98e29390975f67a799748ea33f18a2ad38b23ad52be47c61c0062a1461aa3e9"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed2-20261010-225040/fsm-p1/llm_trace.jsonl": {
+      "sha256": "9790d708d55ca558eee6aa34ab278547afddcf4e61fb5b32878baf70de663a5a"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed2-20261010-225040/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "8f41378f95eaf000e7d22ae999e2d15d0a1e67049a2c2b94c56e98460089e2c5"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed2-20261010-225040/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "9c920fcb09cdc7ea83c9170c9b425851feeb030aed560596fe958b151388c47f"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed2-20261010-225040/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "616a1fbb0b6b7f77460108a3a088248fc940081711f3b8e97a5c77d6bbfbe9df"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed2-20261010-225040/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "f8088f7183b7c7fbc423f170a470bedfcc58049b7b1cd09f1bd890efa38ac475"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed3-20261010-225652/fsm-p1/evaluations.csv.gz": {
+      "sha256": "ab25dc492ec67f9cf56650fbde774d42c08e67047f906a5e1692bae294aa3008"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed3-20261010-225652/fsm-p1/llm_trace.jsonl": {
+      "sha256": "5c72cb2c4367887343b45084eb573a520207f5b2bd5cea074a0fcb5f667f604e"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed3-20261010-225652/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "50942fb10ef04a92ed415450648291f20c63e4daffbb6c2c0d9dd86d9b67c1a4"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed3-20261010-225652/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "47d9de573626308bd321da740d039343dbc6af269fcfcc5fdb1134730058088d"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed3-20261010-225652/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "440866c859b8e7311f5a79db49c9e637f5667921570ce567435e4326585b7d44"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed3-20261010-225652/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "adc7fb90cb2746dd061ab8a024b3e93a04ddbdc92e514aa1851685f6bf4a3470"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed4-20261010-230248/fsm-p1/evaluations.csv.gz": {
+      "sha256": "7ac8576b8b8656ba51579b9ebb4d7eb49e119cb5348cf9c36e07745d6d874994"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed4-20261010-230248/fsm-p1/llm_trace.jsonl": {
+      "sha256": "4672248d05100b31801d8b2c14f496e6e725a62ccdfb3ae88cd9b3dc52235464"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed4-20261010-230248/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "749f21a8947f8df7f4c15da80ecedb616ba1e9f7f1ad1852ea1a3fcf97addc16"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed4-20261010-230248/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "c632b580f716e17c6cbe66a04f92f8c13ac12549fe5c2cdb9542d2b6f7dd91b7"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed4-20261010-230248/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "086450d631a294062123bca972ce58b13e5b1365cc80caa51e7e58b4942c90fe"
+    },
+    "eval/data/traces/m4/fleet_v2/asic_power_50msps/seed4-20261010-230248/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "98e408d2be4a7c53147dbd3adc52326e17601519f293b2b29dd6e8fd377c6572"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed0-20261010-223440/fsm-p1/evaluations.csv.gz": {
+      "sha256": "d69b417434091583fec936b0e2d350ee90e3ef68279d46578010438a29798c4b"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed0-20261010-223440/fsm-p1/llm_trace.jsonl": {
+      "sha256": "b80c69e61a70629e70135520afe594bacb82e2dc45a0a4c68b5e900eef0793a6"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed0-20261010-223440/fsm-p2/evaluations.csv.gz": {
+      "sha256": "dfd42ac218d4e6b15a58609c94424edf6dfaf165352f25f6b22d6dd4885f564d"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed0-20261010-223440/fsm-p2/llm_trace.jsonl": {
+      "sha256": "aed6b833afb70c340356d73515260b7c9cc6b8731b1882d455e0a3527c2efb8b"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed0-20261010-223440/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "b14018b87c4c76250a5aa02f185793e0de7b600db58ae0860f8ecc155d052cae"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed0-20261010-223440/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "d1f977d7818536b3d18144dd3e434bc0b917ddea7ac349399afe891b5ece5d6c"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed1-20261010-224512/fsm-p1/evaluations.csv.gz": {
+      "sha256": "d23953df463446735661bc3ebec7c20f06f7b06fa8b963f9063f6d1d17537290"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed1-20261010-224512/fsm-p1/llm_trace.jsonl": {
+      "sha256": "322c005b9c382d622fd71830b35cdb3c42eb89e1e09de60448915420da47b100"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed1-20261010-224512/fsm-p2/evaluations.csv.gz": {
+      "sha256": "b4a9fbbca60331a3bf578ea863819b83001ead5a7300b4f6c1b63b82a05ae540"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed1-20261010-224512/fsm-p2/llm_trace.jsonl": {
+      "sha256": "304ef7c792680d456a042611629ae299ce228b88a2dc8e2c0c2c6406bc8c62ef"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed1-20261010-224512/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "29b93fc552a74a1e824b8bca328f5e8bc746329643dccbd7cc7d8158447e1e93"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed1-20261010-224512/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "a3b2ae452b80dd25c3597b96d2c742bb46a9dff8fa7b39fec001eb0399400e31"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed2-20261010-225342/fsm-p1/evaluations.csv.gz": {
+      "sha256": "90c4a3aa378dc2d4c6080e657423156dccedf2a58e7d8ae887fb1b65ef437209"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed2-20261010-225342/fsm-p1/llm_trace.jsonl": {
+      "sha256": "d924b4742a678b0c17bd9366783f5a10a4404ca238575a96606575bee9f2bccf"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed2-20261010-225342/fsm-p2/evaluations.csv.gz": {
+      "sha256": "a5d2f0b941ad9e344f88a9955763d89678dbd8f30615aa7c22c0160840f59115"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed2-20261010-225342/fsm-p2/llm_trace.jsonl": {
+      "sha256": "c4d43c237617d292d533f22ddd11e40684cfc3fb6c9c27449267c60070feb37a"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed2-20261010-225342/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "9eb2eb7243c01e83e79884ac2f7dbd6bdb220001d4f34246b1c71c4b5386983d"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed2-20261010-225342/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "d236e147aca1e6a10d618d679cb7270740d7ab4a086bf5a591b1424896af68c9"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed3-20261010-230027/fsm-p1/evaluations.csv.gz": {
+      "sha256": "b2ae82c3e3d5a1f410c2917d685df624b7fce6fb44f8129a5b317e2bb36ec572"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed3-20261010-230027/fsm-p1/llm_trace.jsonl": {
+      "sha256": "f94344064363fa40476ee6fc427ce88ffb69da3250f41783ff9bfb2fd403d75a"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed3-20261010-230027/fsm-p2/evaluations.csv.gz": {
+      "sha256": "a4b97da2b50abe5ec76c5d516b5f7db90753e23e9ef1f7a91d8cafe68af7deff"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed3-20261010-230027/fsm-p2/llm_trace.jsonl": {
+      "sha256": "c070cd23fb8dfb50fa056081c87a9934a991ad0409917502a8e48d2c4994369c"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed3-20261010-230027/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "810778971bba0f28a950c4538bdb6c5f54ac3fc45022dc0fc86d93529bfc004a"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed3-20261010-230027/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "dcc5de5526090d7e4f71d6c090847c3e47e78a36dfd6963b585442f36dfa454f"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed4-20261010-230604/fsm-p1/evaluations.csv.gz": {
+      "sha256": "a5d63829bf70826890e2e3fa2d48c0319966244bc8a98ad63f7c211c1dc63f3d"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed4-20261010-230604/fsm-p1/llm_trace.jsonl": {
+      "sha256": "c58b46242e8adccc5d04f4dda21a4c4cde7f3954fc71c132955797c07ace85f1"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed4-20261010-230604/fsm-p2/evaluations.csv.gz": {
+      "sha256": "34ef6cf334ca079e283a965936671964309bca123dd644de2b04b26e474af6b0"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed4-20261010-230604/fsm-p2/llm_trace.jsonl": {
+      "sha256": "1904c0da84fa51d31a230c6e20414fcc4f9e11d1597e5a842e8dd86a3282e5e9"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed4-20261010-230604/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "e61ebf96ace2f891bb32c3ab0206cf3846a7c98e947eda69b3e6a8610d9d30f1"
+    },
+    "eval/data/traces/m4/fleet_v2/low_area_control/seed4-20261010-230604/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "27a66793cbc55c1fc9da62966159595addc5aca3a2dbce153710d419c1c320b5"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed0-20261010-223637/fsm-p1/evaluations.csv.gz": {
+      "sha256": "efac2d032ac88c901c6b64211af926f008687b56f631844099fc7f04caad9b71"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed0-20261010-223637/fsm-p1/llm_trace.jsonl": {
+      "sha256": "b9bf6c6cbd22dd620c9bb753ea65e10bf6e817089adb7b66b1189331929becba"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed0-20261010-223637/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "4b3ade7f27ff36ddfc449baecf76af758ca6f9e2e1ccf43a29d5cba8673c78ae"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed0-20261010-223637/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "c617f1fe274770ccbe6146d868ec354e13be34c683a229b3e8b273b7f9cf7a2c"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed0-20261010-223637/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "89c48778885bd8c3d301a0b035a7905fde1f8e9ab50fe9a00e20f056a2053e1c"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed0-20261010-223637/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "4a6cade13fdee751bab80240a583737c8b21e9e58cab5ff8b825f6d6183b609d"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed1-20261010-224721/fsm-p1/evaluations.csv.gz": {
+      "sha256": "71d8316e474ddbb6709ae5464d21ed99e601d21ff26a3d8053656dab02189c99"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed1-20261010-224721/fsm-p1/llm_trace.jsonl": {
+      "sha256": "01e7bbfcdb8a52b18614add31daffa1d1943dc6e56cd9b04e98c27b72b201f7c"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed1-20261010-224721/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "2a7b99e7a920c5e7b6f202ae99e19190bd2f554d03280ad58fcfa19ca883f415"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed1-20261010-224721/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "1b55f1ad5f137305a1a3c1f95a6761f144a2e1819b547c846da4488d8a448865"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed1-20261010-224721/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "9dc4950d1193d9afccdddd26ca04e120a1bf7a892187136ee9b62e0922652bc1"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed1-20261010-224721/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "d27b10f770b941d668f3c4c96042cfcb9bf6e04db198ccc886c80fac09eb5ee8"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed2-20261010-225426/fsm-p1/evaluations.csv.gz": {
+      "sha256": "38f4c0b64bd5f86e4a9d8e27c17e36b72ab39eced1b9b3497df6fc8effdb14a7"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed2-20261010-225426/fsm-p1/llm_trace.jsonl": {
+      "sha256": "0d631729d688c5beef01f4052d0d75248d4ab8ca83d465760696f74a85d64b13"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed2-20261010-225426/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "a1b1a89685f13ddf2032cfa995ef82d757a40035edf996c8cc9714965f540e25"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed2-20261010-225426/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "173cb98d1589985c96c99a86aa1ed3e5460c38503d178c19ea34b12925ddb713"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed2-20261010-225426/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "ec2a36b081877041450949303321524d97919abec68a315186103923490339cc"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed2-20261010-225426/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "0cd6e25d78497ed8968c5ffac9959c01cb6e49085fcb6c0d63d45169b345834f"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed3-20261010-230103/fsm-p1/evaluations.csv.gz": {
+      "sha256": "4244cf3650cbf7639d3b310492f588211356ce91128f79658da86487834bc913"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed3-20261010-230103/fsm-p1/llm_trace.jsonl": {
+      "sha256": "ce1b8bc382ca45eeac9533661457e05836c12da0b7ce7d21f089cdad5cceff4a"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed3-20261010-230103/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "ceff7925947cfaf780f71fc3643bbf5a4dd7a13c41a42a3fe51072c6f6188ee8"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed3-20261010-230103/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "393e92621790e2bf1e073b2862e264778fd4447f33b3b8ec8d8a09ea948abb34"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed3-20261010-230103/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "df9d08121ab3cf94f4d5126591e13f86c5acebc8d3e9f7a369ffb8b2cdfed2d7"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed3-20261010-230103/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "f8200d01e2f492b9d42838d378b872676a2c498676d077fd88d527aa4b32d947"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed4-20261010-230634/fsm-p1/evaluations.csv.gz": {
+      "sha256": "4bfa06ca4559d4d8047b0f49872760272b86198191be685d88a19ee5053ceade"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed4-20261010-230634/fsm-p1/llm_trace.jsonl": {
+      "sha256": "88e03ce73407d6501425f383eaafff328aa949acfac57975256ff9bd87e71ea2"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed4-20261010-230634/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "cd6cb54e0a095c00ddd4a15867459058e2fb41fee5ebb4b7892152c848dc34e3"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed4-20261010-230634/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "bea61344171bfa21a8cb043e57ed6a303ab948cf180f1d22cdb832eaccbc1180"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed4-20261010-230634/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "3e6d5f5eeb1a0dcb4c73becc39f3321f424ac90d61d16032cff2ecffa7fa56a6"
+    },
+    "eval/data/traces/m4/fleet_v2/multiaxis_control/seed4-20261010-230634/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "2266f92c54fa16a13a7f145cdcb8ac5537c5291c3af4838b6504e5638968fb4a"
+    },
+    "eval/data/traces/m4/pilot-fleet/asic_multiaxis_control/seed0-20261010-162544/fsm-p1/evaluations.csv.gz": {
+      "sha256": "38f2c06acd6067dcf69010506e6d8da85e3ed5a041c93aa77351b5e8e9edbfb2"
+    },
+    "eval/data/traces/m4/pilot-fleet/asic_multiaxis_control/seed0-20261010-162544/fsm-p1/llm_trace.jsonl": {
+      "sha256": "706e2e08b8a6de0382e8ded597f834e372c71ab69003da69b687936e73d1f2e7"
+    },
+    "eval/data/traces/m4/pilot-fleet/asic_multiaxis_control/seed0-20261010-162544/pipelined-p1/evaluations.csv.gz": {
+      "sha256": "4354d94c3b1ebfb3a84073dcf83d673806143c17dd9e29a29b979ec8cdaddea2"
+    },
+    "eval/data/traces/m4/pilot-fleet/asic_multiaxis_control/seed0-20261010-162544/pipelined-p1/llm_trace.jsonl": {
+      "sha256": "15265026f16f8ab0a9cf52bf7a4707d9ecec659b77dff8b53bf72921a92f166d"
+    },
+    "eval/data/traces/m4/pilot-fleet/asic_multiaxis_control/seed0-20261010-162544/pipelined-p2/evaluations.csv.gz": {
+      "sha256": "234dac817488d143c8d33ac6f5368dd5cf78ea5894e2da405ff68edf3f7a843d"
+    },
+    "eval/data/traces/m4/pilot-fleet/asic_multiaxis_control/seed0-20261010-162544/pipelined-p2/llm_trace.jsonl": {
+      "sha256": "a662c671bb9c1cb027451f84b69c9f05ae9b90da6f5cf599d3dee1ef5148f8f9"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-164032-7e92/evaluations.csv.gz": {
+      "sha256": "945bf6e311309e69116bf52689d0e999f1b8eb4c89c3b5f8c487c5795eaf13fb"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-164032-7e92/llm_trace.jsonl": {
+      "sha256": "2c4e7a3ffa1103890de253b30d3bd4aa26a1678b43b7b140671e43a7f2bb486a"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-164546-ed47/evaluations.csv.gz": {
+      "sha256": "ccfd1f4c7eb1dae30d35e30a4c7feec5f834e8aed322e9f9bf4d09aa08a9d250"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-164546-ed47/llm_trace.jsonl": {
+      "sha256": "83749d06a7ecd847eb1b9b9b66cdcf425439c36f5bcd3905679f186bf44a991b"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-164713-37c7/evaluations.csv.gz": {
+      "sha256": "e238d3d4c229e418ed9d48e58384d41f4395c6926a0348776f888a2657ef2a3d"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-164713-37c7/llm_trace.jsonl": {
+      "sha256": "e85bcefd482d10f5d1edf1f3bc515581022941b9de7edee37cba922b7257fc90"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-164904-99eb/evaluations.csv.gz": {
+      "sha256": "0e48ceb9c95f588d032418f7ea204f08f026a003c411c55e4029df542bb9041b"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-164904-99eb/llm_trace.jsonl": {
+      "sha256": "e8f2de90fe803eb387e13bac390c1e7c54bbe2dbb816501697d694d79dbc64f6"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-165015-353b/evaluations.csv.gz": {
+      "sha256": "bf2df12fee3c14f2322a90bcb1fb1b20c53e5a2186a2ec5204441d503d074421"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-165015-353b/llm_trace.jsonl": {
+      "sha256": "b20d137fa7e19654a723b0a73e05bb36292ef8edde8be866fbfe7d953938f8bf"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-183304-e012/evaluations.csv.gz": {
+      "sha256": "c3923a65c0afb785123d8b6eb5297b62034581bafec4006e601fcc2bd9269066"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-183304-e012/llm_trace.jsonl": {
+      "sha256": "da08b8d7e34c57cec6b0db673f7ba923ac0ec26bc9a7d8b9b9fa69fc1ba8a88f"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-185017-2433/evaluations.csv.gz": {
+      "sha256": "2d594f2cef953648e62ba697a45d9eb88f25c2db58e2bfd4b987555ddd1aeb14"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-185017-2433/llm_trace.jsonl": {
+      "sha256": "3b898b691a8462ffb49a67896166aee2bb4fdf636b2aceeb294ac4e5549270ba"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-185625-b154/evaluations.csv.gz": {
+      "sha256": "155d49000e746cf480edb242fb7167bb07b6c5bd50db4cee6312128c10b028ad"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-185625-b154/llm_trace.jsonl": {
+      "sha256": "8b168804e0e1be538b421d4b570cee130d55915d7d592b58fdc334d9afb9edad"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-190137-f50f/evaluations.csv.gz": {
+      "sha256": "bfe4775e702fe46cda6ebfb239a648edc6b397e0e7b5ac85cd95073e2a502a06"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-190137-f50f/llm_trace.jsonl": {
+      "sha256": "2365b56dddcfb6a0c3a782e5def82881fc1e33e6cddf6444efed3650e274a66f"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-190510-1aaf/evaluations.csv.gz": {
+      "sha256": "28245b81c93abbc800f79248e56d4aa5775c3f66f78fe23da362ed1be8d7cd98"
+    },
+    "eval/data/traces/m4/single/low_area_control/20261010-190510-1aaf/llm_trace.jsonl": {
+      "sha256": "39511e2a753c8164850c3bdb11606b40db60cd402fe36408a0d253dfda3c2904"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-164106-ecb6/evaluations.csv.gz": {
+      "sha256": "ef9f4af3d2291b6dd6f4efd05c88eedbac57e823d1cb992fad326cbb8cc0c9a5"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-164106-ecb6/llm_trace.jsonl": {
+      "sha256": "5c944c095f57cc6a2c0b0fc303f220233cb2620263fdc8c93c9a66e6f8391562"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-164642-9feb/evaluations.csv.gz": {
+      "sha256": "f1789ff4fca4c223d5b65ae3fc36a5f79fd467b670c46e6d4a33549649f80be3"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-164642-9feb/llm_trace.jsonl": {
+      "sha256": "c0ea2354574b4852d353b5d411cd52f4f479d80a3db776f04e75bc5c10747947"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-164824-ce98/evaluations.csv.gz": {
+      "sha256": "e7b1d6c009c9a21130f22356afb159e22081b95e5d195df627fe0d124e91a544"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-164824-ce98/llm_trace.jsonl": {
+      "sha256": "ecb6c3081efc42fb96ef668fd58333fbfb700478fdc3d1cb386d429cb9879b1b"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-164947-b2b5/evaluations.csv.gz": {
+      "sha256": "f7148ed9494ad771d30dad3e5973f49e1480778b40f42cc8616b6f282a94d31b"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-164947-b2b5/llm_trace.jsonl": {
+      "sha256": "6ea46f2d507d032c47b89dcfff946e77956c90f443202d40e67c2a13125ee039"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-165124-993e/evaluations.csv.gz": {
+      "sha256": "576b57407604432321283f656330870f77569f92fccbd5f791abbcf2b27262a0"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-165124-993e/llm_trace.jsonl": {
+      "sha256": "ba7974b75a31b2e1c055a5a6b5e60589cc579edb1ba5f30001315f33fc4e5196"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-183622-841c/evaluations.csv.gz": {
+      "sha256": "50d8f653ac6dfe4640adb0a4465d03268e3a029bcf4316538400e1fa892cf007"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-183622-841c/llm_trace.jsonl": {
+      "sha256": "46d424213b58c8d90ea1fe9d7dbe6807e36bd6ab6a595f08d1b665ee3ac8492b"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-185157-410e/evaluations.csv.gz": {
+      "sha256": "29de83e05cfa11b4f9b438467a90865911cfad8766433773f6f54edf37bf95c0"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-185157-410e/llm_trace.jsonl": {
+      "sha256": "55d49c35ec6723fafe6d1b40967d720e55bf7f4cf51c6a58ff08b98012c6402a"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-185957-8ab7/evaluations.csv.gz": {
+      "sha256": "99b7fd8cffea424e81aa899e4829b2226952e26fee177ee61ca778e99d47b640"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-185957-8ab7/llm_trace.jsonl": {
+      "sha256": "eae1e81a34a51a4459fcaa0d591fab16edbf543eac37e7e49f5bb7aca60305db"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-190303-d81a/evaluations.csv.gz": {
+      "sha256": "1f25f22c09e57b32b02c73b2382bd3f409b497d90aba4f13a03361a31d999c21"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-190303-d81a/llm_trace.jsonl": {
+      "sha256": "929eb285f6d2911d3f33124af5e00aba39591a47d02b79dd904e74a107adaf59"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-190623-a27a/evaluations.csv.gz": {
+      "sha256": "54b0f7252e71104118de0f81727cffb034d960aab51bb7b3a6e9a3b3ddd9ca2d"
+    },
+    "eval/data/traces/m4/single/multiaxis_control/20261010-190623-a27a/llm_trace.jsonl": {
+      "sha256": "157363cae1871b01ec7cc49874ddbd57b0f804ca41d02a07d38b298c0134ae06"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-162733-a56c/evaluations.csv.gz": {
+      "sha256": "91e83d5e99f046bed23df4d0c7af529fb512fb8ab796c0cdbc98276c4f2fa931"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-162733-a56c/llm_trace.jsonl": {
+      "sha256": "7c6199baff384030cc9670b5c2e987b57b3b669c32cba2839cd6945c9a813d79"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-162733-a56c/report.md": {
+      "sha256": "7e6fb4dc728ef53861c353d10f2b1e3e7dd27b3c1d678c5026131bda52e836fd"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163009-6e35/evaluations.csv.gz": {
+      "sha256": "f9cc0305d1ade60c26ef903ba72d929cfd855ca91452556626bb634578ef84b0"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163009-6e35/llm_trace.jsonl": {
+      "sha256": "0d71c1867c0186e116aa6740487d2511f4334a1910cddb57c9b63da9ebb5a1ff"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163009-6e35/report.md": {
+      "sha256": "921f3280beb7a8a9cd4976bb5ebfdd7c6c1efe28a73d7c12b9a266af2aca5b03"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163237-7d1d/evaluations.csv.gz": {
+      "sha256": "f37251f16907ce4545242ca46ce940a5b301344a121ef94bf69e1cfb04f40f68"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163237-7d1d/llm_trace.jsonl": {
+      "sha256": "2db58ef03ddd999f6bef6f712e28f2785b9ea3f52f7cb65fe44c305c0cbc1512"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163237-7d1d/report.md": {
+      "sha256": "ad66c1ae455cbbb786b1aa06ff852aca2137972c1bf94b1637e6dc134f8f3b7b"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163548-2686/evaluations.csv.gz": {
+      "sha256": "d91a07034009c2dc0b8abb2a7c9eb02cf649ccf59a9effb25cf31d7929455b63"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163548-2686/llm_trace.jsonl": {
+      "sha256": "274429e4beb0392fd56796e7b6551a6313b8b6cbf13808f80595a0ecaa3d1838"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163548-2686/report.md": {
+      "sha256": "abbf65e29c5019600a7095f33cbb8f636a396b5f8b90b7475aebbaf80c028f4d"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163807-403f/evaluations.csv.gz": {
+      "sha256": "3fff0c1606805395803720b97442897cf4ac22c82d3ab5c3b7c888431adbb9af"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163807-403f/llm_trace.jsonl": {
+      "sha256": "560e99b733a43f63a7ab0db0e61d0d9eb4f203d69a0a370faab6c86843b8bef3"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-163807-403f/report.md": {
+      "sha256": "8b39a0b101c1031177fa89642e003b8e92b049a3b4fa2f4c01c7ec4ba828d020"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-180345-8218/evaluations.csv.gz": {
+      "sha256": "7db844a8d78be75c928a0a92b5af37d9d14a705acacb44024df3df4a1d74f8e9"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-180345-8218/llm_trace.jsonl": {
+      "sha256": "1fd09b8a5234886f7099e7d4d4ce55e3bd4d8fbb535f9d6fa12e844b15c653fa"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-180345-8218/report.md": {
+      "sha256": "602a6e54ae2fe894e72613497197502f33f630646384a8f472481e340071cdad"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-180949-c3ce/evaluations.csv.gz": {
+      "sha256": "41c2eb1cc263596a078ca5cb978cef2755eeb55cf03884ebc596eb2adb7cdb07"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-180949-c3ce/llm_trace.jsonl": {
+      "sha256": "433ff8f1322f6825eaccfd35db999c55e3d46f89e16bdb6b53b13d4562f34b4d"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-180949-c3ce/report.md": {
+      "sha256": "fe8ad561ae398cbff102898650fa06f0f7ab68c362d4f65700e889e965a40007"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-181544-6f7e/evaluations.csv.gz": {
+      "sha256": "e52af8e18608d16558f16e6a05eda05387a95008132284ce9332c067bf55d441"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-181544-6f7e/llm_trace.jsonl": {
+      "sha256": "2f8a5e4cdedaac3a389aa6dd648c412821c9806245ca8ea6f1a9c2f366655b0a"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-181544-6f7e/report.md": {
+      "sha256": "c459983f41cc738120ac589bc49b640e5b92599073300fa976b3f6b2aeec5274"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-182131-50c5/evaluations.csv.gz": {
+      "sha256": "832640fc860c9f668c7bb80dfb4104e455e9f10518cc5cedde5363d161371e4e"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-182131-50c5/llm_trace.jsonl": {
+      "sha256": "051e135b36ff9a04d91d8a519901ecbb1f222fdd9e6c69d135e66a4ae55cca82"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-182131-50c5/report.md": {
+      "sha256": "fd3ada7ecad96e0ab7a32bb5ed141b330020c72680b009d212577f8ed33eee59"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-182751-4ce1/evaluations.csv.gz": {
+      "sha256": "820db242c76b9f43b0b66a93124317e6cee18ec1302bf7ee5caba9087331161a"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-182751-4ce1/llm_trace.jsonl": {
+      "sha256": "7eac8a0a66b83d5c0845bf5c2ef2b10d2791590fbbe3ba6b07793b8ba02e4704"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-182751-4ce1/report.md": {
+      "sha256": "a9d132a8a25468f49917f3cd6275073be1df637c4429c2ee2744faef15e0d813"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204414-0209/evaluations.csv.gz": {
+      "sha256": "f47f49d4b78e43cf58c2cf9d7ce2d108fbc72b5bdcb796dc1a2849bcda0e1f33"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204414-0209/llm_trace.jsonl": {
+      "sha256": "b7cf51b81cda9389718edf0d1303ac94c608abb3b563068f02b791465e6f1b27"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204414-0209/report.md": {
+      "sha256": "584a50d7192858de0440cf337acc0eb24d9191f13eab987dc6ff68f8859b84d0"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204552-e0c6/evaluations.csv.gz": {
+      "sha256": "33a5dced7f969e20004c93de1bb82f573af15fb00a0cd9bf13b51602715d93c1"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204552-e0c6/llm_trace.jsonl": {
+      "sha256": "e5c0ce229c64fc41ed408df78021660f9bd394bf7031fb8b4e1ad1566d4f1395"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204552-e0c6/report.md": {
+      "sha256": "d10973d19d0aa0d1cfd3eda06a3220eb4a0ddc768f2179e1eb84ee87aecdc295"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204733-4051/evaluations.csv.gz": {
+      "sha256": "4547ca03ffafb5e5fac02607dad84a1d33325fa6155f4ebfdd16eb241aaeaa52"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204733-4051/llm_trace.jsonl": {
+      "sha256": "4fd4e060996a8c7b60c9f2e81e87b8c76713677905c21410ee9aef9da77cea10"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204733-4051/report.md": {
+      "sha256": "24041dbe09e4c3976d3f4671a4927b1f14694b19bc36a723128f36bf493b7b4a"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204912-783e/evaluations.csv.gz": {
+      "sha256": "95774c0e0c70729bccda3b575205bf55ac3ec26d42cbe973bc244b745ff266bb"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204912-783e/llm_trace.jsonl": {
+      "sha256": "c3ce741972e4b9af57833d62e01558fa2ef529213beff413de888204e8ec882e"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-204912-783e/report.md": {
+      "sha256": "d5a8c173c853e28ede96609011d59ef5ea8df1f687a03622458802c2cc7b800a"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-205049-8da7/evaluations.csv.gz": {
+      "sha256": "87d23ccbbcb481aee34a53a6e3eee2b37c7a3e69561c91102dab66349162d599"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-205049-8da7/llm_trace.jsonl": {
+      "sha256": "5d2da158ac3e6cc66c0fb20c458aea50e9a93f8d6cb408633171536593963cc8"
+    },
+    "eval/data/traces/m4/structured/asic_low_area/20261010-205049-8da7/report.md": {
+      "sha256": "e0c29b7b5c0b20f6fd1e93e25d15d527c7abedebf94a78b5bb4def6ff1170b19"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-162846-b7f2/evaluations.csv.gz": {
+      "sha256": "ec5141bbddf61de5af2950c01bf2dbd7e0a3856d5139f42a2b360ef01bdb516c"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-162846-b7f2/llm_trace.jsonl": {
+      "sha256": "5ce35ab836949c247c12a25a45e73756e3e74038a1e815c86143051119105126"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-162846-b7f2/report.md": {
+      "sha256": "50f48ecda20474d1a70c45baed31b6be1f4de40760ca41fb6ea6921148c4877e"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163114-be20/evaluations.csv.gz": {
+      "sha256": "fd4fc50e710b6c626acff2e5ac7fc607f77f03480d2fee1ac77af566e8a67b3f"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163114-be20/llm_trace.jsonl": {
+      "sha256": "a2b046fefba3e88c0af9299b3c6d73be919573d499c921ecb550503e3ad2d835"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163114-be20/report.md": {
+      "sha256": "d48f3c811ff2e790d98475912a19c007edf1cf0c193b43023ffcf5820e5c38fb"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163439-9289/evaluations.csv.gz": {
+      "sha256": "c96de90ba7df187f1389a2e7ec525f5245a393cae211fef32df8e3827189f52f"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163439-9289/llm_trace.jsonl": {
+      "sha256": "a4a4f32355ab832b7743332da1595202633ca4fd9eae39ee73fe841fbf7b33b5"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163439-9289/report.md": {
+      "sha256": "2f65c67e9d49406d43779a315f40e46f0d3a9bc82c6a9c41d51e7708125e59a4"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163712-2769/evaluations.csv.gz": {
+      "sha256": "7fb9f63c8ae96fbc9b816bd4c1aabef3777c5966ac3840b51f40120f0b86b860"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163712-2769/llm_trace.jsonl": {
+      "sha256": "b698af624e8d39f694bbb11c425c54f3c034cd51f447aedff7c665b87231d884"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163712-2769/report.md": {
+      "sha256": "40456f41b6062524a37f251a906f7a2f5591dc2378e111ed1b9b886f09a46d34"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163936-63a6/evaluations.csv.gz": {
+      "sha256": "b09dbd4cc23c059127fce81e0236e15179b2ab0654c3054095ebdff8699a06f3"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163936-63a6/llm_trace.jsonl": {
+      "sha256": "1d2abcc79d09dd359d2382545d81e06df74da78716844c5864c56f8fa50a3d4c"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-163936-63a6/report.md": {
+      "sha256": "31a560761dd20053c351c207f468bec9b160284cc443aca32812b9d63674f792"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-180631-4a3b/evaluations.csv.gz": {
+      "sha256": "caed55a5c5b2e300132400e9ac634d1a1f6be1e4cf7a2a6aeed4f3df8aa44766"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-180631-4a3b/llm_trace.jsonl": {
+      "sha256": "de59bf8a4522b68928bd4affd0a57c5a1f0e6db29dba521dfca436adab7ea3aa"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-180631-4a3b/report.md": {
+      "sha256": "81bbd5487acc710225db986557f8dc67e576b37db1396cf980d318aec495e068"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-181404-a806/evaluations.csv.gz": {
+      "sha256": "766240f338c8dbc88e11ca83191ab0c9616bb3171855586543e3701d8d37ccfe"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-181404-a806/llm_trace.jsonl": {
+      "sha256": "cb332051a6f57f5860068f31cad40e5d2e0c28c3ddae0e6bf929da085d8515b6"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-181404-a806/report.md": {
+      "sha256": "29424d7cb0d2b948391c411530bff0a494c01542bc341449e16b74464ebbd662"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-182015-c819/evaluations.csv.gz": {
+      "sha256": "ce09e4b1625a3cd1444ffd0b90b9aeedd4b67c650a6cd17a409124ea48702bbe"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-182015-c819/llm_trace.jsonl": {
+      "sha256": "6f540076b9682f82d72b113815475c1552897278066a86ad6447c5882b294069"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-182015-c819/report.md": {
+      "sha256": "a9ac01f1ded74cca862e933a7ccfb54aa9e5a74431a0b160e06773f3723e274b"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-182542-d01e/evaluations.csv.gz": {
+      "sha256": "bcb53a308951366fa22d1d8c2dec9b1947352cd29973362959aa394f087821d9"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-182542-d01e/llm_trace.jsonl": {
+      "sha256": "ffdaba8f896e009f7a5137882fcf4d01585a440c38934b51ffab17803729168a"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-182542-d01e/report.md": {
+      "sha256": "e268a7a8fda2a65b41b72b57ab8c8c1b57dcfd2ea26d4ac9c3d4efd7798ae3fd"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-183152-2f7f/evaluations.csv.gz": {
+      "sha256": "8181656d0b96d0ca107f19735e9e5eeaa8c4d06c6f6a4b0936c360f014a2e22c"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-183152-2f7f/llm_trace.jsonl": {
+      "sha256": "2316b39dee252ca746eb0069adf0c03847a0d9e2064623109b4d1ed7efe7edd7"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-183152-2f7f/report.md": {
+      "sha256": "b61ea9f3dddeadde2373cec3dac442f8fc3f22ea1d11abee3d5a38b542e475b4"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-204507-de78/evaluations.csv.gz": {
+      "sha256": "2a6de8eaff4ee75e7876cc9aed2c7afa28c931f03b0978578be99cc42fd55d30"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-204507-de78/llm_trace.jsonl": {
+      "sha256": "ff8c233c2c3fb90cf8e85d4f821af18dcc7d7873c69b1f5b35eeb3bd00435205"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-204507-de78/report.md": {
+      "sha256": "0bc50e0c9210489b63787eac4801700744082a2453df6918952a59bb8634d55b"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-204652-b15b/evaluations.csv.gz": {
+      "sha256": "cadd21ff5951f15a1f0aa0633745b99a433049eba7892a5214613fe86b24ec00"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-204652-b15b/llm_trace.jsonl": {
+      "sha256": "0984c9048f91008c62534915a0b12d984c0cd0f4dff62d3b76f9402777b4634a"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-204652-b15b/report.md": {
+      "sha256": "6b2c753dc57577d4c0087cea36ff9aab2cf8d23b92919b941502ddcbe5e4cdf5"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-204827-e9a0/evaluations.csv.gz": {
+      "sha256": "52726160c3494689e577bd8d77b415f8190a777caa80669a16f8df6bfaf24546"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-204827-e9a0/llm_trace.jsonl": {
+      "sha256": "87966dd1da43202f10f5b872f8927a9252976b011fa524c994171ed3ee04a3c5"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-204827-e9a0/report.md": {
+      "sha256": "07d64eeade77db4328f693d712dde7fae4da062b574d30f6eb54133118ef4de7"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-205003-7311/evaluations.csv.gz": {
+      "sha256": "989cc00f945689cefafccb3567920d17b5db5a1d3d128887e4ac4d287ee5191a"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-205003-7311/llm_trace.jsonl": {
+      "sha256": "a1a0d65fa5b59276b79e68c0c8c7069f470f44372de1ebd067dcf3dcf2e9f8b5"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-205003-7311/report.md": {
+      "sha256": "4a37a8d1457745657a60c96b65c364791bb52e24b03fdfe1d5339c75a4376854"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-205147-7b11/evaluations.csv.gz": {
+      "sha256": "4075106204ad083e1cdf757f07d59d838221b0be74ac2b124458d72ab06f3b72"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-205147-7b11/llm_trace.jsonl": {
+      "sha256": "7abadd87e4062bb784e280e929b9cf72c3c1c546010b1210ab5e21db74b4d163"
+    },
+    "eval/data/traces/m4/structured/asic_multiaxis_control/20261010-205147-7b11/report.md": {
+      "sha256": "1c27be3fd1e23d85fe3219a84d29463e61eed460a456a39928ac3a6d63ed36f9"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-162803-a2ba/evaluations.csv.gz": {
+      "sha256": "45c6913ccfdbac5e4344b7dc4033945b092b77ca0772a3cb3575a83cfe0ff922"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-162803-a2ba/llm_trace.jsonl": {
+      "sha256": "f617e78b04e2e50a37370ea3d6818411f7fda63df00f85882d21459eae405ece"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-162803-a2ba/report.md": {
+      "sha256": "edd4f5846635feb399e81505ec3223ef7797352b43cce85ee902905da8a72bb0"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163029-6d4b/evaluations.csv.gz": {
+      "sha256": "a64c4c2f57d1a8b445c315cdd0f469afa3643731638596398fe671def466585e"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163029-6d4b/llm_trace.jsonl": {
+      "sha256": "81c86d248413af68481b274412b6c48e61d1614764fcea8f18454a9c2ee74949"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163029-6d4b/report.md": {
+      "sha256": "ce184f96fc2520af8119d68ce70cf9dcb9777ef9b75737828eac84126b51a9ed"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163339-41ce/evaluations.csv.gz": {
+      "sha256": "c59a2e55f11cf765f1faf302a024e1636deb2541d8c7609544219d63c042b947"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163339-41ce/llm_trace.jsonl": {
+      "sha256": "e401755a2207faed2d54dd27d8645073cefc0f3344ceedce4683bbebdd77764c"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163339-41ce/report.md": {
+      "sha256": "619341880c2367cacec1fb53bb001dfe04aff61ac1f5f2fb20752a29542bf551"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163633-8666/evaluations.csv.gz": {
+      "sha256": "b5dacc3f5627199acfdff8d6653490144a05475c7a1ae5dba20f4f685ca264a1"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163633-8666/llm_trace.jsonl": {
+      "sha256": "79236eeb6305ed679c79a1d25cf624b75f95d173a4402ea4da7c350f37c8d853"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163633-8666/report.md": {
+      "sha256": "3dd2868e884e68fa57753c7f237b850306ca2993d6f2709d0186d0ea252e4353"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163839-dc3a/evaluations.csv.gz": {
+      "sha256": "e694d5444cb88d18aded64d27d87d18c7a31bb54a3eec3733846b1da4e48ed3b"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163839-dc3a/llm_trace.jsonl": {
+      "sha256": "626e6ebbbcca233268f3a11dee1247117137ebf861b93efb3073ea80a69a3022"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-163839-dc3a/report.md": {
+      "sha256": "baf9d8ff5ee0422a2e81b629a538871a96bae3051c9f536fab0e0daabd12a01d"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-180445-13ec/evaluations.csv.gz": {
+      "sha256": "fb912a0e603af83fb39c4fe698e2ae2da82db722ae98348d64f97b740bf2de61"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-180445-13ec/llm_trace.jsonl": {
+      "sha256": "3b5287311006b9613e493de353aa6f5a1cbfeafe1dd88dc0fdd0b0795b7f7423"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-180445-13ec/report.md": {
+      "sha256": "4671b8184193d8a5497803c6a0f2460682909fec13b6ff64012e97d013619a8a"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-181205-9f88/evaluations.csv.gz": {
+      "sha256": "78e2ae3e93da8fe6772d4bc13e2a256ca087c595cde328cdab8c9d89a5b273a1"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-181205-9f88/llm_trace.jsonl": {
+      "sha256": "9b54a7349068c957cc31e5e33b6cf81024692a9c79e257980b3321c560a64a88"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-181205-9f88/report.md": {
+      "sha256": "f8086394994cc34c749d3fbb13988e76e31ccc7e8ee4dcc5728a9bba49438e49"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-181855-d43c/evaluations.csv.gz": {
+      "sha256": "ab864097508153b690f6101e47eeb1112fd8d1560af4fdd32d2ec083982ecdc9"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-181855-d43c/llm_trace.jsonl": {
+      "sha256": "570d17d4c53aa72d2e7d78d7a3fdbd7094be0dbc17863ead9aac8dc7ab6ca969"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-181855-d43c/report.md": {
+      "sha256": "f9164980787f09eae427e48f5adba855c2b9800415b5548a198b1f02bd5b9d1f"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-182302-b006/evaluations.csv.gz": {
+      "sha256": "7933f363f117155ad464770f20400179c0fac440a935dc9df10c451e98c0f36e"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-182302-b006/llm_trace.jsonl": {
+      "sha256": "21f0799795fd7bc5ce177b48dd8ce3cef2f9b504a7dfed150426a5c9cce10193"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-182302-b006/report.md": {
+      "sha256": "af5c974a1ab24eb4982f917a1f66fbda25efbf3dfcc5b9c1045a1ad8d4a3c15e"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-182948-7b98/evaluations.csv.gz": {
+      "sha256": "ed98f2a813b1524797917a4a92789d7dbeea2af03a7b93a3f57e06a55ac76443"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-182948-7b98/llm_trace.jsonl": {
+      "sha256": "89c070abd564d9adb9b1a6608b6b0e76b7ad6570ab7c28856483060dc53bc61f"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-182948-7b98/report.md": {
+      "sha256": "228a6b298f110c8f96a8cf9344d293eb80bb5bc506533ce981f4ca043072ebc7"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204440-4900/evaluations.csv.gz": {
+      "sha256": "93fc7b23de4a6c63b1543afa7a2e9cb0342445508816944a04a074083b814818"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204440-4900/llm_trace.jsonl": {
+      "sha256": "bb52abcc03f0cc992be2954e2e32c4ead1a4f25bffd5a19dfefe9ad46880157e"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204440-4900/report.md": {
+      "sha256": "193c78a964445643236389f97a0744f044c32ca2262c744b28149619ccd1cdd2"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204621-2391/evaluations.csv.gz": {
+      "sha256": "96dfac8cb5f2f123f8eee1fc521dea0ec8e24a37916a3c518de9fd12e7f09ef0"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204621-2391/llm_trace.jsonl": {
+      "sha256": "e7d6dc4b03e4f4a8d4783e255af4ca26df4a6302a31c78ee7e94203fbe0ab752"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204621-2391/report.md": {
+      "sha256": "c3beda3700cd01b059418b92bfc45dc0a6b4d41cf8c772978c9becfdc6754220"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204757-01cf/evaluations.csv.gz": {
+      "sha256": "9de2339d3daf0c57fe3b741a03af7ae8013bbf2d186c57e9c5c135b0213b80aa"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204757-01cf/llm_trace.jsonl": {
+      "sha256": "8afac68d31425553bc70ef2fd6f525ff10f08647fac27b898ba2d5f6f797221c"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204757-01cf/report.md": {
+      "sha256": "488ca61e52f5780c832f0037d749d340ad2cbd7ec9f670a08114a0ebd6912b41"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204938-8f37/evaluations.csv.gz": {
+      "sha256": "3b79318012f3b5c8ce17ed45fec530efe6f94332445dcf9bf95f8f03a43f58a0"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204938-8f37/llm_trace.jsonl": {
+      "sha256": "803cfe11909758c22ee8f1139deb0ba9d691b93b33368dca607693996b5bdfcf"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-204938-8f37/report.md": {
+      "sha256": "2a740d27552f90e9eceeb3e94a983f2d5b927f0fb7ad2cee392aab3ca4c90221"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-205117-e870/evaluations.csv.gz": {
+      "sha256": "ecfb5aef0e6a1df2f9b4f1e2e0f4c562cd302f56bb6113e9d1db55874a697c44"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-205117-e870/llm_trace.jsonl": {
+      "sha256": "bb959688fca94cbd842e10aada37565a963a96aecc5f6d6ec6b19173f557c877"
+    },
+    "eval/data/traces/m4/structured/asic_power_50msps/20261010-205117-e870/report.md": {
+      "sha256": "f94deee864315483d914c7f5b51391b6a58d15d395e6ed8c0876a50a0c6f422b"
+    },
+    "specs/asic/asic_low_area.yaml": {
+      "sha256": "182ea5282375014c03146c12efce01626462d7a8bac30ef48dc3f97d9e04606b"
+    },
+    "specs/asic/asic_multiaxis_control.yaml": {
+      "sha256": "a8aa9979bf3fb31ad20d3e5374bc2e80b64280db51be5d226399563f6428a641"
+    },
+    "specs/asic/asic_power_50msps.yaml": {
+      "sha256": "4a40b6ecdcc4ca5a498cca09f5d1807bf2060d40367c651928b4a0d557d662ab"
+    },
     "specs/dds_250msps.yaml": {
       "sha256": "9dbfdcfdcdbc37fc7758d9b91c659656d114cc4b09c45e82f112558aabc45fb0"
     },
@@ -2285,6 +4796,9 @@
     },
     "specs/low_area_control.yaml": {
       "sha256": "008461afcef4989ecb768c2fc4e0c54c971b3f7be0ee26184b797382c3237e6f"
+    },
+    "specs/m4/l2_feedback_bursty.yaml": {
+      "sha256": "915c0d06438c17bcbe4796f26dc1eb1e9cf2e68234377301d0e935702eb26ccf"
     },
     "specs/system/bursty_offload.yaml": {
       "sha256": "e13d203db6c09d2016271f44c1ed42d9d8f08bea1e65700edd53485518e09f1f"

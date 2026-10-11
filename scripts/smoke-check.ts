@@ -11,7 +11,8 @@
  *
  * Fails when a page is not a 200 (redirects count as failures) or lacks the content that proves
  * it rendered from the vendored data: the vendored commit in the footer on every page, the
- * Knuth DOI on /why, the widget placeholders, and the about page's contact links.
+ * Knuth DOI on /why, the widget placeholders, M4's sections, the write-up rendered from the
+ * vendored file (dollar amounts intact), and the about page's contact links.
  */
 import { site } from "@/lib/dse/data";
 
@@ -40,6 +41,8 @@ const PAGES: [string, string[]][] = [
       "Division of labour",
       "data-pending-widget",
       "L2: the design inside its system",
+      "A second target: an ASIC on sky130",
+      "The fleet: orchestrated by code",
     ],
   ],
   ["/case-study", [commit, "bit-exact", "data-pending-widget"]],
@@ -47,13 +50,18 @@ const PAGES: [string, string[]][] = [
     "/results",
     [
       commit,
+      "Milestone 4 at a glance",
       "Milestone 3 at a glance",
       "Where it got worse",
       "data-pending-widget",
       "eval/results.md",
     ],
   ],
-  ["/roadmap", [commit, "M4", "pull/1", "pull/4", "pull/5"]],
+  ["/writeup", [commit, "final technical report", "docs/WRITEUP.md", "$13.64"]],
+  [
+    "/roadmap",
+    [commit, "M4", "pull/1", "pull/4", "pull/5", "pull/6", "After M4"],
+  ],
   ["/record", [commit, "Decision log", "decision-timeline"]],
   [
     "/about",

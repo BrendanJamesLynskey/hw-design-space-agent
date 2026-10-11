@@ -1,0 +1,24 @@
+# Milestone 4: a spec constructed so that the L2 -> L1 feedback fires.
+# Bursts of 32 requests at 130 MS/s on average (Poisson bursts), a sustained
+# throughput floor equal to that rate, p99 latency <= 0.4 us, error <= 2^-10,
+# on the FPGA target. The isolated-burst L1 bound is far too optimistic here
+# (the bursts overlap and queue); the counts are in eval/data/l2_feedback_m4.json.
+# (The first version had a throughput floor of 1 MS/s, a strawman: review S6.) None of the committed specs makes L2 reject a
+# run's whole L1-feasible set; this one does, for some searches (see the
+# README's L2 -> L1 feedback section). Not part of the agent eval.
+name: l2_feedback_bursty
+description: >
+  A shared sin/cos unit behind a bursty 130 MS/s request stream: bursts of 32,
+  at least 130 MS/s sustained, p99 latency <= 0.4 us, max error <= 2^-10.
+  Minimise LUTs + FFs.
+constraints:
+  - {metric: throughput_msps, op: ">=", value: 130}
+  - {metric: max_abs_err, op: "<=", value: "2^-10"}
+  - {metric: sys_p99_latency_us, op: "<=", value: 0.4}
+objectives:
+  - {metric: luts_plus_ffs, direction: min, ref: 3000}
+  - {metric: accuracy_bits, direction: max, ref: 10}
+select_by: luts_plus_ffs
+select_direction: min
+budget: {total_evals: 400, evals_per_round: 100, max_rounds: 4, hv_epsilon: 0.01}
+system: {kind: bursty, mean_rate_msps: 130, burst_size: 32, n_bursts: 800}

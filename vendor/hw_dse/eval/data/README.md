@@ -107,3 +107,23 @@ python -m hw_dse.synth.recalibrate --measured eval/data/l4_synthesis.csv --measu
 | `spend_ledger.jsonl` | every live run's provider-reported cost; M3 rows carry `milestone: m3` and an `arm` | the live commands |
 | `traces/m3/` | every M3 live run's LLM trace (+ tool log, inner reports, evaluations), with `INDEX.md`; campaigns also `pool_keys.json.gz` (the L1 pool, so every campaign can be re-scored) | `scripts/archive_traces_m3.py`, then `eval/m3_rescore.py` |
 | (rows with `before_b1`) | M3 rows re-scored after the L2 fix (selection over every L1-feasible design); the old values are kept | `eval/m3_rescore.py` |
+
+## Milestone 4
+
+| file | what | regenerate |
+|---|---|---|
+| `asic_synthesis.csv`, `asic_logs/` | the ASIC calibration sweep: 57 generated designs (every generated FPGA-sweep point plus an ASIC spread) through Yosys 0.33 + OpenSTA 3.1.0 on `sky130_fd_sc_hd` at `tt_025C_1v80`, 10 ns clock. Columns: `hw_dse.synth.asic.COLUMNS` (cell area µm², gate equivalents, flip-flop cells, reg-to-reg critical path and Fmax with the wire-load model, vectorless power at 100 MHz with its breakdown, the exact commands). Logs: Yosys `stat -liberty`, the STA script and OpenSTA's report, per design. Deterministic: CI re-measures every row. | `python scripts/run_asic_sweep.py` |
+| `asic_validation.csv` | the held-out set: per ASIC spec the ground truth's best design of every family, the FPGA twin's optima and the L1-bound pick (9 designs not in the sweep), same flow; never fitted | `python scripts/run_asic_sweep.py --validate` |
+| `asic_calibration.md` / `.json` | the ASIC cost model's fit: constants, in-sample and leave-one-out residuals per family and per point, the feature sets compared; writes `src/hw_dse/models/calibration_sky130hd.yaml` | `python -m hw_dse.models.cost_asic` |
+| `ground_truth_m4.json` | the three ASIC specs over all 635,040 designs (system metrics simulated; the L1-bound view for the system spec), per-family bests, the family ranking, and each spec's FPGA twin on the FPGA ground truth | `python eval/run_eval.py ground-truth-m4` |
+| `baselines_m4.json` | NSGA-II and random on the ASIC specs, 5 seeds, scored on the ASIC ground truth (the system spec through the L2 shortlist) | `python eval/run_eval.py baselines-m4` |
+| `agent_m4/<model>/` | the structured graph on the ASIC specs (live, 5 seeds); also the A/B's single arm on those specs | `python eval/run_eval.py agent-m4 ...` |
+| `fleet_m4/single/`, `fleet_m4/fleet/` | the A/B: the single arm on the two FPGA specs, and the first fleet (*before_fix*: phase-2 members cold, member minimum 10) on all five | `agent-m4 --arm single`, `fleet-m4 --fleet-version v1` |
+| `fleet_m4/fleet_v2/` | the fleet after review fixes S3/S4 (phase 2 warm-started from the Store, member minimum 20), Qwen only, same specs and seeds | `fleet-m4` (v2 is the default) |
+| `m4_pilot/` | the pilots (not in the tables) | `--pilot` |
+| `l2_feedback_m4.json` | where the L2 -> L1 feedback fires on recorded searches, and its results on the constructed spec with an ablation | `python eval/run_eval.py l2-feedback-m4` |
+| `l2_feedback_m4_v1_floor1.json` | the same study on the first version of the constructed spec (throughput floor 1 MS/s, replaced after review S6), kept for the record | (the first `l2-feedback-m4` run) |
+| `models_check_m4.json` | `GET /api/v1/models` before the eval: each model listed with `tools` and `structured_outputs` | `python eval/run_eval.py models-m4` |
+| `key_usage_m4.json`, `spend_plan_m4.md` | the key's usage snapshots (free endpoint) and the plan made before any M4 call; ledger rows carry `milestone: m4` in `spend_ledger.jsonl` | `key-usage-m4 --tag ...` |
+| `traces/m4/` | every M4 live run's LLM trace, report and evaluations (fleet: per member run), key-scanned | `python scripts/archive_traces_m4.py` |
+| `vivado_measured_20ns.csv`, `vivado_power.csv`, `vivado_m4_compare.md` | **not yet present**: written by the local Vivado run (`scripts/vivado_m4.py`; README, "What the local Vivado run needs") | |

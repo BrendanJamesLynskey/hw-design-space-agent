@@ -1,0 +1,177 @@
+{
+ "milestone": "m4",
+ "arm": "fleet",
+ "pilot": false,
+ "spec": "asic_multiaxis_control",
+ "target": "asic-sky130hd",
+ "seed": 3,
+ "provider": "openrouter",
+ "model_requested": "qwen/qwen3.8-27b",
+ "models_served": [
+  "qwen/qwen3.8-27b"
+ ],
+ "reasoning": "off",
+ "status": "stopped",
+ "llm_calls": 11.0,
+ "llm_failures": 0.0,
+ "input_tokens": 29187.0,
+ "output_tokens": 10810.0,
+ "cost_usd": 0.019821852,
+ "wall_s": 139.9,
+ "decisions": [
+  "add_family",
+  "infeasible",
+  "refine",
+  "infeasible",
+  "add_family",
+  "infeasible",
+  "stop"
+ ],
+ "l1_selected_key": "pipelined:data_width=16,n_iter=14,angle_guard=2,frac_guard=1,rounding=round",
+ "l2_winner_changed": false,
+ "l2_feedback": null,
+ "back_annotation_winner_changed": false,
+ "failed": false,
+ "n_evals": 400,
+ "hv_final": 179592.16122377984,
+ "hv_frac": 0.5879129350691349,
+ "evals_to_95": null,
+ "selected_meets_spec": true,
+ "selected_key": "pipelined:data_width=16,n_iter=14,angle_guard=2,frac_guard=1,rounding=round",
+ "select_regret": 0.1629315550136592,
+ "declared_infeasible": false,
+ "infeasibility_correct": true,
+ "members": [
+  {
+   "member": "fsm",
+   "families": [
+    "iterative",
+    "unrolled_k"
+   ],
+   "phase": 1,
+   "budget": 100,
+   "status": "infeasible",
+   "rounds": 2,
+   "decisions": [
+    "add_family",
+    "infeasible"
+   ],
+   "coverage_rounds": 0,
+   "wall_s": 62.4,
+   "run_dir": "runs/fleet_m4/asic_multiaxis_control/seed3-20261010-173258/fsm-p1/asic_multiaxis_control/20261010-173258-55a5",
+   "llm_declared_infeasible": true,
+   "n_evals": 100,
+   "cost_usd": 0.007269813
+  },
+  {
+   "member": "pipelined",
+   "families": [
+    "pipelined",
+    "pipelined_m"
+   ],
+   "phase": 1,
+   "budget": 100,
+   "status": "infeasible",
+   "rounds": 2,
+   "decisions": [
+    "refine",
+    "infeasible"
+   ],
+   "coverage_rounds": 0,
+   "wall_s": 73.6,
+   "run_dir": "runs/fleet_m4/asic_multiaxis_control/seed3-20261010-173258/pipelined-p1/asic_multiaxis_control/20261010-173258-84fe",
+   "llm_declared_infeasible": true,
+   "n_evals": 100,
+   "cost_usd": 0.004502208
+  },
+  {
+   "member": "fsm",
+   "families": [
+    "iterative",
+    "unrolled_k"
+   ],
+   "phase": 2,
+   "budget": 100,
+   "status": "infeasible",
+   "rounds": 2,
+   "decisions": [
+    "add_family",
+    "infeasible"
+   ],
+   "coverage_rounds": 0,
+   "wall_s": 66.2,
+   "run_dir": "runs/fleet_m4/asic_multiaxis_control/seed3-20261010-173258/fsm-p2/asic_multiaxis_control/20261010-173412-fa20",
+   "llm_declared_infeasible": true,
+   "n_evals": 100,
+   "cost_usd": 0.0059683819999999995
+  },
+  {
+   "member": "pipelined",
+   "families": [
+    "pipelined",
+    "pipelined_m"
+   ],
+   "phase": 2,
+   "budget": 100,
+   "status": "stopped",
+   "rounds": 2,
+   "decisions": [
+    "stop"
+   ],
+   "coverage_rounds": 1,
+   "wall_s": 25.0,
+   "run_dir": "runs/fleet_m4/asic_multiaxis_control/seed3-20261010-173258/pipelined-p2/asic_multiaxis_control/20261010-173412-bcf3",
+   "llm_declared_infeasible": false,
+   "n_evals": 100,
+   "cost_usd": 0.002081449
+  }
+ ],
+ "phase2_budgets": {
+  "fsm": 100,
+  "pipelined": 100
+ },
+ "lessons": {
+  "iterative": {
+   "member": "fsm",
+   "evaluations": 47,
+   "feasible": 0,
+   "best_area_um2": null,
+   "on_merged_front": 0,
+   "merged_front_size": 0,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "unrolled_k": {
+   "member": "fsm",
+   "evaluations": 53,
+   "feasible": 0,
+   "best_area_um2": null,
+   "on_merged_front": 0,
+   "merged_front_size": 0,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "pipelined": {
+   "member": "pipelined",
+   "evaluations": 50,
+   "feasible": 0,
+   "best_area_um2": null,
+   "on_merged_front": 0,
+   "merged_front_size": 0,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  },
+  "pipelined_m": {
+   "member": "pipelined",
+   "evaluations": 50,
+   "feasible": 0,
+   "best_area_um2": null,
+   "on_merged_front": 0,
+   "merged_front_size": 0,
+   "provenance": "code: counted from the fleet's evaluated designs"
+  }
+ },
+ "store_evaluations_by_member": {
+  "fsm": 200,
+  "pipelined": 200
+ },
+ "store_distinct_designs": 280,
+ "run_dir": "runs/fleet_m4/asic_multiaxis_control/seed3-20261010-173258"
+}

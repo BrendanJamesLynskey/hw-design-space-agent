@@ -223,3 +223,150 @@
 {"model": "anthropic/claude-sonnet-5.5", "spec": "multiaxis_control", "seed": 2, "cost_usd": 0.22899399999999998, "arm": "campaign", "ts": "2026-10-09T19:31:44", "milestone": "m3"}
 {"model": "anthropic/claude-sonnet-5.5", "spec": "multiaxis_control", "seed": 3, "cost_usd": 0.214812, "arm": "campaign", "ts": "2026-10-09T19:32:38", "milestone": "m3"}
 {"model": "anthropic/claude-sonnet-5.5", "spec": "multiaxis_control", "seed": 4, "cost_usd": 0.22299999999999998, "arm": "campaign", "ts": "2026-10-09T19:33:48", "milestone": "m3"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 0, "cost_usd": 0.00712429, "arm": "structured", "ts": "2026-10-10T16:25:35", "milestone": "m4", "note": "pilot"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 0, "cost_usd": 0.0158032908, "arm": "fleet", "ts": "2026-10-10T16:27:21", "milestone": "m4", "note": "pilot"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 0, "cost_usd": 0.012813269, "arm": "structured", "ts": "2026-10-10T16:28:03", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 0, "cost_usd": 0.0100721279, "arm": "structured", "ts": "2026-10-10T16:28:46", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 0, "cost_usd": 0.0067896782000000004, "arm": "structured", "ts": "2026-10-10T16:30:09", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 1, "cost_usd": 0.0098662384, "arm": "structured", "ts": "2026-10-10T16:30:29", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 1, "cost_usd": 0.00735943, "arm": "structured", "ts": "2026-10-10T16:31:14", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 1, "cost_usd": 0.007276754, "arm": "structured", "ts": "2026-10-10T16:32:37", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 2, "cost_usd": 0.007441693, "arm": "structured", "ts": "2026-10-10T16:33:39", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 2, "cost_usd": 0.0104489586, "arm": "structured", "ts": "2026-10-10T16:34:39", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 2, "cost_usd": 0.0078575868, "arm": "structured", "ts": "2026-10-10T16:35:48", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 3, "cost_usd": 0.00624651, "arm": "structured", "ts": "2026-10-10T16:36:33", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 3, "cost_usd": 0.011022480000000001, "arm": "structured", "ts": "2026-10-10T16:37:12", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 3, "cost_usd": 0.0065860625999999995, "arm": "structured", "ts": "2026-10-10T16:38:07", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 4, "cost_usd": 0.008681344, "arm": "structured", "ts": "2026-10-10T16:38:39", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 4, "cost_usd": 0.008999222, "arm": "structured", "ts": "2026-10-10T16:39:36", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 4, "cost_usd": 0.007782416, "arm": "structured", "ts": "2026-10-10T16:40:29", "milestone": "m4", "note": "structured"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 0, "cost_usd": 0.01068545, "arm": "structured", "ts": "2026-10-10T16:41:06", "milestone": "m4", "note": "single"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 0, "cost_usd": 0.011011706000000001, "arm": "structured", "ts": "2026-10-10T16:45:46", "milestone": "m4", "note": "single"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 1, "cost_usd": 0.00858677, "arm": "structured", "ts": "2026-10-10T16:46:42", "milestone": "m4", "note": "single"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 1, "cost_usd": 0.005880086, "arm": "structured", "ts": "2026-10-10T16:47:13", "milestone": "m4", "note": "single"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 2, "cost_usd": 0.00901164, "arm": "structured", "ts": "2026-10-10T16:48:24", "milestone": "m4", "note": "single"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 2, "cost_usd": 0.010590428, "arm": "structured", "ts": "2026-10-10T16:49:04", "milestone": "m4", "note": "single"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 3, "cost_usd": 0.008941727, "arm": "structured", "ts": "2026-10-10T16:49:47", "milestone": "m4", "note": "single"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 3, "cost_usd": 0.007866685, "arm": "structured", "ts": "2026-10-10T16:50:15", "milestone": "m4", "note": "single"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 4, "cost_usd": 0.009269471999999999, "arm": "structured", "ts": "2026-10-10T16:51:24", "milestone": "m4", "note": "single"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 4, "cost_usd": 0.014267647999999999, "arm": "structured", "ts": "2026-10-10T16:51:45", "milestone": "m4", "note": "single"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 0, "cost_usd": 0.013886111, "arm": "fleet", "ts": "2026-10-10T16:53:19", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 0, "cost_usd": 0.012352283, "arm": "fleet", "ts": "2026-10-10T16:54:24", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 0, "cost_usd": 0.014817538000000002, "arm": "fleet", "ts": "2026-10-10T16:58:40", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 0, "cost_usd": 0.011305602000000001, "arm": "fleet", "ts": "2026-10-10T16:59:20", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 0, "cost_usd": 0.01201902, "arm": "fleet", "ts": "2026-10-10T17:00:25", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 1, "cost_usd": 0.009855283, "arm": "fleet", "ts": "2026-10-10T17:01:10", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 1, "cost_usd": 0.012879939, "arm": "fleet", "ts": "2026-10-10T17:02:06", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 1, "cost_usd": 0.013971938, "arm": "fleet", "ts": "2026-10-10T17:03:24", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 1, "cost_usd": 0.012771424, "arm": "fleet", "ts": "2026-10-10T17:08:58", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 1, "cost_usd": 0.016410368, "arm": "fleet", "ts": "2026-10-10T17:17:06", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 2, "cost_usd": 0.0119925083, "arm": "fleet", "ts": "2026-10-10T17:18:30", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 2, "cost_usd": 0.012054671, "arm": "fleet", "ts": "2026-10-10T17:19:44", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 2, "cost_usd": 0.012681814, "arm": "fleet", "ts": "2026-10-10T17:21:38", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 2, "cost_usd": 0.008480697999999998, "arm": "fleet", "ts": "2026-10-10T17:23:02", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 2, "cost_usd": 0.013661476999999998, "arm": "fleet", "ts": "2026-10-10T17:24:18", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 3, "cost_usd": 0.0100195526, "arm": "fleet", "ts": "2026-10-10T17:25:19", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 3, "cost_usd": 0.013538740799999999, "arm": "fleet", "ts": "2026-10-10T17:32:58", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 3, "cost_usd": 0.019821852, "arm": "fleet", "ts": "2026-10-10T17:35:22", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 3, "cost_usd": 0.008739802000000001, "arm": "fleet", "ts": "2026-10-10T17:36:20", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 3, "cost_usd": 0.014461660999999999, "arm": "fleet", "ts": "2026-10-10T17:49:00", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 4, "cost_usd": 0.0115483724, "arm": "fleet", "ts": "2026-10-10T17:50:12", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 4, "cost_usd": 0.014814560099999999, "arm": "fleet", "ts": "2026-10-10T17:51:14", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 4, "cost_usd": 0.0124454068, "arm": "fleet", "ts": "2026-10-10T17:53:08", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 4, "cost_usd": 0.011007953, "arm": "fleet", "ts": "2026-10-10T17:54:31", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 4, "cost_usd": 0.0119799415, "arm": "fleet", "ts": "2026-10-10T18:03:41", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_low_area", "seed": 0, "cost_usd": 0.01207161, "arm": "structured", "ts": "2026-10-10T18:04:45", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_power_50msps", "seed": 0, "cost_usd": 0.019918007, "arm": "structured", "ts": "2026-10-10T18:06:31", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_multiaxis_control", "seed": 0, "cost_usd": 0.023228326, "arm": "structured", "ts": "2026-10-10T18:09:49", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_low_area", "seed": 1, "cost_usd": 0.014624747999999998, "arm": "structured", "ts": "2026-10-10T18:12:05", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_power_50msps", "seed": 1, "cost_usd": 0.017921639, "arm": "structured", "ts": "2026-10-10T18:14:04", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_multiaxis_control", "seed": 1, "cost_usd": 0.0080305, "arm": "structured", "ts": "2026-10-10T18:15:44", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_low_area", "seed": 2, "cost_usd": 0.01843365, "arm": "structured", "ts": "2026-10-10T18:18:55", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_power_50msps", "seed": 2, "cost_usd": 0.013343170000000001, "arm": "structured", "ts": "2026-10-10T18:20:15", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_multiaxis_control", "seed": 2, "cost_usd": 0.014273287, "arm": "structured", "ts": "2026-10-10T18:21:31", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_low_area", "seed": 3, "cost_usd": 0.013727239, "arm": "structured", "ts": "2026-10-10T18:23:02", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_power_50msps", "seed": 3, "cost_usd": 0.017628885999999996, "arm": "structured", "ts": "2026-10-10T18:25:42", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_multiaxis_control", "seed": 3, "cost_usd": 0.017917902, "arm": "structured", "ts": "2026-10-10T18:27:51", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_low_area", "seed": 4, "cost_usd": 0.020364114, "arm": "structured", "ts": "2026-10-10T18:29:48", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_power_50msps", "seed": 4, "cost_usd": 0.020194051999999997, "arm": "structured", "ts": "2026-10-10T18:31:52", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_multiaxis_control", "seed": 4, "cost_usd": 0.014223439999999999, "arm": "structured", "ts": "2026-10-10T18:33:01", "milestone": "m4", "note": "structured"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 0, "cost_usd": 0.01450049, "arm": "structured", "ts": "2026-10-10T18:36:22", "milestone": "m4", "note": "single"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "multiaxis_control", "seed": 0, "cost_usd": 0.025120881999999997, "arm": "structured", "ts": "2026-10-10T18:50:17", "milestone": "m4", "note": "single"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 1, "cost_usd": 0.014810957, "arm": "structured", "ts": "2026-10-10T18:51:56", "milestone": "m4", "note": "single"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "multiaxis_control", "seed": 1, "cost_usd": 0.032868176, "arm": "structured", "ts": "2026-10-10T18:56:22", "milestone": "m4", "note": "single"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 2, "cost_usd": 0.0180968, "arm": "structured", "ts": "2026-10-10T18:59:56", "milestone": "m4", "note": "single"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "multiaxis_control", "seed": 2, "cost_usd": 0.014790998999999999, "arm": "structured", "ts": "2026-10-10T19:01:37", "milestone": "m4", "note": "single"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 3, "cost_usd": 0.010932869999999999, "arm": "structured", "ts": "2026-10-10T19:03:03", "milestone": "m4", "note": "single"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "multiaxis_control", "seed": 3, "cost_usd": 0.018483299999999998, "arm": "structured", "ts": "2026-10-10T19:05:10", "milestone": "m4", "note": "single"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 4, "cost_usd": 0.01034833, "arm": "structured", "ts": "2026-10-10T19:06:23", "milestone": "m4", "note": "single"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "multiaxis_control", "seed": 4, "cost_usd": 0.011904109, "arm": "structured", "ts": "2026-10-10T19:08:03", "milestone": "m4", "note": "single"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_low_area", "seed": 0, "cost_usd": 0.02090404, "arm": "fleet", "ts": "2026-10-10T19:10:32", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_power_50msps", "seed": 0, "cost_usd": 0.024501425, "arm": "fleet", "ts": "2026-10-10T19:13:03", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_multiaxis_control", "seed": 0, "cost_usd": 0.020377193999999998, "arm": "fleet", "ts": "2026-10-10T19:15:05", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 0, "cost_usd": 0.022829989, "arm": "fleet", "ts": "2026-10-10T19:17:15", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "multiaxis_control", "seed": 0, "cost_usd": 0.02513930213, "arm": "fleet", "ts": "2026-10-10T19:19:08", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_low_area", "seed": 1, "cost_usd": 0.014661255, "arm": "fleet", "ts": "2026-10-10T19:20:41", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_power_50msps", "seed": 1, "cost_usd": 0.025508202, "arm": "fleet", "ts": "2026-10-10T19:23:10", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_multiaxis_control", "seed": 1, "cost_usd": 0.037383886, "arm": "fleet", "ts": "2026-10-10T19:27:21", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 1, "cost_usd": 0.017494561, "arm": "fleet", "ts": "2026-10-10T19:28:57", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "multiaxis_control", "seed": 1, "cost_usd": 0.034535478999999994, "arm": "fleet", "ts": "2026-10-10T19:31:51", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_low_area", "seed": 2, "cost_usd": 0.02413022, "arm": "fleet", "ts": "2026-10-10T19:34:16", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_power_50msps", "seed": 2, "cost_usd": 0.017980942, "arm": "fleet", "ts": "2026-10-10T19:36:04", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_multiaxis_control", "seed": 2, "cost_usd": 0.041645041, "arm": "fleet", "ts": "2026-10-10T19:39:40", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 2, "cost_usd": 0.016500193, "arm": "fleet", "ts": "2026-10-10T19:41:36", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "multiaxis_control", "seed": 2, "cost_usd": 0.028946869, "arm": "fleet", "ts": "2026-10-10T19:43:51", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_low_area", "seed": 3, "cost_usd": 0.016956628, "arm": "fleet", "ts": "2026-10-10T19:45:47", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_power_50msps", "seed": 3, "cost_usd": 0.029075234999999998, "arm": "fleet", "ts": "2026-10-10T19:50:58", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_multiaxis_control", "seed": 3, "cost_usd": 0.037889753, "arm": "fleet", "ts": "2026-10-10T19:54:19", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 3, "cost_usd": 0.033876371, "arm": "fleet", "ts": "2026-10-10T19:57:25", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "multiaxis_control", "seed": 3, "cost_usd": 0.015216832, "arm": "fleet", "ts": "2026-10-10T20:14:41", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_low_area", "seed": 4, "cost_usd": 0.021684521930000002, "arm": "fleet", "ts": "2026-10-10T20:17:13", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_power_50msps", "seed": 4, "cost_usd": 0.018152551, "arm": "fleet", "ts": "2026-10-10T20:36:23", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "asic_multiaxis_control", "seed": 4, "cost_usd": 0.043669165, "arm": "fleet", "ts": "2026-10-10T20:40:01", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "low_area_control", "seed": 4, "cost_usd": 0.032471905, "arm": "fleet", "ts": "2026-10-10T20:41:41", "milestone": "m4"}
+{"model": "deepseek/deepseek-v4.1-flash", "spec": "multiaxis_control", "seed": 4, "cost_usd": 0.021602626, "arm": "fleet", "ts": "2026-10-10T20:44:10", "milestone": "m4"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_low_area", "seed": 0, "cost_usd": 0.065746, "arm": "structured", "ts": "2026-10-10T20:44:40", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_power_50msps", "seed": 0, "cost_usd": 0.06758600000000001, "arm": "structured", "ts": "2026-10-10T20:45:07", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_multiaxis_control", "seed": 0, "cost_usd": 0.091516, "arm": "structured", "ts": "2026-10-10T20:45:52", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_low_area", "seed": 1, "cost_usd": 0.0711, "arm": "structured", "ts": "2026-10-10T20:46:21", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_power_50msps", "seed": 1, "cost_usd": 0.07375999999999999, "arm": "structured", "ts": "2026-10-10T20:46:52", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_multiaxis_control", "seed": 1, "cost_usd": 0.092096, "arm": "structured", "ts": "2026-10-10T20:47:33", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_low_area", "seed": 2, "cost_usd": 0.064886, "arm": "structured", "ts": "2026-10-10T20:47:57", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_power_50msps", "seed": 2, "cost_usd": 0.070754, "arm": "structured", "ts": "2026-10-10T20:48:27", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_multiaxis_control", "seed": 2, "cost_usd": 0.093162, "arm": "structured", "ts": "2026-10-10T20:49:11", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_low_area", "seed": 3, "cost_usd": 0.067092, "arm": "structured", "ts": "2026-10-10T20:49:37", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_power_50msps", "seed": 3, "cost_usd": 0.067152, "arm": "structured", "ts": "2026-10-10T20:50:02", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_multiaxis_control", "seed": 3, "cost_usd": 0.096124, "arm": "structured", "ts": "2026-10-10T20:50:49", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_low_area", "seed": 4, "cost_usd": 0.059294, "arm": "structured", "ts": "2026-10-10T20:51:16", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_power_50msps", "seed": 4, "cost_usd": 0.073184, "arm": "structured", "ts": "2026-10-10T20:51:47", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_multiaxis_control", "seed": 4, "cost_usd": 0.09242, "arm": "structured", "ts": "2026-10-10T20:52:30", "milestone": "m4", "note": "structured"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_multiaxis_control", "seed": 0, "cost_usd": 0.145308, "arm": "fleet", "ts": "2026-10-10T20:53:47", "milestone": "m4"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_multiaxis_control", "seed": 1, "cost_usd": 0.151, "arm": "fleet", "ts": "2026-10-10T20:54:42", "milestone": "m4"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_multiaxis_control", "seed": 2, "cost_usd": 0.14728, "arm": "fleet", "ts": "2026-10-10T20:55:36", "milestone": "m4"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_multiaxis_control", "seed": 3, "cost_usd": 0.151252, "arm": "fleet", "ts": "2026-10-10T20:56:28", "milestone": "m4"}
+{"model": "anthropic/claude-sonnet-5.5", "spec": "asic_multiaxis_control", "seed": 4, "cost_usd": 0.149116, "arm": "fleet", "ts": "2026-10-10T20:57:19", "milestone": "m4"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 0, "cost_usd": 0.0120115595, "arm": "fleet", "ts": "2026-10-10T22:30:58", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 0, "cost_usd": 0.009990035, "arm": "fleet", "ts": "2026-10-10T22:32:45", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 0, "cost_usd": 0.0112748268, "arm": "fleet", "ts": "2026-10-10T22:34:40", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 0, "cost_usd": 0.008572702, "arm": "fleet", "ts": "2026-10-10T22:36:37", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 0, "cost_usd": 0.01567061, "arm": "fleet", "ts": "2026-10-10T22:37:49", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 1, "cost_usd": 0.0087857786, "arm": "fleet", "ts": "2026-10-10T22:39:23", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 1, "cost_usd": 0.009976871299999999, "arm": "fleet", "ts": "2026-10-10T22:41:59", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 1, "cost_usd": 0.0137440986, "arm": "fleet", "ts": "2026-10-10T22:45:11", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 1, "cost_usd": 0.012154864, "arm": "fleet", "ts": "2026-10-10T22:47:20", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 1, "cost_usd": 0.0177459896, "arm": "fleet", "ts": "2026-10-10T22:49:36", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 2, "cost_usd": 0.0100354848, "arm": "fleet", "ts": "2026-10-10T22:50:39", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 2, "cost_usd": 0.011242097400000001, "arm": "fleet", "ts": "2026-10-10T22:51:50", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 2, "cost_usd": 0.015965526, "arm": "fleet", "ts": "2026-10-10T22:53:42", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 2, "cost_usd": 0.010235499, "arm": "fleet", "ts": "2026-10-10T22:54:25", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 2, "cost_usd": 0.0187177106, "arm": "fleet", "ts": "2026-10-10T22:55:47", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 3, "cost_usd": 0.0116207178, "arm": "fleet", "ts": "2026-10-10T22:56:51", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 3, "cost_usd": 0.0112817964, "arm": "fleet", "ts": "2026-10-10T22:58:37", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 3, "cost_usd": 0.017752445399999997, "arm": "fleet", "ts": "2026-10-10T23:00:26", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 3, "cost_usd": 0.014277373, "arm": "fleet", "ts": "2026-10-10T23:01:02", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 3, "cost_usd": 0.0149245787, "arm": "fleet", "ts": "2026-10-10T23:02:15", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_low_area", "seed": 4, "cost_usd": 0.010891232399999999, "arm": "fleet", "ts": "2026-10-10T23:02:47", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_power_50msps", "seed": 4, "cost_usd": 0.0123984821, "arm": "fleet", "ts": "2026-10-10T23:04:42", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "asic_multiaxis_control", "seed": 4, "cost_usd": 0.020487468, "arm": "fleet", "ts": "2026-10-10T23:06:04", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "low_area_control", "seed": 4, "cost_usd": 0.013181341999999999, "arm": "fleet", "ts": "2026-10-10T23:06:33", "milestone": "m4", "note": "v2"}
+{"model": "qwen/qwen3.8-27b", "spec": "multiaxis_control", "seed": 4, "cost_usd": 0.014311487, "arm": "fleet", "ts": "2026-10-10T23:07:32", "milestone": "m4", "note": "v2"}
