@@ -8,12 +8,13 @@ import { LevelBadge } from "@/components/dse/Badges";
 import { COMMIT, site } from "@/lib/dse/data";
 import { hp20, viv4 } from "@/lib/dse/vivado4";
 import { AGENT_REPO, GITHUB_URL, agentFile } from "@/lib/site";
+import { withShare } from "@/lib/share";
 
-export const metadata = {
+export const metadata = withShare("/roadmap", {
   title: "Roadmap",
   description:
     "Milestones M1 to M4, all done: what each adds to the fidelity ladder (RTL, synthesis, gate-level simulation and back-annotation in M2; cycle-level and SimPy system-level simulation and an experimental campaign layer in M3; an ASIC target on sky130, a code-orchestrated fleet and L2 → L1 feedback in M4), their pull requests, and what is planned after M4.",
-};
+});
 
 const A =
   "focus-ring rounded text-accent underline underline-offset-2 dark:text-indigo-300";

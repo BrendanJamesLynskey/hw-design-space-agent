@@ -17,12 +17,13 @@ import { MdxTable } from "@/components/ui/MdxTable";
 import { COMMIT, site } from "@/lib/dse/data";
 import { deciders, parseRecord, type Decision } from "@/lib/record";
 import { AGENT_REPO, agentFile } from "@/lib/site";
+import { withShare } from "@/lib/share";
 
-export const metadata = {
+export const metadata = withShare("/record", {
   title: "Project record",
   description:
     "How the HW Design-Space Agent was built and why: the principles, the planner-and-executor process with its verification gates, every decision with its alternatives and reasons, the results, what review found and what is still missing.",
-};
+});
 
 const A =
   "focus-ring rounded text-accent underline underline-offset-2 dark:text-indigo-300";

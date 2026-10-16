@@ -18,12 +18,13 @@ import { nextSteps } from "@/lib/adoption";
 import { COMMIT, site } from "@/lib/dse/data";
 import { V_ } from "@/lib/dse/values";
 import { AGENT_REPO, agentFile } from "@/lib/site";
+import { withShare } from "@/lib/share";
 
-export const metadata = {
+export const metadata = withShare("/adoption", {
   title: "For a hardware team",
   description:
     "Would an agent like this help a company that builds its own hardware? Where it helps (auditable numbers, verification at every level, open-weights models, measured cost, an honest A/B), where it does not (one IP block, a modest LLM contribution, estimate-grade models), how it compares with a general-purpose agent, a proposed deployment next to an EDA farm, and what it would need next.",
-};
+});
 
 const A =
   "focus-ring rounded text-accent underline underline-offset-2 dark:text-indigo-300";

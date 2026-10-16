@@ -154,14 +154,15 @@ accuracy metrics (which take cos and sin) use a tolerance, far below one LSB.
 
 ## Checks
 
-| Check                                                                                                                                                                                      | Command                                |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------- |
-| Unit tests (parity, frames, captions, values, vendored hashes), coverage thresholds                                                                                                        | `pnpm test:coverage`                   |
-| Site data and fixtures up to date with the reference at the vendored commit                                                                                                                | `python scripts/export_dse.py --check` |
-| Vendored data, trace cost sums, honesty checks, ladder data, M3 and M4 data                                                                                                                | `python -m pytest -q tests/python`     |
-| e2e: every page at 1280 and 390 px in light and dark; every animation plays, steps, scrubs, resets and answers the keyboard; reduced motion; frame tests; ladder badges; wording; no email | `pnpm test:e2e`                        |
-| axe (serious/critical) in light and dark                                                                                                                                                   | part of `pnpm test:e2e`                |
-| Lighthouse ≥ 0.9 (performance, accessibility, best practices)                                                                                                                              | `pnpm lighthouse`                      |
+| Check                                                                                                                                                                                      | Command                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------- |
+| Unit tests (parity, frames, captions, values, vendored hashes), coverage thresholds                                                                                                        | `pnpm test:coverage`                         |
+| Site data and fixtures up to date with the reference at the vendored commit                                                                                                                | `python scripts/export_dse.py --check`       |
+| Vendored data, trace cost sums, honesty checks, ladder data, M3 and M4 data                                                                                                                | `python -m pytest -q tests/python`           |
+| e2e: every page at 1280 and 390 px in light and dark; every animation plays, steps, scrubs, resets and answers the keyboard; reduced motion; frame tests; ladder badges; wording; no email | `pnpm test:e2e`                              |
+| axe (serious/critical) in light and dark                                                                                                                                                   | part of `pnpm test:e2e`                      |
+| Lighthouse ≥ 0.9 (performance, accessibility, best practices)                                                                                                                              | `pnpm lighthouse`                            |
+| Link-preview tags and 1,200 × 630 cards, favicon and Apple icon, sitemap and robots; the landing page's start button, "How this is checked" strip and hero figure above the fold at 390 px | CI "E2E Tests" (`tests/e2e/sharing.spec.ts`) |
 
 ```bash
 pnpm install
@@ -177,6 +178,14 @@ the CI and test layout) are copied from
 [Agent Harnesses Explained](https://github.com/BrendanJamesLynskey/agent-harnesses-explained). This is a showcase,
 not one of the `*-explained` family, so it does not carry the family's site switch; its footer links the related
 agent sites and the [LLMs hub](https://github.com/BrendanJamesLynskey/LLMs) instead.
+
+## Sharing
+
+Every page carries Open Graph and Twitter tags, titled and addressed as that page. The link-preview cards (1,200 × 630 PNG)
+are drawn at build time by [`src/app/_og/card.tsx`](src/app/_og/card.tsx), the same file on every companion site, from
+this site's [`src/lib/share.ts`](src/lib/share.ts): one for the site. The favicon
+([`src/app/icon.svg`](src/app/icon.svg)) is this site's own octagon (it sits outside the four tracks) with the letter D; [`/sitemap.xml`](src/app/sitemap.ts) lists every page and
+[`/robots.txt`](src/app/robots.ts) allows everything. The cards are set in Noto Sans and Noto Sans Mono (subsets, SIL Open Font License 1.1: [`src/app/_og/OFL.txt`](src/app/_og/OFL.txt)).
 
 ## Licence
 

@@ -7,11 +7,12 @@
  */
 import { site } from "@/lib/dse/data";
 import { MdxPage } from "@/lib/mdx/render";
+import { withShare } from "@/lib/share";
 
-export const metadata = {
+export const metadata = withShare("/results", {
   title: "Results",
   description: `The agent against NSGA-II and random search on the exhaustive ground truth, M1 to M2: the front-mapping gap closed (${site.glance.hv_ratio_m2[0]}–${site.glance.hv_ratio_m2[1]}× NSGA-II's hypervolume), the selection lead kept in ${site.glance.regret_beats_nsga2_m2} of ${site.glance.regret_cells} cells, and where it got worse. Pareto replays, the hypervolume race, tokens and dollars per run, and a cost calculator.`,
-};
+});
 
 export default function ResultsPage(): JSX.Element {
   return (

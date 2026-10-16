@@ -4,14 +4,15 @@
  * Server Component; the prose is content/pages/case-study.mdx.
  */
 import { MdxPage } from "@/lib/mdx/render";
+import { withShare } from "@/lib/share";
 
 import "katex/dist/katex.min.css";
 
-export const metadata = {
+export const metadata = withShare("/case-study", {
   title: "Case study: CORDIC sin/cos",
   description:
     "The milestone 1 design space: CORDIC micro-rotations from the bit-exact golden model, the four architecture families as datapaths, and the true Pareto fronts.",
-};
+});
 
 export default function CaseStudyPage(): JSX.Element {
   return (
