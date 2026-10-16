@@ -4,12 +4,13 @@
  * level, and the fleet. Server Component; the prose is content/pages/how-it-works.mdx.
  */
 import { MdxPage } from "@/lib/mdx/render";
+import { withShare } from "@/lib/share";
 
-export const metadata = {
+export const metadata = withShare("/how-it-works", {
   title: "How it works",
   description:
     "The fidelity ladder, the rule that the LLM never produces a number, the LangGraph graph replayed from a recorded trace with its token and dollar counters, verification at every level, and a fleet of agents.",
-};
+});
 
 export default function HowItWorksPage(): JSX.Element {
   return (

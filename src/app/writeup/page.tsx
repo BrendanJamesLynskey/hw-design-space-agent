@@ -18,12 +18,13 @@ import { MdxTable } from "@/components/ui/MdxTable";
 import { COMMIT, site } from "@/lib/dse/data";
 import { AGENT_REPO, agentFile } from "@/lib/site";
 import { factValue, parseWriteup, type Block, type Flow } from "@/lib/writeup";
+import { withShare } from "@/lib/share";
 
-export const metadata = {
+export const metadata = withShare("/writeup", {
   title: "Write-up",
   description:
     "The project's closing report on all four milestones, from the repository: the question, the ladder, what each milestone found (losses first), the A/Bs together, the limitations and what comes next. Every number in it is bound to a named fact computed from the committed data.",
-};
+});
 
 const A =
   "focus-ring rounded text-accent underline underline-offset-2 dark:text-indigo-300";

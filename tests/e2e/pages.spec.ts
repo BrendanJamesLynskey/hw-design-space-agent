@@ -184,11 +184,13 @@ test("the record: twelve sections (7b, 7c, 7d: the M3, M4 and PR #7 reviews), th
   await expect(
     page.getByRole("link", { name: "project record" }),
   ).toHaveAttribute("href", "/record");
-  await expect(
-    page
-      .getByRole("navigation", { name: "Site" })
-      .getByRole("link", { name: "Record" }),
-  ).toHaveAttribute("href", "/record");
+  // under the header's "More" menu (a <details>): open it first
+  const site = page.getByRole("navigation", { name: "Site" });
+  await site.locator("[data-more-menu] summary").click();
+  await expect(site.getByRole("link", { name: "Record" })).toHaveAttribute(
+    "href",
+    "/record",
+  );
 });
 
 test("the roadmap: M1–M4 done with their pull requests, then the after-M4 plan with no results", async ({
@@ -394,8 +396,9 @@ test("for a hardware team: pros, cons, the comparison, the deployment (proposals
   );
   await expect(art).toContainText("projection");
   await expect(art).toContainText("no recorded run used it");
+  // in DOM order: the bar's links, then the "More" menu's, which it leads
   const nav = page.getByRole("navigation", { name: "Site" });
-  const labels = await nav.getByRole("link").allTextContents();
+  const labels = await nav.locator("a").allTextContents();
   expect(labels.indexOf("For a hardware team")).toBe(
     labels.indexOf("Write-up") + 1,
   );

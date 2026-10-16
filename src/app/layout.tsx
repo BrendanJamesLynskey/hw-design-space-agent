@@ -11,10 +11,11 @@ import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/ui/SiteFooter";
 import { SiteHeader } from "@/components/ui/SiteHeader";
 import { SITE_URL } from "@/lib/site";
+import { withShare } from "@/lib/share";
 
 import "./globals.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withShare("/", {
   metadataBase: new URL(SITE_URL),
   title: {
     default: "HW Design-Space Agent",
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
   },
   description:
     "An agent optimised for hardware development: trade-off exploration. One spec, explored by a LangGraph agent over tested hardware models, with every number from a recorded run.",
-};
+});
 
 export default function RootLayout({
   children,

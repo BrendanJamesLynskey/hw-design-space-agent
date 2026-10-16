@@ -4,6 +4,7 @@ import { LevelBadge, Prov } from "@/components/dse/Badges";
 import { LadderHero } from "@/components/dse/lazy";
 import { CostTable, HeadlineTable } from "@/components/dse/Tables";
 import { V } from "@/components/mdx/V";
+import { CheckedStrip, StartButton } from "@/components/ui/Landing";
 import { COMMIT, site } from "@/lib/dse/data";
 import { ladder } from "@/lib/dse/ladder";
 import { AGENT_REPO, agentFile } from "@/lib/site";
@@ -29,29 +30,52 @@ export default function HomePage(): JSX.Element {
         An agent optimised for hardware development: trade-off exploration.
       </h1>
       <p className="mt-6 max-w-3xl text-lg text-neutral-600 dark:text-neutral-300">
-        Give it one high-level spec. A LangGraph agent chooses which
-        architectures to explore, a classic optimiser searches them on tested
-        models, and the agent reads the results, decides what to try next, and
-        picks the design. That one spec then goes down the fidelity ladder: the
-        design inside a SimPy model of its system and a cycle-accurate model of
-        its interface, RTL generated and simulated in two simulators, FPGA
-        synthesis and place and route, gate-level simulation of the netlist,
-        synthesis on a second target (standard cells on the open sky130 PDK),
-        and back-annotation of the measurements into the cost model, each level
-        offering its own power, performance and area view, with regression tests
-        against the golden model at every level.
+        A LangGraph agent that explores hardware design trade-offs from one
+        spec, down a fidelity ladder from a system model to synthesis, with
+        every number from a recorded run.
       </p>
-
-      <LadderHero
-        hero={site.hero}
-        ladder={site.ladder}
-        spec={site.specs[site.hero.spec]!}
-        worked={ladder.worked}
-      />
+      <div className="mt-6">
+        <StartButton href="/why">Start with why →</StartButton>
+      </div>
+      <div data-hero-figure className="min-w-0">
+        <LadderHero
+          hero={site.hero}
+          ladder={site.ladder}
+          spec={site.specs[site.hero.spec]!}
+          worked={ladder.worked}
+        />
+      </div>
+      <CheckedStrip href="/about#site">
+        Every number comes from a recorded run of the agent, vendored byte for
+        byte with its hashes; the TypeScript ports of its golden model and cost
+        model match the Python reference exactly, and CI fails if anything
+        drifts.
+      </CheckedStrip>
+      <section aria-labelledby="learn-heading" className="mt-12">
+        <h2
+          id="learn-heading"
+          className="text-2xl font-semibold tracking-tight"
+        >
+          What it does
+        </h2>
+        <p className="mt-4 max-w-3xl text-neutral-600 dark:text-neutral-300">
+          Give it one high-level spec. A LangGraph agent chooses which
+          architectures to explore, a classic optimiser searches them on tested
+          models, and the agent reads the results, decides what to try next, and
+          picks the design. That one spec then goes down the fidelity ladder:
+          the design inside a SimPy model of its system and a cycle-accurate
+          model of its interface, RTL generated and simulated in two simulators,
+          FPGA synthesis and place and route, gate-level simulation of the
+          netlist, synthesis on a second target (standard cells on the open
+          sky130 PDK), and back-annotation of the measurements into the cost
+          model, each level offering its own power, performance and area view,
+          with regression tests against the golden model at every level.
+        </p>
+      </section>
 
       <section
         aria-label="Two principles"
-        className="grid gap-4 sm:grid-cols-2"
+        className="mt-12 grid gap-4 sm:grid-cols-2"
       >
         <blockquote className="rounded-lg border-l-4 border-accent bg-neutral-50 p-5 text-xl font-semibold tracking-tight dark:border-indigo-300 dark:bg-neutral-900">
           An AI agent is the perfect environment for trade-off exploration.

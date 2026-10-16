@@ -4,14 +4,15 @@
  * the prose is content/pages/why.mdx.
  */
 import { MdxPage } from "@/lib/mdx/render";
+import { withShare } from "@/lib/share";
 
 import "katex/dist/katex.min.css";
 
-export const metadata = {
+export const metadata = withShare("/why", {
   title: "Why: avoid premature optimisation",
   description:
     "Knuth's critical 3%, applied to hardware: polishing the default architecture against exploring first, on the real CORDIC design space.",
-};
+});
 
 export default function WhyPage(): JSX.Element {
   return (

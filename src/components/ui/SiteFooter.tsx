@@ -5,6 +5,7 @@
 import { COMMIT, site } from "@/lib/dse/data";
 import {
   AGENT_REPO,
+  COMPANION_URL,
   CONTEXT_URL,
   GITHUB_URL,
   HARNESSES_URL,
@@ -15,6 +16,7 @@ import {
 } from "@/lib/site";
 
 const RELATED = [
+  { href: COMPANION_URL, label: "the companion explainer sites" },
   { href: HARNESSES_URL, label: "Agent Harnesses Explained" },
   { href: PROTOCOLS_URL, label: "Agent Protocols Explained" },
   { href: CONTEXT_URL, label: "Agent Context Explained" },

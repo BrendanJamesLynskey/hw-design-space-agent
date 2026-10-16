@@ -22,6 +22,8 @@ export const HARNESSES_URL = "https://agent-harnesses-explained.vercel.app";
 export const PROTOCOLS_URL = "https://agent-protocols-explained.vercel.app";
 export const CONTEXT_URL = "https://agent-context-explained.vercel.app";
 export const LLMS_HUB = "https://github.com/BrendanJamesLynskey/LLMs";
+/** The companion explainer sites: their site menu opens from any of them (this is the first). */
+export const COMPANION_URL = "https://transformer-decoder-explained.vercel.app";
 
 /** A file in the agent's repository at a commit. */
 export function agentFile(path: string, commit: string): string {

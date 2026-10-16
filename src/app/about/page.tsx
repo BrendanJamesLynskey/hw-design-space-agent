@@ -20,12 +20,13 @@ import {
   PROTOCOLS_URL,
   ownerRepo,
 } from "@/lib/site";
+import { withShare } from "@/lib/share";
 
-export const metadata = {
+export const metadata = withShare("/about", {
   title: "About",
   description:
     "Brendan Lynskey: a software developer and a hardware engineer with more than 25 years in FPGA, SoC, power, signal integrity, PCB and DSP. The evidence, linked.",
-};
+});
 
 const A =
   "focus-ring rounded text-accent underline underline-offset-2 dark:text-indigo-300";
