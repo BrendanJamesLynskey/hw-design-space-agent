@@ -31,8 +31,7 @@ export default function HomePage(): JSX.Element {
       </h1>
       <p className="mt-6 max-w-3xl text-lg text-neutral-600 dark:text-neutral-300">
         A LangGraph agent that explores hardware design trade-offs from one
-        spec, down a fidelity ladder from a system model to synthesis, with
-        every number from a recorded run.
+        spec, down a fidelity ladder to synthesis.
       </p>
       <div className="mt-6">
         <StartButton href="/why">Start with why →</StartButton>
